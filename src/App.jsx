@@ -32,6 +32,27 @@ function saveSessions(sessions) {
 
 const RED = "#e53e3e";
 
+const Field = ({ label, children }) => (
+  <div>
+    <label style={{ fontSize: 12, color: "#666", marginBottom: 5, display: "block" }}>{label}</label>
+    {children}
+  </div>
+);
+
+const DetailBlock = ({ title, children }) => (
+  <div style={{ background: "#111", border: "1px solid #1e1e1e", borderRadius: 10, padding: "16px 18px", marginBottom: 14 }}>
+    <div style={{ fontSize: 11, fontWeight: 700, color: RED, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 12 }}>{title}</div>
+    {children}
+  </div>
+);
+
+const SubField = ({ label, value }) => value ? (
+  <div style={{ marginBottom: 10 }}>
+    <div style={{ fontSize: 11, color: "#555", marginBottom: 3 }}>{label}</div>
+    <div style={{ fontSize: 14, color: "#bbb", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{value}</div>
+  </div>
+) : null;
+
 const s = {
   app: { fontFamily: "inherit", color: "#fff", minHeight: "100vh", background: "#0a0a0a" },
   header: { background: "#111", borderBottom: "1px solid #222", padding: "12px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 },
@@ -121,27 +142,6 @@ export default function App() {
   sessions.forEach(ss => { if (ss.disciplina) discCount[ss.disciplina] = (discCount[ss.disciplina] || 0) + 1; });
   const topDisc = Object.entries(discCount).sort((a, b) => b[1] - a[1])[0];
   const getRpeColor = (v) => v >= 8 ? RED : v >= 5 ? "#f6ad55" : "#68d391";
-
-  const Field = ({ label, children }) => (
-    <div>
-      <label style={s.label}>{label}</label>
-      {children}
-    </div>
-  );
-
-  const DetailBlock = ({ title, children }) => (
-    <div style={s.card}>
-      <div style={s.sectionTitle}>{title}</div>
-      {children}
-    </div>
-  );
-
-  const SubField = ({ label, value }) => value ? (
-    <div style={{ marginBottom: 10 }}>
-      <div style={{ fontSize: 11, color: "#555", marginBottom: 3 }}>{label}</div>
-      <div style={{ fontSize: 14, color: "#bbb", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>{value}</div>
-    </div>
-  ) : null;
 
   return (
     <div style={s.app}>

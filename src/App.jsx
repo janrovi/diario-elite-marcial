@@ -147,7 +147,7 @@ export default function App() {
     <div style={s.app}>
       <header style={s.header}>
         <div style={s.logo}>
-          <div style={s.logoIcon}>EM</div>
+          <img src="/icons/icon-192.png" style={{width:34,height:34,borderRadius:7,objectFit:"cover"}} alt="Élite Marcial" />
           <div>
             <div style={s.logoText}>Élite Marcial</div>
             <div style={s.logoSub}>Diario de Entrenamiento</div>

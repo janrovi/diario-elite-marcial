@@ -6022,14 +6022,17 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         background: darkMode ? "linear-gradient(180deg,#1a1a1a 0%,#141414 100%)" : "linear-gradient(180deg,#ffffff 0%,#f8f8f8 100%)",
         borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.08)",
         boxShadow: darkMode ? "0 1px 30px rgba(0,0,0,0.5),0 0 0 0.5px rgba(255,255,255,0.04)" : "0 1px 20px rgba(0,0,0,0.08)",
-        padding: "0 20px", height: 80, display: "flex", alignItems: "center", gap: 0, position: "sticky", top: 0, zIndex: 100
+        paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: 0,
+        paddingLeft: window.innerWidth < 600 ? 12 : 20, paddingRight: window.innerWidth < 600 ? 12 : 20,
+        minHeight: window.innerWidth < 600 ? "calc(56px + env(safe-area-inset-top, 0px))" : 80,
+        display: "flex", alignItems: "center", gap: 0, position: "sticky", top: 0, zIndex: 100
       }}>
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 11, flexShrink: 0, marginRight: 20 }}>
           <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setCoachLogoZoomed(true)}>
             <img src="/logo-512.png" alt="Élite Marcial"
               className="em-logo-img"
-              style={{ borderRadius: 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45),0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s,box-shadow 0.18s", display: "block" }}
+              style={{ width: window.innerWidth < 600 ? 36 : 62, height: window.innerWidth < 600 ? 36 : 62, borderRadius: window.innerWidth < 600 ? 9 : 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45),0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s,box-shadow 0.18s", display: "block" }}
               onError={e => { e.target.src = "/logo-192.png"; }}
               onMouseEnter={e => { e.currentTarget.style.transform="scale(1.08)"; e.currentTarget.style.boxShadow="0 0 0 2px rgba(196,26,26,0.6),0 6px 22px rgba(196,26,26,0.5)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow="0 0 0 1px rgba(196,26,26,0.45),0 4px 16px rgba(196,26,26,0.4)"; }}

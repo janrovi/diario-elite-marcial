@@ -548,6 +548,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 @media (max-width: 600px) {
+  /* ── Prevenir zoom iOS al enfocar inputs (font-size < 16px dispara el zoom) ── */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+
   /* Ocultar nav tabs y logo text en header (el bottom nav los cubre) */
   .em-header nav,
   .em-header-nav .em-nav-btn,
@@ -1555,7 +1560,7 @@ input, textarea, select {
 .em-focus-overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 200;
   background: var(--bg);
   overflow-y: auto;
   animation: em-focus-in 0.32s cubic-bezier(0.25,0.46,0.45,0.94) both;
@@ -1600,7 +1605,7 @@ input, textarea, select {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ═══════════════════════════════════════════════════════════
-   COACH APP — MOBILE  (max-width: 768px)
+   COACH APP — ESTILOS BASE + MOBILE
    ─────────────────────────────────────────────────────────── */
 
 /* Contenedor principal coach */
@@ -1615,7 +1620,11 @@ input, textarea, select {
 .em-coach-header-actions { display: flex; }
 .em-coach-header-sep { display: block; }
 
-/* Bottom nav coach: estilos base (visible siempre, oculto en desktop por min-width) */
+/* Bottom nav coach — oculto en desktop */
+@media (min-width: 901px) {
+  .em-coach-bottom-nav { display: none !important; }
+}
+
 .em-coach-bottom-nav {
   display: flex;
   position: fixed;
@@ -1685,6 +1694,17 @@ input, textarea, select {
   min-width: 280px;
 }
 
+/* Semana agenda — scroll horizontal en mobile */
+.em-coach-week-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.em-coach-week-scroll::-webkit-scrollbar { display: none; }
+.em-coach-week-grid {
+  min-width: 520px;
+}
+
 @media (max-width: 900px) {
 
   /* ── Header compacto ── */
@@ -1695,6 +1715,62 @@ input, textarea, select {
   .em-coach-header-nav   { display: none !important; }
   .em-coach-header-sep   { display: none !important; }
   .em-coach-header-diary { display: none !important; }
+
+  /* ── Main padding reducido ── */
+  .em-coach-main {
+    padding: 14px 12px 90px !important;
+  }
+
+  /* ── Sidebar + panel: full-width apilados ── */
+  .em-coach-layout {
+    gap: 12px !important;
+  }
+  .em-coach-sidebar {
+    flex: 0 0 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  /* Ocultar sidebar cuando hay atleta seleccionado */
+  .em-coach-sidebar--collapsed {
+    display: none !important;
+  }
+  .em-coach-panel {
+    flex: 0 0 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* ── Stats activity rows: flex ajustado ── */
+  .em-coach-activity-row {
+    gap: 8px !important;
+  }
+  .em-coach-activity-name {
+    width: 80px !important;
+  }
+  .em-coach-activity-ses {
+    width: 44px !important;
+    font-size: 11px !important;
+  }
+  .em-coach-activity-rpe {
+    width: 38px !important;
+    font-size: 11px !important;
+  }
+
+  /* ── Stats KPI cards: padding reducido ── */
+  .em-coach-stats-grid > div {
+    padding: 14px 14px 12px !important;
+  }
+  .em-coach-stats-grid > div > div:last-child {
+    display: none; /* ocultar sub-label para ahorrar espacio */
+  }
+
+  /* ── Agenda section header: botón compacto ── */
+  .em-coach-agenda-btn {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
 
   /* Coach diary mode: hide search btn + make Panel btn compact */
   .em-search-btn--hidden-coach { display: none !important; }
@@ -1726,6 +1802,19 @@ input, textarea, select {
 
   /* Logo simplificado en mobile */
   .em-coach-logo-sub   { display: none !important; }
+  .em-coach-logo-badge { display: none !important; }
+
+  /* Stats: saludo compacto */
+  .em-coach-stats-saludo h1 {
+    font-size: 20px !important;
+    margin-bottom: 2px !important;
+  }
+
+  /* Stats grid: 2 columnas en mobile */
+  .em-coach-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
 }
 
 /* ── COACH DIARY / ATHLETE DETAIL ANIMATIONS ───────────────────────────── */
@@ -1995,4 +2084,233 @@ input, textarea, select {
     height: 30px;
     font-size: 14px;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE OPTIMISATION v2 — GLOBAL FIXES
+   ─────────────────────────────────────────────────────────── */
+
+/* Prevenir scroll horizontal accidental */
+html, body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+/* Reducir glow decorativo en mobile — ahorra GPU */
+@media (max-width: 600px) {
+  body::after {
+    width: 100vw;
+    height: 40vh;
+    opacity: 0.6;
+  }
+  body::before {
+    background-size: 32px 32px;
+  }
+}
+
+/* ── Safe area insets (notch / Dynamic Island / home indicator) ── */
+.em-header {
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+.em-bottom-nav {
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+}
+.em-coach-bottom-nav {
+  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
+}
+
+/* ── Focus overlay: teclado virtual + safe areas ── */
+.em-focus-overlay {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
+}
+
+@media (max-width: 600px) {
+  /* Form ocupa todo el ancho sin padding lateral extra */
+  .em-focus-content {
+    padding: 16px 14px 48px !important;
+    max-width: 100% !important;
+  }
+
+  /* Botón cerrar: mínimo táctil 44px */
+  .em-focus-close {
+    width: 44px !important;
+    height: 44px !important;
+    top: max(10px, env(safe-area-inset-top)) !important;
+    right: 12px !important;
+  }
+
+  /* Scroll padding: que el teclado no tape el input activo */
+  .em-focus-overlay {
+    scroll-padding-bottom: 120px;
+  }
+  .em-focus-overlay input:focus,
+  .em-focus-overlay textarea:focus,
+  .em-focus-overlay select:focus {
+    scroll-margin-bottom: 120px;
+  }
+
+  /* Labels de formulario más legibles */
+  .em-focus-content label {
+    font-size: 13px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Inputs del formulario — altura mínima cómoda */
+  .em-focus-content input,
+  .em-focus-content textarea,
+  .em-focus-content select {
+    min-height: 46px !important;
+    font-size: 16px !important;       /* evita zoom iOS */
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Textarea más corta en mobile — no ocupa pantalla entera */
+  .em-focus-content textarea {
+    min-height: 80px !important;
+    max-height: 160px !important;
+  }
+
+  /* Stepper de pasos: barra compacta */
+  .em-focus-content [style*="gap: 5px"][style*="height: 5px"],
+  .em-focus-content [style*="gap:5px"][style*="height:5px"] {
+    gap: 4px !important;
+  }
+}
+
+/* ── Overlays y modales: contener scroll ── */
+@media (max-width: 600px) {
+  /* Cualquier overlay fullscreen */
+  [style*="position: fixed"][style*="inset: 0"],
+  [style*="position:fixed"][style*="inset:0"] {
+    overscroll-behavior: contain;
+  }
+}
+
+/* ── Tap highlight global apagado ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── date input: área táctil completa ── */
+@media (max-width: 600px) {
+  input[type="date"],
+  input[type="time"] {
+    min-height: 46px !important;
+    padding: 12px 14px !important;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+}
+
+/* ── Botones de acción rápida (RPE, intensidad): mínimo 44px ── */
+@media (max-width: 600px) {
+  /* Chips RPE / intensidad genéricos */
+  [style*="border-radius: 8px"][style*="cursor: pointer"],
+  [style*="borderRadius: 8px"][style*="cursor: pointer"] {
+    min-height: 40px;
+  }
+
+  /* Stat cards del home: sin minWidth fijo que rompe layout */
+  .em-stat-card {
+    min-width: 0 !important;
+  }
+
+  /* Tabs de métricas en StatsView: scroll horizontal */
+  .em-stat-tabs {
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px;
+  }
+  .em-stat-tabs::-webkit-scrollbar { display: none; }
+  .em-stat-tabs button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Cards métricas del home: grilla más compacta */
+  .em-home-metric-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .em-home-metric-card {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+}
+
+/* ── Sesión detail / modal scroll ── */
+@media (max-width: 600px) {
+  /* Modal de sesión dentro del overlay — scroll interno */
+  .em-session-detail-inner {
+    max-height: calc(100dvh - 80px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Header fijo del overlay no corta contenido */
+  .em-focus-overlay > *:first-child {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+  }
+}
+
+/* ── Tipografía: escala mínima en 360px ── */
+@media (max-width: 380px) {
+  .em-page-title     { font-size: 18px !important; }
+  .em-week-banner__val { font-size: 16px !important; }
+  .em-session-row    { padding: 12px 10px !important; }
+  .em-main           { padding: 10px 10px 96px !important; }
+
+  /* Bottom nav: labels en 360 — más pequeñas pero legibles */
+  .em-bottom-nav__label { font-size: 8px !important; }
+  .em-bottom-nav__icon  { font-size: 20px !important; }
+}
+
+/* ── Coach app: ajustes móvil finales ── */
+@media (max-width: 600px) {
+  .em-coach-main {
+    padding: 12px 10px 90px !important;
+  }
+  /* Stats grid coach: 2 cols bien distribuidas */
+  .em-coach-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  /* Header logo coach: sin badge */
+  .em-coach-logo-sub, .em-coach-logo-badge {
+    display: none !important;
+  }
+}
+
+/* ── Heatmap: no overflow en mobile ── */
+@media (max-width: 600px) {
+  .em-heatmap-svg {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* ── Scroll más suave en toda la app ── */
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

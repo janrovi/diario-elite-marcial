@@ -7,8 +7,26 @@ import { ExpirationPlugin } from 'workbox-expiration';
 // ── Workbox precache (injected by VitePWA) ──────────────────────────────────
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
-self.skipWaiting();
+// NO skipWaiting automático — el usuario decide cuándo actualizar
 clientsClaim();
+
+// ── Activación: avisar a todos los clientes que hay nueva versión ────────────
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    clients.matchAll({ type: 'window' }).then((windowClients) => {
+      windowClients.forEach((client) => {
+        client.postMessage({ type: 'SW_ACTIVATED' });
+      });
+    })
+  );
+});
+
+// ── Mensaje desde la app: aplicar update cuando el usuario lo confirma ───────
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
 // ── Cache Google Fonts ───────────────────────────────────────────────────────
 registerRoute(

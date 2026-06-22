@@ -113,18 +113,18 @@ function discBadge(disc) {
   const c = getDiscColor(disc);
   return { background: c, color: "#fff", borderRadius: 5, padding: "2px 9px", fontSize: 12, fontWeight: 700, whiteSpace: "nowrap" };
 }
-const STORAGE_KEY = "elite_marcial_sesiones";
-const GOAL_KEY = "elite_marcial_goal";
-const GOALS_KEY = "elite_marcial_goals";
-const DRAFT_KEY = "elite_marcial_draft";
-const BODY_KEY     = "elite_marcial_cuerpo";
-const INJURIES_KEY = "elite_marcial_injuries";
-const RANGO_KEY    = "elite_marcial_rango";
-const ALTURA_KEY   = "elite_marcial_altura";
-const PESOOBJ_KEY  = "elite_marcial_peso_obj";
+const STORAGE_KEY = uid => `elite_marcial_sesiones_${uid||"anon"}`;
+const GOAL_KEY = uid => `elite_marcial_goal_${uid||"anon"}`;
+const GOALS_KEY = uid => `elite_marcial_goals_${uid||"anon"}`;
+const DRAFT_KEY = uid => `elite_marcial_draft_${uid||"anon"}`;
+const BODY_KEY = uid => `elite_marcial_cuerpo_${uid||"anon"}`;
+const INJURIES_KEY = uid => `elite_marcial_injuries_${uid||"anon"}`;
+const RANGO_KEY = uid => `elite_marcial_rango_${uid||"anon"}`;
+const ALTURA_KEY = uid => `elite_marcial_altura_${uid||"anon"}`;
+const PESOOBJ_KEY = uid => `elite_marcial_peso_obj_${uid||"anon"}`;
 
 const EMPTY_BODY = { id: null, fecha: new Date().toISOString().slice(0,10), peso: "", notas: "" };
-const HIDRA_KEY  = "elite_marcial_hidratacion";
+const HIDRA_KEY = uid => `elite_marcial_hidratacion_${uid||"anon"}`;
 const ATH_EXT_KEY = uid => `elite_marcial_ath_ext_${uid}`;
 
 const PESO_CATEGORIAS = {
@@ -273,15 +273,15 @@ const BELT_STRIPES = {
 };
 const getBeltMaxStripes = disc => BELT_STRIPES[disc] ?? 0;
 
-function loadSessions() {
+function loadSessions(uid) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY(uid));
     return raw ? JSON.parse(raw) : [];
   } catch { return []; }
 }
 
-function saveSessions(sessions) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); } catch {}
+function saveSessions(sessions, uid) {
+  try { localStorage.setItem(STORAGE_KEY(uid), JSON.stringify(sessions)); } catch {}
 }
 
 // ── Supabase ↔ local session mapping ──────────────────────
@@ -584,8 +584,120 @@ const TRANSLATIONS = {
     saved_streak:"Racha", saved_go_list:"Ver lista", saved_view_session:"Ver sesión",
     toast_deleted:"🗑 Sesión eliminada", toast_restored:"↩️ Sesión restaurada",
     toast_undo:"Deshacer",
+    update_ready_title:"Nueva versión disponible", update_ready_body:"Actualiza para obtener las últimas mejoras", update_now:"Actualizar", update_later:"Ahora no",
     splash_title:"Diario de Entrenamiento",
     rpe_no_data:"Registra al menos 2 sesiones con RPE para ver la evolución",
+    /* ── LABELS GENERALES ── */
+    lbl_nombre:"Nombre", lbl_email:"Email", lbl_estado:"Estado", lbl_tipo:"Tipo",
+    lbl_notas_lbl:"Notas", lbl_zona:"Zona", lbl_objetivo:"Objetivo", lbl_inicio:"Inicio",
+    lbl_select:"Selecciona", lbl_add:"Añadir", lbl_no_data:"Sin datos",
+    lbl_no_sessions:"Sin sesiones", lbl_pendiente:"Pendiente", lbl_meta:"Meta",
+    lbl_competicion:"Competición", lbl_fecha_obj:"Fecha objetivo",
+    lbl_tap_close:"Toca para cerrar", lbl_historial:"Historial",
+    lbl_todas:"Todas", lbl_para:"Para", lbl_guardar:"Guardar",
+    /* ── AUTH ── */
+    auth_password:"Contraseña", auth_new_password:"Nueva contraseña",
+    auth_terms:"Términos de Uso", auth_privacy:"Política de Privacidad",
+    auth_choose_plan:"Elige tu plan", auth_plan_atleta:"Atleta",
+    auth_plan_free:"Gratis", auth_plan_coach:"Entrenador",
+    auth_plan_founder:"Fundador", auth_coach_feature:"Panel coach completo",
+    /* ── HOME/DASHBOARD ── */
+    home_no_session:"Sin sesión registrada hoy",
+    home_log_now:"Toca para registrar tu entrenamiento →",
+    home_see_all:"Ver todo →", home_hidra_card:"Hidratación",
+    home_nutri_card:"Nutrición", home_weight_card:"Peso corporal",
+    home_estado_card:"Estado físico", home_recup_card:"Recuperación hoy",
+    home_explore:"Explora las secciones", home_coach_session:"Sesión de tu coach",
+    home_today_session:"Sesión de hoy",
+    home_coach_scheduled:"Tu entrenador te ha programado",
+    home_upcoming:"Próximas", home_session_by_coach:"Programada por tu entrenador",
+    /* ── BIOMETRÍA ── */
+    bio_title:"Biometría", bio_evolucion:"Evolución", bio_historial:"Historial",
+    bio_no_weight:"Sin registros de peso aún",
+    bio_no_weight_sub:"Añade tu primer registro para ver la evolución",
+    /* ── HIDRATACIÓN ── */
+    hidra_daily_goal:"Objetivo diario", hidra_no_cut:"Sin recorte activo",
+    hidra_water_lbl:"Agua (ml)", hidra_checkins:"Check-ins de recorte",
+    hidra_last7:"Últimos 7 días",
+    /* ── NUTRICIÓN ── */
+    nutri_empty:"Sin registros de nutrición",
+    nutri_empty_sub:"Empieza añadiendo tus comidas de hoy",
+    nutri_calorias:"Calorías *", nutri_proteina:"Proteína (g)",
+    nutri_carbos:"Carbos (g)", nutri_grasa:"Grasa (g)", nutri_hoy:"Hoy",
+    nutri_last7:"Últimos 7 días",
+    /* ── RECUPERACIÓN ── */
+    recup_tipo:"Tipo de sesión", recup_zona:"Zona tratada",
+    recup_terapeuta:"Terapeuta",
+    recup_empty:"Sin sesiones registradas",
+    recup_empty_sub:"Registra tus sesiones de fisio y recuperación",
+    /* ── PERFIL / SETTINGS ── */
+    profile_edit:"Editar perfil", profile_main_disc:"Disciplina principal",
+    settings_lang:"Idioma", settings_notif:"Notificaciones push",
+    notif_enable:"Activar", notif_disable:"Desactivar", notif_blocked:"Bloqueadas", notif_blocked_hint:"Permite las notificaciones en los ajustes del navegador",
+    settings_account:"Cuenta", settings_dark:"Modo oscuro",
+    profile_sport_empty:"Pulsa Editar para añadir info deportiva",
+    /* ── COACH ── */
+    coach_title:"Panel de entrenador",
+    coach_sessions_sub:"Todas las sesiones que has programado",
+    coach_no_sessions:"Sin sesiones programadas",
+    coach_summary:"Resumen de tus sesiones programadas",
+    coach_completion:"Tasa de compleción del equipo",
+    coach_no_active:"Sin atletas activos",
+    coach_identity:"Tu identidad como coach",
+    coach_bio_lbl:"Bio corta", coach_exp_lbl:"Años de experiencia",
+    coach_disc_select:"Selecciona las que impartes como coach",
+    coach_no_athletes:"Sin atletas todavía",
+    coach_invite_pending_msg:"Esperando que acepte",
+    coach_invite_pending2:"Invitación pendiente de aceptar",
+    coach_add_athlete:"Añadir atleta",
+    coach_athlete_email:"Email del atleta",
+    coach_invite_btn:"Invitar atleta",
+    coach_select_athlete:"Selecciona un atleta para ver su detalle",
+    coach_empty_team:"Empieza a construir tu equipo",
+    coach_session_history:"Historial de sesiones",
+    coach_no_messages:"Sin mensajes aún",
+    /* ── PERIODIZACIÓN ── */
+    period_title:"Periodización", period_comp_obj:"Competición objetivo",
+    period_fase:"Fase", period_obj_bloque:"Objetivo del bloque",
+    period_meso:"Mesociclos", period_no_template:"Sin plantilla",
+    period_descanso:"Descanso",
+    /* ── ATLETA ENTRENADOR TAB ── */
+    athlete_coach_title:"Tu entrenador",
+    athlete_no_coach:"Sin entrenador asignado",
+    athlete_blocks:"Bloques de entrenamiento",
+    athlete_next_sessions:"Próximas sesiones",
+    /* ── ONBOARDING ── */
+    onb_avatar_title:"Pon cara a tu perfil",
+    onb_skip:"También puedes saltarte este paso",
+    onb_invite_title:"Invita a tu primer atleta",
+    /* ── CLUB FUNDADOR ── */
+    club_title:"Club Fundador", club_improvements:"Próximas mejoras",
+    club_suggestions:"Tus sugerencias anteriores",
+    coach_team_activity:"Actividad esta semana",
+    coach_empty_team_sub:"Añade a un atleta a tu equipo y empieza a entrenarle desde Élite Marcial",
+    auth_subtitle:"Sistema de entrenamiento marcial",
+    auth_plan_free_note:"para siempre",
+    auth_plan_atleta_desc:"Diario de entrenamiento personal completo.",
+    auth_plan_coach_desc:"Gestión completa de tu equipo.",
+    period_weeks:"Semanas", period_weeks_dur:"Semanas de duración",
+    period_timeline:"Línea de tiempo",
+    period_fin:"Fin",
+    stats_this_week_short:"Esta sem", stats_time_lbl:"Tiempo",
+    /* ── FORM ERRORS ── */
+    err_nombre:"El nombre es obligatorio",
+    err_fecha:"La fecha es obligatoria",
+    err_disciplina:"Selecciona una disciplina",
+    err_tipo:"Selecciona el tipo de sesión",
+    err_duracion:"Indica la duración",
+    /* ── FORM SAVE ── */
+    saving:"Guardando…",
+    save_success_label:"// Sesión guardada",
+    save_success_fallback:"Sesión registrada",
+    save_returning:"Volviendo a sesiones...",
+    coach_session_autofill:"Los campos se han rellenado automáticamente. Añade tu RPE y sensaciones al terminar.",
+  
+  
+  
   },
   en: {
     logo_sub:"Training Journal",
@@ -752,8 +864,105 @@ const TRANSLATIONS = {
     saved_streak:"Streak", saved_go_list:"Go to list", saved_view_session:"View session",
     toast_deleted:"🗑 Session deleted", toast_restored:"↩️ Session restored",
     toast_undo:"Undo",
+    update_ready_title:"New version available", update_ready_body:"Update to get the latest improvements", update_now:"Update now", update_later:"Not now",
     splash_title:"Training Journal",
     rpe_no_data:"Log at least 2 sessions with RPE to see the evolution",
+    lbl_nombre:"Name", lbl_email:"Email", lbl_estado:"Status", lbl_tipo:"Type",
+    lbl_notas_lbl:"Notes", lbl_zona:"Area", lbl_objetivo:"Goal", lbl_inicio:"Start",
+    lbl_select:"Select", lbl_add:"Add", lbl_no_data:"No data",
+    lbl_no_sessions:"No sessions", lbl_pendiente:"Pending", lbl_meta:"Goal",
+    lbl_competicion:"Competition", lbl_fecha_obj:"Target date",
+    lbl_tap_close:"Tap to close", lbl_historial:"History",
+    lbl_todas:"All", lbl_para:"For", lbl_guardar:"Save",
+    auth_password:"Password", auth_new_password:"New password",
+    auth_terms:"Terms of Use", auth_privacy:"Privacy Policy",
+    auth_choose_plan:"Choose your plan", auth_plan_atleta:"Athlete",
+    auth_plan_free:"Free", auth_plan_coach:"Coach",
+    auth_plan_founder:"Founder", auth_coach_feature:"Full coach panel",
+    home_no_session:"No session logged today",
+    home_log_now:"Tap to log your training →",
+    home_see_all:"See all →", home_hidra_card:"Hydration",
+    home_nutri_card:"Nutrition", home_weight_card:"Body weight",
+    home_estado_card:"Physical state", home_recup_card:"Recovery today",
+    home_explore:"Explore sections", home_coach_session:"Coach session",
+    home_today_session:"Today's session",
+    home_coach_scheduled:"Your coach has scheduled",
+    home_upcoming:"Upcoming", home_session_by_coach:"Scheduled by your coach",
+    bio_title:"Biometrics", bio_evolucion:"Evolution", bio_historial:"History",
+    bio_no_weight:"No weight records yet",
+    bio_no_weight_sub:"Add your first record to see the evolution",
+    hidra_daily_goal:"Daily goal", hidra_no_cut:"No active cut",
+    hidra_water_lbl:"Water (ml)", hidra_checkins:"Cut check-ins",
+    hidra_last7:"Last 7 days",
+    nutri_empty:"No nutrition records",
+    nutri_empty_sub:"Start adding your meals for today",
+    nutri_calorias:"Calories *", nutri_proteina:"Protein (g)",
+    nutri_carbos:"Carbs (g)", nutri_grasa:"Fat (g)", nutri_hoy:"Today",
+    nutri_last7:"Last 7 days",
+    recup_tipo:"Session type", recup_zona:"Treated area",
+    recup_terapeuta:"Therapist",
+    recup_empty:"No sessions logged",
+    recup_empty_sub:"Log your physio and recovery sessions",
+    profile_edit:"Edit profile", profile_main_disc:"Main discipline",
+    settings_lang:"Language", settings_notif:"Push notifications",
+    notif_enable:"Enable", notif_disable:"Disable", notif_blocked:"Blocked", notif_blocked_hint:"Allow notifications in your browser settings",
+    settings_account:"Account", settings_dark:"Dark mode",
+    profile_sport_empty:"Press Edit to add sports info",
+    coach_title:"Coach panel",
+    coach_sessions_sub:"All sessions you've scheduled",
+    coach_no_sessions:"No scheduled sessions",
+    coach_summary:"Summary of your scheduled sessions",
+    coach_completion:"Team completion rate",
+    coach_no_active:"No active athletes",
+    coach_identity:"Your coach identity",
+    coach_bio_lbl:"Short bio", coach_exp_lbl:"Years of experience",
+    coach_disc_select:"Select the ones you teach as coach",
+    coach_no_athletes:"No athletes yet",
+    coach_invite_pending_msg:"Waiting for acceptance",
+    coach_invite_pending2:"Invitation pending acceptance",
+    coach_add_athlete:"Add athlete",
+    coach_athlete_email:"Athlete email",
+    coach_invite_btn:"Invite athlete",
+    coach_select_athlete:"Select an athlete to view their detail",
+    coach_empty_team:"Start building your team",
+    coach_session_history:"Session history",
+    coach_no_messages:"No messages yet",
+    period_title:"Periodization", period_comp_obj:"Target competition",
+    period_fase:"Phase", period_obj_bloque:"Block goal",
+    period_meso:"Mesocycles", period_no_template:"No template",
+    period_descanso:"Rest",
+    athlete_coach_title:"Your coach",
+    athlete_no_coach:"No coach assigned",
+    athlete_blocks:"Training blocks",
+    athlete_next_sessions:"Upcoming sessions",
+    onb_avatar_title:"Add a face to your profile",
+    onb_skip:"You can also skip this step",
+    onb_invite_title:"Invite your first athlete",
+    club_title:"Founder Club", club_improvements:"Upcoming improvements",
+    club_suggestions:"Your previous suggestions",
+    coach_team_activity:"Activity this week",
+    coach_empty_team_sub:"Add an athlete to your team and start coaching them from Élite Marcial",
+    auth_subtitle:"Martial training system",
+    auth_plan_free_note:"forever",
+    auth_plan_atleta_desc:"Complete personal training journal.",
+    auth_plan_coach_desc:"Full team management.",
+    period_weeks:"Weeks", period_weeks_dur:"Duration (weeks)",
+    period_timeline:"Timeline",
+    period_fin:"End",
+    stats_this_week_short:"This wk", stats_time_lbl:"Time",
+    err_nombre:"Name is required",
+    err_fecha:"Date is required",
+    err_disciplina:"Select a discipline",
+    err_tipo:"Select the session type",
+    err_duracion:"Enter the duration",
+    saving:"Saving…",
+    save_success_label:"// Session saved",
+    save_success_fallback:"Session logged",
+    save_returning:"Returning to sessions...",
+    coach_session_autofill:"Fields have been pre-filled. Add your RPE and sensations when done.",
+  
+  
+  
   },
   ca: {
     logo_sub:"Diari d'Entrenament",
@@ -921,8 +1130,105 @@ const TRANSLATIONS = {
     saved_streak:"Ratxa", saved_go_list:"Veure llista", saved_view_session:"Veure sessió",
     toast_deleted:"🗑 Sessió eliminada", toast_restored:"↩️ Sessió restaurada",
     toast_undo:"Desfer",
+    update_ready_title:"Nova versió disponible", update_ready_body:"Actualitza per obtenir les últimes millores", update_now:"Actualitzar", update_later:"Ara no",
     splash_title:"Diari d'Entrenament",
     rpe_no_data:"Registra almenys 2 sessions amb RPE per veure l'evolució",
+    lbl_nombre:"Nom", lbl_email:"Email", lbl_estado:"Estat", lbl_tipo:"Tipus",
+    lbl_notas_lbl:"Notes", lbl_zona:"Zona", lbl_objetivo:"Objectiu", lbl_inicio:"Inici",
+    lbl_select:"Selecciona", lbl_add:"Afegir", lbl_no_data:"Sense dades",
+    lbl_no_sessions:"Sense sessions", lbl_pendiente:"Pendent", lbl_meta:"Meta",
+    lbl_competicion:"Competició", lbl_fecha_obj:"Data objectiu",
+    lbl_tap_close:"Toca per tancar", lbl_historial:"Historial",
+    lbl_todas:"Totes", lbl_para:"Per a", lbl_guardar:"Guardar",
+    auth_password:"Contrasenya", auth_new_password:"Nova contrasenya",
+    auth_terms:"Termes d'Ús", auth_privacy:"Política de Privacitat",
+    auth_choose_plan:"Tria el teu pla", auth_plan_atleta:"Atleta",
+    auth_plan_free:"Gratis", auth_plan_coach:"Entrenador",
+    auth_plan_founder:"Fundador", auth_coach_feature:"Panell coach complet",
+    home_no_session:"Sense sessió registrada avui",
+    home_log_now:"Toca per registrar el teu entrenament →",
+    home_see_all:"Veure tot →", home_hidra_card:"Hidratació",
+    home_nutri_card:"Nutrició", home_weight_card:"Pes corporal",
+    home_estado_card:"Estat físic", home_recup_card:"Recuperació avui",
+    home_explore:"Explora les seccions", home_coach_session:"Sessió del teu coach",
+    home_today_session:"Sessió d'avui",
+    home_coach_scheduled:"El teu entrenador t'ha programat",
+    home_upcoming:"Properes", home_session_by_coach:"Programada pel teu entrenador",
+    bio_title:"Biometria", bio_evolucion:"Evolució", bio_historial:"Historial",
+    bio_no_weight:"Sense registres de pes encara",
+    bio_no_weight_sub:"Afegeix el teu primer registre per veure l'evolució",
+    hidra_daily_goal:"Objectiu diari", hidra_no_cut:"Sense retall actiu",
+    hidra_water_lbl:"Aigua (ml)", hidra_checkins:"Check-ins de retall",
+    hidra_last7:"Darrers 7 dies",
+    nutri_empty:"Sense registres de nutrició",
+    nutri_empty_sub:"Comença afegint els teus àpats d'avui",
+    nutri_calorias:"Calories *", nutri_proteina:"Proteïna (g)",
+    nutri_carbos:"Carbohidrats (g)", nutri_grasa:"Greix (g)", nutri_hoy:"Avui",
+    nutri_last7:"Darrers 7 dies",
+    recup_tipo:"Tipus de sessió", recup_zona:"Zona tractada",
+    recup_terapeuta:"Terapeuta",
+    recup_empty:"Sense sessions registrades",
+    recup_empty_sub:"Registra les teves sessions de fisio i recuperació",
+    profile_edit:"Editar perfil", profile_main_disc:"Disciplina principal",
+    settings_lang:"Idioma", settings_notif:"Notificacions push",
+    notif_enable:"Activar", notif_disable:"Desactivar", notif_blocked:"Bloquejades", notif_blocked_hint:"Permet les notificacions als ajustos del navegador",
+    settings_account:"Compte", settings_dark:"Mode fosc",
+    profile_sport_empty:"Prem Editar per afegir info esportiva",
+    coach_title:"Panell d'entrenador",
+    coach_sessions_sub:"Totes les sessions que has programat",
+    coach_no_sessions:"Sense sessions programades",
+    coach_summary:"Resum de les teves sessions programades",
+    coach_completion:"Taxa de compleció de l'equip",
+    coach_no_active:"Sense atletes actius",
+    coach_identity:"La teva identitat com a coach",
+    coach_bio_lbl:"Bio curta", coach_exp_lbl:"Anys d'experiència",
+    coach_disc_select:"Selecciona les que imparteixes com a coach",
+    coach_no_athletes:"Sense atletes encara",
+    coach_invite_pending_msg:"Esperant que accepti",
+    coach_invite_pending2:"Invitació pendent d'acceptar",
+    coach_add_athlete:"Afegir atleta",
+    coach_athlete_email:"Email de l'atleta",
+    coach_invite_btn:"Convidar atleta",
+    coach_select_athlete:"Selecciona un atleta per veure el seu detall",
+    coach_empty_team:"Comença a construir el teu equip",
+    coach_session_history:"Historial de sessions",
+    coach_no_messages:"Sense missatges encara",
+    period_title:"Periodització", period_comp_obj:"Competició objectiu",
+    period_fase:"Fase", period_obj_bloque:"Objectiu del bloc",
+    period_meso:"Mesocicles", period_no_template:"Sense plantilla",
+    period_descanso:"Descans",
+    athlete_coach_title:"El teu entrenador",
+    athlete_no_coach:"Sense entrenador assignat",
+    athlete_blocks:"Blocs d'entrenament",
+    athlete_next_sessions:"Properes sessions",
+    onb_avatar_title:"Posa cara al teu perfil",
+    onb_skip:"També pots saltar-te aquest pas",
+    onb_invite_title:"Convida el teu primer atleta",
+    club_title:"Club Fundador", club_improvements:"Properes millores",
+    club_suggestions:"Els teus suggeriments anteriors",
+    coach_team_activity:"Activitat aquesta setmana",
+    coach_empty_team_sub:"Afegeix un atleta al teu equip i comença a entrenar-lo des d'Élite Marcial",
+    auth_subtitle:"Sistema d'entrenament marcial",
+    auth_plan_free_note:"per sempre",
+    auth_plan_atleta_desc:"Diari d'entrenament personal complet.",
+    auth_plan_coach_desc:"Gestió completa del teu equip.",
+    period_weeks:"Setmanes", period_weeks_dur:"Durada (setmanes)",
+    period_timeline:"Línia de temps",
+    period_fin:"Fi",
+    stats_this_week_short:"Aquesta set", stats_time_lbl:"Temps",
+    err_nombre:"El nom és obligatori",
+    err_fecha:"La data és obligatòria",
+    err_disciplina:"Selecciona una disciplina",
+    err_tipo:"Selecciona el tipus de sessió",
+    err_duracion:"Indica la durada",
+    saving:"Guardant…",
+    save_success_label:"// Sessió guardada",
+    save_success_fallback:"Sessió registrada",
+    save_returning:"Tornant a sessions...",
+    coach_session_autofill:"Els camps s'han emplenat automàticament. Afegeix el teu RPE i sensacions en acabar.",
+  
+  
+  
   },
 };
 function t(key, lang) {
@@ -998,7 +1304,7 @@ function YearHeatmap({ sessions, lang = "es", onOpenSession }) {
   const legendX = W - COLORS.length * (CELL + GAP) - 60;
 
   return (
-    <div style={{ overflowX: showFull ? "auto" : "visible", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}>
+    <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}>
       {/* Stats row */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12, flexWrap:"wrap" }}>
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
@@ -2150,7 +2456,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
           value={filterDisc}
           onChange={e => setFilterDisc(e.target.value)}
         >
-          <option value="">Todas</option>
+          <option value="">{t("lbl_todas",lang)}</option>
           {discs.map(d => <option key={d} value={d}>{discLabel(d, lang)}</option>)}
         </select>
       </div>
@@ -2168,7 +2474,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
           {rankedFiltered.length === 0 ? (
             <div style={{ textAlign:"center", padding:"50px 20px" }}>
               <div style={{ fontSize:40, marginBottom:8 }}>🔍</div>
-              <div style={{ fontSize:15, fontWeight:600, color:"var(--text-faint)" }}>Sin resultados</div>
+              <div style={{ fontSize:15, fontWeight:600, color:"var(--text-faint)" }}>{t("empty_no_results",lang)}</div>
             </div>
           ) : rankedFiltered.map(([name, info], idx) => {
             const barPct = Math.round(info.count / maxCount * 100);
@@ -2213,7 +2519,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
           {entries.length === 0 ? (
             <div style={{ textAlign:"center", padding:"60px 20px" }}>
               <div style={{ fontSize:40, marginBottom:8 }}>🔍</div>
-              <div style={{ fontSize:15, fontWeight:600, color:"var(--text-faint)", marginBottom:12 }}>Sin resultados</div>
+              <div style={{ fontSize:15, fontWeight:600, color:"var(--text-faint)", marginBottom:12 }}>{t("empty_no_results",lang)}</div>
               <button style={{ background:"transparent", color:RED, border:`1px solid ${RED}40`, borderRadius:8, padding:"7px 16px", fontSize:13, cursor:"pointer" }}
                 onClick={() => { setSearch(""); setFilterDisc(""); }}>
                 {t("tec_clear_filters", lang)}
@@ -2481,13 +2787,13 @@ function CalendarView({ sessions, onOpenDetail, lang = "es" }) {
 }
 
 // ── Notas Rápidas View ────────────────────────────────────
-const NOTAS_KEY = "elite_marcial_notas_rapidas";
+const NOTAS_KEY = uid => `elite_marcial_notas_rapidas_${uid||"anon"}`;
 
 function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }) {
   const RED = "#C41A1A", BLUE = "#3b82f6", GREEN = "#10b981", GOLD = "#f59e0b", PURPLE = "#8b5cf6";
   const today = new Date().toISOString().slice(0,10);
 
-  const hidraEntries = (() => { try { return JSON.parse(localStorage.getItem(HIDRA_KEY)) || []; } catch { return []; } })();
+  const hidraEntries = (() => { try { return JSON.parse(localStorage.getItem(HIDRA_KEY(user?.id))) || []; } catch { return []; } })();
   const nutriEntries = (() => { try { return JSON.parse(localStorage.getItem("em_nutricion")) || []; } catch { return []; } })();
   const recupEntries = (() => { try { return JSON.parse(localStorage.getItem("em_recuperacion")) || []; } catch { return []; } })();
   const nutriGoal    = (() => { try { return JSON.parse(localStorage.getItem("em_nutri_goal")) || { calorias:2000 }; } catch { return { calorias:2000 }; } })();
@@ -2536,7 +2842,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     <div style={{ paddingBottom:40, maxWidth:760, margin:"0 auto" }}>
 
       {/* ── HERO ── */}
-      <div style={{ position:"relative", marginBottom:20, overflow:"hidden", borderRadius:24, background:`linear-gradient(135deg,${RED}20 0%,${RED}08 40%,transparent 70%)`, border:`1px solid ${RED}20`, padding:"28px 28px 24px" }}>
+      <div style={{ position:"relative", marginBottom:20, overflow:"hidden", borderRadius:24, background:`linear-gradient(135deg,${RED}20 0%,${RED}08 40%,transparent 70%)`, border:`1px solid ${RED}20`, padding:"20px 16px 18px" }}>
         <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(${RED}06 1px,transparent 1px),linear-gradient(90deg,${RED}06 1px,transparent 1px)`, backgroundSize:"28px 28px", pointerEvents:"none" }} />
         <div style={{ position:"absolute", top:-40, left:-20, width:220, height:220, background:`radial-gradient(circle,${RED}20 0%,transparent 65%)`, pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-60, right:-30, width:180, height:180, background:`radial-gradient(circle,${RED}10 0%,transparent 65%)`, pointerEvents:"none" }} />
@@ -2553,7 +2859,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             <div style={{ background:streak>=7?`${GOLD}18`:"rgba(255,255,255,0.04)", border:`2px solid ${streak>=7?GOLD+"50":"rgba(255,255,255,0.08)"}`, borderRadius:18, padding:"14px 18px", textAlign:"center", flexShrink:0, minWidth:70 }}>
               <div style={{ fontSize:28, lineHeight:1 }}>{streak>=7?"🔥":"⚡"}</div>
               <div style={{ fontSize:26, fontWeight:900, color:streak>=7?GOLD:"var(--text)", lineHeight:1, marginTop:4 }}>{streak}</div>
-              <div style={{ fontSize:8, color:streak>=7?GOLD:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800, marginTop:2 }}>racha</div>
+              <div style={{ fontSize:10, color:streak>=7?GOLD:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800, marginTop:2 }}>racha</div>
             </div>
           </div>
         </div>
@@ -2571,7 +2877,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
                 <span style={{ fontSize:22, fontWeight:900, color:s.color, lineHeight:1 }}>{s.val}</span>
                 {s.unit && <span style={{ fontSize:9, color:"var(--text-faint)", fontWeight:600 }}>{s.unit}</span>}
               </div>
-              <div style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, fontWeight:700, marginTop:3 }}>{s.label}</div>
+              <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5, fontWeight:700, marginTop:3 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -2610,8 +2916,8 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             onMouseLeave={e => { e.currentTarget.style.background=`${RED}06`; e.currentTarget.style.borderColor=`${RED}30`; }}>
             <div style={{ width:52, height:52, borderRadius:14, background:`${RED}15`, border:`1.5px solid ${RED}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0 }}>🥋</div>
             <div style={{ flex:1 }}>
-              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>Sin sesión registrada hoy</div>
-              <div style={{ fontSize:12, color:RED, fontWeight:700 }}>Toca para registrar tu entrenamiento →</div>
+              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("home_no_session",lang)}</div>
+              <div style={{ fontSize:12, color:RED, fontWeight:700 }}>{t("home_log_now",lang)}</div>
             </div>
             <div style={{ fontSize:28, color:`${RED}40`, flexShrink:0 }}>+</div>
           </div>
@@ -2623,7 +2929,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
           <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// Biometría</div>
           <div style={{ flex:1, height:1, background:"var(--border)" }} />
-          <span onClick={() => onNavigate("cuerpo")} style={{ fontSize:9, color:RED, fontWeight:800, cursor:"pointer", letterSpacing:0.5 }}>Ver todo →</span>
+          <span onClick={() => onNavigate("cuerpo")} style={{ fontSize:9, color:RED, fontWeight:800, cursor:"pointer", letterSpacing:0.5 }}>{t("home_see_all",lang)}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
 
@@ -2641,7 +2947,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               <div style={{ height:3, background:"rgba(255,255,255,0.06)", borderRadius:2, margin:"10px 0 6px", overflow:"hidden" }}>
                 <div style={{ width:`${agua_pct}%`, height:"100%", background:`linear-gradient(90deg,${BLUE}88,${BLUE})`, borderRadius:2, transition:"width 0.8s" }}/>
               </div>
-              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>Hidratación</div>
+              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>{t("home_hidra_card",lang)}</div>
             </div>
           </div>
 
@@ -2659,7 +2965,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               <div style={{ height:3, background:"rgba(255,255,255,0.06)", borderRadius:2, margin:"10px 0 6px", overflow:"hidden" }}>
                 <div style={{ width:`${calo_pct}%`, height:"100%", background:`linear-gradient(90deg,${GREEN}88,${GREEN})`, borderRadius:2, transition:"width 0.8s" }}/>
               </div>
-              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>Nutrición</div>
+              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>{t("home_nutri_card",lang)}</div>
             </div>
           </div>
 
@@ -2675,7 +2981,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               {latestPeso ? <>{latestPeso.peso}<span style={{ fontSize:11, fontWeight:500, marginLeft:3, color:"var(--text-muted)" }}>kg</span></> : <span style={{ color:"var(--text-faint)", fontSize:18 }}>—</span>}
             </div>
             <div style={{ height:3, background:"transparent", margin:"10px 0 6px" }} />
-            <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>Peso corporal</div>
+            <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>{t("home_weight_card",lang)}</div>
           </div>
 
           {/* Estado físico */}
@@ -2690,7 +2996,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               {lesActivas > 0 ? lesActivas : "OK"}
             </div>
             <div style={{ height:3, background:"transparent", margin:"10px 0 6px" }} />
-            <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>Estado físico</div>
+            <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, fontWeight:800 }}>{t("home_estado_card",lang)}</div>
           </div>
         </div>
       </div>
@@ -2700,7 +3006,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         <div style={{ background:`${PURPLE}08`, border:`1px solid ${PURPLE}25`, borderLeft:`4px solid ${PURPLE}`, borderRadius:14, padding:"14px 18px", marginBottom:18, display:"flex", alignItems:"center", gap:12 }}>
           <span style={{ fontSize:24 }}>🧘</span>
           <div>
-            <div style={{ fontSize:9, fontWeight:900, color:PURPLE, textTransform:"uppercase", letterSpacing:1.5, marginBottom:3 }}>Recuperación hoy</div>
+            <div style={{ fontSize:9, fontWeight:900, color:PURPLE, textTransform:"uppercase", letterSpacing:1.5, marginBottom:3 }}>{t("home_recup_card",lang)}</div>
             <div style={{ fontSize:13, color:"var(--text)", fontWeight:600 }}>{recupHoy.map(r => ({fisio:"Fisioterapia",masaje:"Masaje",estira:"Estiramiento",hielo:"Hielo/Cryo"}[r.tipo]||r.tipo)).join(" · ")}</div>
           </div>
         </div>
@@ -2742,10 +3048,10 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
           {[
-            { icon:"🥋", label:"Nueva sesión",    sub:"Registrar entrenamiento", color:RED,    dest:"form" },
-            { icon:"⚖️", label:"Registrar peso",  sub:"Actualizar biometría",    color:GOLD,   dest:"cuerpo" },
-            { icon:"💧", label:"+ Hidratación",   sub:"Añadir ingesta de agua",  color:BLUE,   dest:"cuerpo" },
-            { icon:"🧘", label:"+ Recuperación",  sub:"Fisio / masaje / estira", color:PURPLE, dest:"cuerpo" },
+            { icon:"🥋", label:"Nueva sesión",    sub:"Registrar entreno", color:RED,    dest:"form" },
+            { icon:"⚖️", label:"Registrar peso",  sub:"Actualizar bio",    color:GOLD,   dest:"cuerpo" },
+            { icon:"💧", label:"+ Hidratación",   sub:"Añadir agua",       color:BLUE,   dest:"cuerpo" },
+            { icon:"🧘", label:"+ Recuperación",  sub:"Fisio / masaje",    color:PURPLE, dest:"cuerpo" },
           ].map(a => (
             <button key={a.label} onClick={() => onNavigate(a.dest)}
               style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 16px", borderRadius:16, border:`1px solid ${a.color}18`, background:`${a.color}06`, color:"var(--text)", cursor:"pointer", transition:"all 0.18s", textAlign:"left", width:"100%" }}
@@ -2765,8 +3071,8 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
 }
 
 
-function NotasView({ lang = "es" }) {
-  const [notas, setNotas] = useState(() => { try { return JSON.parse(localStorage.getItem(NOTAS_KEY)) || []; } catch { return []; } });
+function NotasView({ lang = "es", userId = "anon" }) {
+  const [notas, setNotas] = useState(() => { try { return JSON.parse(localStorage.getItem(NOTAS_KEY(userId))) || []; } catch { return []; } });
   const [texto, setTexto] = useState("");
   const [tag, setTag] = useState("general");
   const [filterTag, setFilterTag] = useState("");
@@ -2774,7 +3080,7 @@ function NotasView({ lang = "es" }) {
   const [expandCompose, setExpandCompose] = useState(false);
   const textareaRef = useRef(null);
 
-  useEffect(() => { try { localStorage.setItem(NOTAS_KEY, JSON.stringify(notas)); } catch {} }, [notas]);
+  useEffect(() => { try { localStorage.setItem(NOTAS_KEY(userId), JSON.stringify(notas)); } catch {} }, [notas]);
 
   const RED = "#C41A1A";
   const TAGS = [
@@ -2876,7 +3182,7 @@ function NotasView({ lang = "es" }) {
               <span style={{ fontSize:11, color:"var(--text-faint)" }}>⌘+Enter para guardar</span>
               <div style={{ display:"flex", gap:8 }}>
                 <button style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, color:"var(--text-faint)", padding:"8px 14px", fontSize:13, cursor:"pointer" }}
-                  onClick={() => { setExpandCompose(false); setTexto(""); }}>Cancelar</button>
+                  onClick={() => { setExpandCompose(false); setTexto(""); }}>{t("btn_cancel",lang)}</button>
                 <button style={{ background:RED, color:"#fff", border:"none", borderRadius:8, padding:"8px 18px", fontSize:13, fontWeight:700, cursor:"pointer", boxShadow:`0 3px 12px ${RED}40`, opacity:texto.trim()?1:0.5 }}
                   onClick={add}>{t("notas_add", lang)}</button>
               </div>
@@ -2916,7 +3222,7 @@ function NotasView({ lang = "es" }) {
           <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
             <button
               style={{ background:!filterTag?RED+"22":"var(--bg-elevated)", border:`1px solid ${!filterTag?RED:"var(--border)"}`, borderRadius:8, color:!filterTag?RED:"var(--text-faint)", padding:"5px 12px", fontSize:12, fontWeight:!filterTag?700:500, cursor:"pointer", transition:"all 0.15s" }}
-              onClick={()=>setFilterTag("")}>Todas ({notas.length})</button>
+              onClick={()=>setFilterTag("")}>{t("lbl_todas",lang)} ({notas.length})</button>
             {Object.entries(tagCounts).sort((a,b)=>b[1]-a[1]).map(([tv, cnt]) => (
               <button key={tv}
                 style={{ background:filterTag===tv?tagColor(tv)+"22":"var(--bg-elevated)", border:`1px solid ${filterTag===tv?tagColor(tv):"var(--border)"}`, borderRadius:8, color:filterTag===tv?tagColor(tv):"var(--text-faint)", padding:"5px 12px", fontSize:12, fontWeight:filterTag===tv?700:500, cursor:"pointer", transition:"all 0.15s" }}
@@ -2971,7 +3277,7 @@ function NotasView({ lang = "es" }) {
 }
 
 // ── Cuerpo View ───────────────────────────────────────────
-function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "es" }) {
+function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "es", userId = "anon" }) {
   const RED = "#C41A1A";
   const BLUE = "#3b82f6";
   const GOLD = "#f59e0b";
@@ -2981,10 +3287,10 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   // ── Peso ──
   const [form, setForm] = useState({ ...EMPTY_BODY, fecha: new Date().toISOString().slice(0,10) });
   const [showForm, setShowForm] = useState(false);
-  const [altura, setAltura] = useState(() => { try { return localStorage.getItem(ALTURA_KEY) || ""; } catch { return ""; } });
+  const [altura, setAltura] = useState(() => { try { return localStorage.getItem(ALTURA_KEY(userId)) || ""; } catch { return ""; } });
   const [alturaTemp, setAlturaTemp] = useState("");
   const [editAltura, setEditAltura] = useState(false);
-  const [pesoObj, setPesoObj] = useState(() => { try { return JSON.parse(localStorage.getItem(PESOOBJ_KEY)) || { peso:"", fecha:"" }; } catch { return { peso:"", fecha:"" }; } });
+  const [pesoObj, setPesoObj] = useState(() => { try { return JSON.parse(localStorage.getItem(PESOOBJ_KEY(userId))) || { peso:"", fecha:"" }; } catch { return { peso:"", fecha:"" }; } });
   const [objTemp, setObjTemp] = useState({ peso:"", fecha:"" });
   const [editObj, setEditObj] = useState(false);
   const [chartPeriod, setChartPeriod] = useState("3M");
@@ -2994,7 +3300,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
   // ── Hidratación ──
   const todayH = new Date().toISOString().slice(0,10);
-  const [hidraEntries, setHidraEntries] = useState(() => { try { return JSON.parse(localStorage.getItem(HIDRA_KEY)) || []; } catch { return []; } });
+  const [hidraEntries, setHidraEntries] = useState(() => { try { return JSON.parse(localStorage.getItem(HIDRA_KEY(userId))) || []; } catch { return []; } });
   const [showHidraForm, setShowHidraForm] = useState(false);
   const [hidraTab, setHidraTab] = useState("hoy");
   const AGUA_RECOMENDADA = 2500;
@@ -3003,8 +3309,8 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const setHF = (k, v) => setHidraForm(f => ({ ...f, [k]: v }));
 
   // ── Nutrición ──
-  const NUTRI_KEY = "em_nutricion";
-  const NUTRI_GOAL_KEY = "em_nutri_goal";
+  const NUTRI_KEY = `em_nutricion_${userId}`;
+  const NUTRI_GOAL_KEY = `em_nutri_goal_${userId}`;
   const [nutriGoal, setNutriGoal] = useState(() => { try { return JSON.parse(localStorage.getItem(NUTRI_GOAL_KEY)) || { calorias:2000, proteina:150, carbos:200, grasa:65 }; } catch { return { calorias:2000, proteina:150, carbos:200, grasa:65 }; } });
   const [nutriEntries, setNutriEntries] = useState(() => { try { return JSON.parse(localStorage.getItem(NUTRI_KEY)) || []; } catch { return []; } });
   const [nutriForm, setNutriForm] = useState({ nombre:"", calorias:"", proteina:"", carbos:"", grasa:"", fecha: todayH });
@@ -3039,7 +3345,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const [bioTab, setBioTab] = useState("peso");
 
   // ── Recuperación ──
-  const RECUP_KEY = "em_recuperacion";
+  const RECUP_KEY = `em_recuperacion_${userId}`;
   const [recupEntries, setRecupEntries] = useState(() => { try { return JSON.parse(localStorage.getItem("em_recuperacion")) || []; } catch { return []; } });
   const [showRecupForm, setShowRecupForm] = useState(false);
   const [recupForm, setRecupForm] = useState({ tipo:"fisio", fecha: new Date().toISOString().slice(0,10), zona:"", terapia:"", duracion:"", terapeuta:"", notas:"" });
@@ -3057,7 +3363,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     return diff <= 7;
   });
 
-  const persistHidra = (arr) => { setHidraEntries(arr); try { localStorage.setItem(HIDRA_KEY, JSON.stringify(arr)); } catch {} };
+  const persistHidra = (arr) => { setHidraEntries(arr); try { localStorage.setItem(HIDRA_KEY(userId), JSON.stringify(arr)); } catch {} };
   const quickAdd = (ml) => {
     const existing = hidraEntries.find(e => e.fecha === todayH);
     if (existing) persistHidra(hidraEntries.map(e => e.id === existing.id ? { ...e, agua_ml: e.agua_ml + ml } : e));
@@ -3097,8 +3403,8 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
   const [injForm, setInjForm] = useState({ zona:"", tipo:"", fecha:new Date().toISOString().slice(0,10), estado:"activa", notas:"" });
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  useEffect(() => { try { localStorage.setItem(ALTURA_KEY, altura); } catch {} }, [altura]);
-  useEffect(() => { try { localStorage.setItem(PESOOBJ_KEY, JSON.stringify(pesoObj)); } catch {} }, [pesoObj]);
+  useEffect(() => { try { localStorage.setItem(ALTURA_KEY(userId), altura); } catch {} }, [altura]);
+  useEffect(() => { try { localStorage.setItem(PESOOBJ_KEY(userId), JSON.stringify(pesoObj)); } catch {} }, [pesoObj]);
   useEffect(() => { try { localStorage.setItem(NUTRI_GOAL_KEY, JSON.stringify(nutriGoal)); } catch {} }, [nutriGoal]);
 
   const save = () => {
@@ -3117,8 +3423,37 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const injStatusLabel = st => t(st === "activa" ? "inj_activa" : st === "recuperando" ? "inj_recuperando" : "inj_curada", lang);
   const cycleInjStatus = id => setInjuries(arr => arr.map(inj => inj.id !== id ? inj : { ...inj, estado: inj.estado === "activa" ? "recuperando" : inj.estado === "recuperando" ? "curada" : "activa" }));
   const daysSince = fecha => Math.floor((new Date(new Date().toISOString().slice(0,10)) - new Date(fecha + "T12:00:00")) / 86400000);
-  const INJ_ZONES = ["Rodilla","Hombro","Espalda","Muñeca","Tobillo","Cuello","Codo","Cadera"];
-  const INJ_TYPES = ["Esguince","Contusion","Distension","Tendinitis","Sobrecarga"];
+  const INJ_ZONES = [
+    "Rodilla derecha","Rodilla izquierda",
+    "Hombro derecho","Hombro izquierdo",
+    "Codo derecho","Codo izquierdo",
+    "Muñeca derecha","Muñeca izquierda",
+    "Mano derecha","Mano izquierda",
+    "Dedo mano der.","Dedo mano izq.",
+    "Tobillo derecho","Tobillo izquierdo",
+    "Pie derecho","Pie izquierdo",
+    "Dedo pie der.","Dedo pie izq.",
+    "Espalda lumbar","Espalda dorsal","Espalda cervical",
+    "Cuello","Cadera derecha","Cadera izquierda",
+    "Ingle derecha","Ingle izquierda",
+    "Cuádriceps der.","Cuádriceps izq.",
+    "Isquiotibial der.","Isquiotibial izq.",
+    "Gemelo derecho","Gemelo izquierdo",
+    "Costillas der.","Costillas izq.",
+    "Nariz","Oído derecho","Oído izquierdo",
+    "Frente / cuero cab.","Otro",
+  ];
+  const INJ_TYPES = [
+    "Esguince","Distensión muscular","Rotura muscular parcial","Rotura muscular total",
+    "Contusión","Hematoma","Laceración / corte",
+    "Tendinitis","Tendinosis","Bursitis",
+    "Luxación","Subluxación",
+    "Fractura","Fisura ósea",
+    "Hernia discal","Contractura","Sobrecarga muscular",
+    "Quemadura tatami / fricción","Otohematoma (oreja de coliflor)",
+    "Rotura de ligamento","Lesión menisco","Lesión manguito rotador",
+    "Otro",
+  ];
 
   const sorted = [...entries].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   const chronological = [...entries].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
@@ -3135,7 +3470,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const aguaHoy = hidraToday?.agua_ml || 0;
   const caloHoy = Math.round(nutriTotals.calorias);
 
-  const inputSt = { width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" };
+  const inputSt = { width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:16, outline:"none", boxSizing:"border-box" };
 
   const PERIODS = { "1M":30, "3M":90, "6M":180, "1Y":365 };
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - PERIODS[chartPeriod]);
@@ -3152,7 +3487,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     <div className="em-main">
       <div style={{ marginBottom:20 }}>
         <div style={{ fontSize:11, fontWeight:800, color:RED, letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// Sistema corporal</div>
-        <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>Biometría</h1>
+        <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>{t("bio_title",lang)}</h1>
       </div>
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:6, marginBottom:20 }}>
@@ -3161,7 +3496,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           { key:"hidra",    label:"AGUA",         val: aguaHoy ? `${aguaHoy} ml` : "—",      icon:"💧", color: BLUE,    onClick: () => setBioTab("hidra") },
           { key:"nutricion",label:"CALORÍAS",     val: caloHoy ? `${caloHoy} kcal` : "—",   icon:"🥗", color: GREEN,   onClick: () => setBioTab("nutricion") },
           { key:"lesiones", label:"LESIONES",     val: lesionesActivas ? `${lesionesActivas} activa${lesionesActivas>1?"s":""}` : "OK", icon:"🩹", color: lesionesActivas ? "#ef4444" : GREEN, onClick: () => setBioTab("lesiones") },
-          { key:"recup",    label:"RECUPERACIÓN", val: recupThisWeek.length ? `${recupThisWeek.length} esta sem.` : "—", icon:"🧘", color: PURPLE, onClick: () => setBioTab("recup") },
+          { key:"recup",    label:"RECUPERACIÓN", val: recupThisWeek.length ? `${recupThisWeek.length}/sem` : "—", icon:"🧘", color: PURPLE, onClick: () => setBioTab("recup") },
         ].map(kpi => {
           const isActive = bioTab === kpi.key;
           return (
@@ -3172,7 +3507,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               onMouseLeave={e => { if (!isActive) { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.background = "var(--bg-card)"; }}}>
               {isActive && <div style={{ position:"absolute", inset:0, background:`radial-gradient(ellipse at top, ${kpi.color}12, transparent 70%)`, pointerEvents:"none" }} />}
               <div style={{ fontSize:16, marginBottom:3, filter: isActive ? `drop-shadow(0 0 6px ${kpi.color}80)` : "none" }}>{kpi.icon}</div>
-              <div style={{ fontSize:12, fontWeight:900, color: kpi.val === "OK" ? GREEN : kpi.color, lineHeight:1.1, letterSpacing:-0.3 }}>{kpi.val}</div>
+              <div style={{ fontSize:12, fontWeight:900, color: kpi.val === "OK" ? GREEN : kpi.color, lineHeight:1.1, letterSpacing:-0.3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", width:"100%" }}>{kpi.val}</div>
               <div style={{ fontSize:7.5, color:"var(--text-faint)", marginTop:3, letterSpacing:1, fontWeight:700 }}>{kpi.label}</div>
             </div>
           );
@@ -3196,12 +3531,12 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                   <input type="number" step="0.1" value={form.peso} onChange={e => setF("peso", e.target.value)} placeholder="75.5" style={inputSt} />
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_fecha",lang)}</label>
                   <input type="date" value={form.fecha} onChange={e => setF("fecha", e.target.value)} style={inputSt} />
                 </div>
               </div>
               <div style={{ marginBottom:10 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>Notas</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_notas_lbl",lang)}</label>
                 <input value={form.notas||""} onChange={e => setF("notas", e.target.value)} placeholder="Opcional" style={inputSt} />
               </div>
               <button onClick={save} style={{ width:"100%", padding:11, borderRadius:10, border:"none", background:`linear-gradient(135deg,${RED},#8B0000)`, color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer" }}>
@@ -3228,7 +3563,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:16 }}>
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:14 }}>
-              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Altura</div>
+              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("cuerpo_height",lang)}</div>
               {editAltura ? (
                 <div style={{ display:"flex", gap:6 }}>
                   <input type="number" value={alturaTemp} onChange={e => setAlturaTemp(e.target.value)} placeholder="175" style={{ ...inputSt, flex:1 }} />
@@ -3237,12 +3572,12 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               ) : (
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <span style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>{altura ? `${altura} cm` : "—"}</span>
-                  <button onClick={() => { setAlturaTemp(altura); setEditAltura(true); }} style={{ fontSize:11, padding:"4px 8px", borderRadius:6, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", cursor:"pointer" }}>Editar</button>
+                  <button onClick={() => { setAlturaTemp(altura); setEditAltura(true); }} style={{ fontSize:11, padding:"4px 8px", borderRadius:6, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", cursor:"pointer" }}>{t("cuerpo_edit",lang)}</button>
                 </div>
               )}
             </div>
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:14 }}>
-              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Objetivo</div>
+              <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("lbl_objetivo",lang)}</div>
               {editObj ? (
                 <div>
                   <input type="number" step="0.1" value={objTemp.peso} onChange={e => setObjTemp(o=>({...o,peso:e.target.value}))} placeholder="70" style={{ ...inputSt, marginBottom:6 }} />
@@ -3254,7 +3589,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               ) : (
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <span style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>{pesoObj.peso ? `${pesoObj.peso} kg` : "—"}</span>
-                  <button onClick={() => { setObjTemp(pesoObj); setEditObj(true); }} style={{ fontSize:11, padding:"4px 8px", borderRadius:6, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", cursor:"pointer" }}>Editar</button>
+                  <button onClick={() => { setObjTemp(pesoObj); setEditObj(true); }} style={{ fontSize:11, padding:"4px 8px", borderRadius:6, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", cursor:"pointer" }}>{t("cuerpo_edit",lang)}</button>
                 </div>
               )}
             </div>
@@ -3263,7 +3598,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {filtered.length >= 2 && (
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:16, marginBottom:16 }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-                <span style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1 }}>Evolucion</span>
+                <span style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1 }}>{t("bio_evolucion",lang)}</span>
                 <div style={{ display:"flex", gap:4 }}>
                   {Object.keys(PERIODS).map(p => (
                     <button key={p} onClick={() => setChartPeriod(p)}
@@ -3312,7 +3647,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
           {sorted.length > 0 && (
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:14 }}>
-              <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:10 }}>Historial</div>
+              <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:10 }}>{t("lbl_historial",lang)}</div>
               {sorted.slice(0,10).map((e,i) => (
                 <div key={e.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"8px 0", borderBottom: i<sorted.slice(0,10).length-1?"1px solid var(--border)":"none" }}>
                   <div>
@@ -3331,8 +3666,8 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {entries.length === 0 && (
             <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)" }}>
               <div style={{ fontSize:36, marginBottom:12 }}>⚖️</div>
-              <div style={{ fontSize:14, fontWeight:600 }}>Sin registros de peso aun</div>
-              <div style={{ fontSize:12, marginTop:6 }}>Añade tu primer registro para ver la evolucion</div>
+              <div style={{ fontSize:14, fontWeight:600 }}>{t("bio_no_weight",lang)}</div>
+              <div style={{ fontSize:12, marginTop:6 }}>{t("bio_no_weight_sub",lang)}</div>
             </div>
           )}
         </div>
@@ -3393,16 +3728,16 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 <div style={{ background:"var(--bg-card)", border:`1px solid ${BLUE}30`, borderRadius:14, padding:16, marginBottom:12 }}>
                   <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:10 }}>
                     <div>
-                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>Agua (ml)</label>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>{t("hidra_water_lbl",lang)}</label>
                       <input type="number" value={hidraForm.agua_ml} onChange={e=>setHF("agua_ml",parseInt(e.target.value)||0)} style={inputSt}/>
                     </div>
                     <div>
-                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_fecha",lang)}</label>
                       <input type="date" value={hidraForm.fecha} onChange={e=>setHF("fecha",e.target.value)} style={inputSt}/>
                     </div>
                   </div>
                   <div style={{ marginBottom:10 }}>
-                    <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>Estado</label>
+                    <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:5, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_estado",lang)}</label>
                     <div style={{ display:"flex", gap:6 }}>
                       {[{key:"normal",label:"Normal",icon:"💧",color:BLUE},{key:"deshidratacion",label:"Deshidratación",icon:"⚠️",color:"#ef4444"},{key:"recorte",label:"Recorte",icon:"⚖️",color:GOLD}].map(s=>(
                         <button key={s.key} type="button" onClick={()=>setHF("estado",s.key)}
@@ -3438,18 +3773,18 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 <div style={{ background:`${GOLD}08`, border:`1px solid ${GOLD}40`, borderRadius:16, padding:16, marginBottom:12 }}>
                   <div style={{ fontSize:11, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>⚖️ Recorte activo</div>
                   {hidraRecorte.peso_objetivo && <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
-                    <span style={{ fontSize:12, color:"var(--text-faint)" }}>Objetivo</span>
+                    <span style={{ fontSize:12, color:"var(--text-faint)" }}>{t("lbl_objetivo",lang)}</span>
                     <span style={{ fontWeight:800, color:GOLD }}>{hidraRecorte.peso_objetivo} kg</span>
                   </div>}
                   {hidraRecorte.fecha_comp && <div style={{ display:"flex", justifyContent:"space-between", marginBottom:12 }}>
-                    <span style={{ fontSize:12, color:"var(--text-faint)" }}>Competicion</span>
+                    <span style={{ fontSize:12, color:"var(--text-faint)" }}>{t("lbl_competicion",lang)}</span>
                     <span style={{ fontWeight:700, color:"var(--text)" }}>{hidraRecorte.fecha_comp}</span>
                   </div>}
                 </div>
               ) : (
                 <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", marginBottom:12 }}>
                   <div style={{ fontSize:32, marginBottom:8 }}>⚖️</div>
-                  <div style={{ fontSize:13 }}>Sin recorte activo</div>
+                  <div style={{ fontSize:13 }}>{t("hidra_no_cut",lang)}</div>
                 </div>
               )}
               <button onClick={() => { setShowHidraForm(true); setHF("estado","recorte"); setHidraTab("hoy"); }}
@@ -3457,7 +3792,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 + Iniciar protocolo de recorte
               </button>
               <div style={{ marginTop:16 }}>
-                <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Check-ins de recorte</div>
+                <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("hidra_checkins",lang)}</div>
                 {hidraEntries.filter(e=>e.estado==="recorte"&&e.peso_actual).sort((a,b)=>b.id-a.id).slice(0,5).map(e=>(
                   <div key={e.id} style={{ display:"flex", justifyContent:"space-between", padding:"8px 12px", background:"var(--bg-card)", borderRadius:10, marginBottom:6, border:"1px solid var(--border)" }}>
                     <span style={{ fontSize:13, fontWeight:800, color:GOLD }}>{e.peso_actual} kg</span>
@@ -3482,7 +3817,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 ))}
               </div>
               <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:14 }}>
-                <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Ultimos 7 dias</div>
+                <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>{t("hidra_last7",lang)}</div>
                 <div style={{ display:"flex", alignItems:"flex-end", gap:6, height:80 }}>
                   {last7.map(d=>{
                     const pct = Math.min(d.ml/AGUA_RECOMENDADA, 1);
@@ -3507,7 +3842,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <div>
           <div style={{ background:"var(--bg-card)", border:`1px solid ${GREEN}30`, borderRadius:16, padding:16, marginBottom:12 }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
-              <span style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1 }}>Objetivo diario</span>
+              <span style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1 }}>{t("hidra_daily_goal",lang)}</span>
               <button onClick={() => { setGoalTemp(nutriGoal); setEditNutriGoal(v=>!v); }}
                 style={{ fontSize:11, padding:"4px 8px", borderRadius:6, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", cursor:"pointer" }}>
                 {editNutriGoal ? "✕" : "Editar"}
@@ -3563,29 +3898,29 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {showNutriForm && (
             <div style={{ background:"var(--bg-card)", border:`1px solid ${GREEN}30`, borderRadius:14, padding:16, marginBottom:12 }}>
               <div style={{ marginBottom:8 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Nombre</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_nombre",lang)}</label>
                 <input value={nutriForm.nombre} onChange={e=>setNutriForm(f=>({...f,nombre:e.target.value}))} placeholder="Pollo con arroz" style={inputSt}/>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(2,1fr)", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Calorias *</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("nutri_calorias",lang)}</label>
                   <input type="number" value={nutriForm.calorias} onChange={e=>setNutriForm(f=>({...f,calorias:e.target.value}))} placeholder="450" style={inputSt}/>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Proteina (g)</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("nutri_proteina",lang)}</label>
                   <input type="number" value={nutriForm.proteina} onChange={e=>setNutriForm(f=>({...f,proteina:e.target.value}))} placeholder="35" style={inputSt}/>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Carbos (g)</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("nutri_carbos",lang)}</label>
                   <input type="number" value={nutriForm.carbos} onChange={e=>setNutriForm(f=>({...f,carbos:e.target.value}))} placeholder="60" style={inputSt}/>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Grasa (g)</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("nutri_grasa",lang)}</label>
                   <input type="number" value={nutriForm.grasa} onChange={e=>setNutriForm(f=>({...f,grasa:e.target.value}))} placeholder="12" style={inputSt}/>
                 </div>
               </div>
               <div style={{ marginBottom:10 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_fecha",lang)}</label>
                 <input type="date" value={nutriForm.fecha} onChange={e=>setNutriForm(f=>({...f,fecha:e.target.value}))} style={inputSt}/>
               </div>
               <button onClick={saveNutri} disabled={!nutriForm.nombre||!nutriForm.calorias}
@@ -3616,7 +3951,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           )}
 
           <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:14 }}>
-            <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>Ultimos 7 dias</div>
+            <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:12 }}>{t("hidra_last7",lang)}</div>
             <div style={{ display:"flex", alignItems:"flex-end", gap:6, height:70 }}>
               {nutriLast7.map(d=>{
                 const pct = nutriGoal.calorias ? Math.min(d.total/nutriGoal.calorias,1) : 0;
@@ -3636,8 +3971,8 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {nutriEntries.length === 0 && !showNutriForm && (
             <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", marginTop:12 }}>
               <div style={{ fontSize:36, marginBottom:8 }}>🥗</div>
-              <div style={{ fontSize:14, fontWeight:600 }}>Sin registros de nutricion</div>
-              <div style={{ fontSize:12, marginTop:4 }}>Empieza añadiendo tus comidas de hoy</div>
+              <div style={{ fontSize:14, fontWeight:600 }}>{t("nutri_empty",lang)}</div>
+              <div style={{ fontSize:12, marginTop:4 }}>{t("nutri_empty_sub",lang)}</div>
             </div>
           )}
         </div>
@@ -3654,36 +3989,36 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
             <div style={{ background:"var(--bg-card)", border:"1px solid rgba(229,62,62,0.2)", borderRadius:14, padding:16, marginBottom:16 }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Zona</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_zona",lang)}</label>
                   <select value={injForm.zona} onChange={e=>setInjForm(f=>({...f,zona:e.target.value}))} style={inputSt}>
-                    <option value="">Selecciona</option>
+                    <option value="">{t("lbl_select",lang)}</option>
                     {INJ_ZONES.map(z=><option key={z} value={z}>{z}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Tipo</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_tipo",lang)}</label>
                   <select value={injForm.tipo} onChange={e=>setInjForm(f=>({...f,tipo:e.target.value}))} style={inputSt}>
-                    <option value="">Selecciona</option>
+                    <option value="">{t("lbl_select",lang)}</option>
                     {INJ_TYPES.map(t=><option key={t} value={t}>{t}</option>)}
                   </select>
                 </div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_fecha",lang)}</label>
                   <input type="date" value={injForm.fecha} onChange={e=>setInjForm(f=>({...f,fecha:e.target.value}))} style={inputSt}/>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Estado</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_estado",lang)}</label>
                   <select value={injForm.estado} onChange={e=>setInjForm(f=>({...f,estado:e.target.value}))} style={inputSt}>
-                    <option value="activa">Activa</option>
-                    <option value="recuperando">Recuperandose</option>
-                    <option value="curada">Curada</option>
+                    <option value="activa">{t("inj_activa",lang)}</option>
+                    <option value="recuperando">{t("inj_recuperando",lang)}</option>
+                    <option value="curada">{t("inj_curada",lang)}</option>
                   </select>
                 </div>
               </div>
               <div style={{ marginBottom:10 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Notas</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_notas_lbl",lang)}</label>
                 <textarea value={injForm.notas} onChange={e=>setInjForm(f=>({...f,notas:e.target.value}))} rows={2} placeholder="Descripcion, tratamiento..." style={{ ...inputSt, resize:"vertical" }}/>
               </div>
               <button onClick={saveInjury} disabled={!injForm.zona}
@@ -3711,7 +4046,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {injuries.length === 0 && (
             <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)" }}>
               <div style={{ fontSize:36, marginBottom:12 }}>🩹</div>
-              <div style={{ fontSize:14, fontWeight:600 }}>Sin lesiones registradas</div>
+              <div style={{ fontSize:14, fontWeight:600 }}>{t("inj_empty",lang)}</div>
               <div style={{ fontSize:12, marginTop:4 }}>¡Entrena sano!</div>
             </div>
           )}
@@ -3749,7 +4084,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
             <div style={{ background:"var(--bg-card)", border:`1px solid ${PURPLE}30`, borderRadius:14, padding:16, marginBottom:16 }}>
               {/* Tipo */}
               <div style={{ marginBottom:10 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:1 }}>Tipo de sesión</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_tipo",lang)}</label>
                 <div style={{ display:"flex", gap:6 }}>
                   {[
                     { k:"fisio",   icon:"🩺", label:"Fisioterapia", color:PURPLE },
@@ -3767,10 +4102,10 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Zona tratada</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_zona",lang)}</label>
                   <select value={recupForm.zona} onChange={e=>setRecupForm(f=>({...f,zona:e.target.value}))}
                     style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none" }}>
-                    <option value="">Selecciona</option>
+                    <option value="">{t("lbl_select",lang)}</option>
                     {["Rodilla","Hombro","Espalda","Muñeca","Tobillo","Cuello","Codo","Cadera","General","Piernas","Core"].map(z=><option key={z} value={z}>{z}</option>)}
                   </select>
                 </div>
@@ -3787,18 +4122,18 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                     style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" }}/>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Terapeuta</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_terapeuta",lang)}</label>
                   <input value={recupForm.terapeuta} onChange={e=>setRecupForm(f=>({...f,terapeuta:e.target.value}))} placeholder="Opcional"
                     style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" }}/>
                 </div>
               </div>
               <div style={{ marginBottom:8 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_fecha",lang)}</label>
                 <input type="date" value={recupForm.fecha} onChange={e=>setRecupForm(f=>({...f,fecha:e.target.value}))}
                   style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" }}/>
               </div>
               <div style={{ marginBottom:12 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Notas</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_notas_lbl",lang)}</label>
                 <textarea value={recupForm.notas} onChange={e=>setRecupForm(f=>({...f,notas:e.target.value}))} rows={2} placeholder="Cómo fue, qué mejoró..."
                   style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none", resize:"vertical", boxSizing:"border-box" }}/>
               </div>
@@ -3827,12 +4162,12 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {recupEntries.length === 0 ? (
             <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)" }}>
               <div style={{ fontSize:36, marginBottom:12 }}>🧘</div>
-              <div style={{ fontSize:14, fontWeight:600 }}>Sin sesiones registradas</div>
-              <div style={{ fontSize:12, marginTop:6 }}>Registra tus sesiones de fisio y recuperación</div>
+              <div style={{ fontSize:14, fontWeight:600 }}>{t("recup_empty",lang)}</div>
+              <div style={{ fontSize:12, marginTop:6 }}>{t("recup_empty_sub",lang)}</div>
             </div>
           ) : (
             <div>
-              <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:10 }}>Historial</div>
+              <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:10 }}>{t("lbl_historial",lang)}</div>
               {recupEntries.map(e => {
                 const tipoMeta = {
                   fisio:  { icon:"🩺", label:"Fisioterapia", color:PURPLE },
@@ -3981,7 +4316,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
 
       {/* Dropdown */}
       {open && (
-        <div style={{ position: "absolute", top: 44, right: 0, width: 280, background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.4)", zIndex: 500, overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 44, right: 0, width: 280, maxWidth: "calc(100vw - 16px)", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.4)", zIndex: 500, overflow: "hidden" }}>
 
           {/* Cabecera perfil */}
           <div style={{ padding: "16px 18px 14px", borderBottom: "1px solid var(--border)" }}>
@@ -4022,20 +4357,20 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             <button onClick={() => setEditing(e => !e)}
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "6px 0", color: "var(--text)", fontSize: 13, fontWeight: 600 }}>
               <span style={{ fontSize: 16 }}>✏️</span>
-              <span style={{ flex: 1, textAlign: "left" }}>Editar perfil</span>
+              <span style={{ flex: 1, textAlign: "left" }}>{t("profile_edit",lang)}</span>
               <span style={{ fontSize: 10, color: "var(--text-faint)" }}>{editing ? "▲" : "▼"}</span>
             </button>
 
             {editing && (
               <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
                 <div>
-                  <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>Nombre</label>
+                  <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>{t("lbl_nombre",lang)}</label>
                   <input value={nombre} onChange={e => setNombre(e.target.value)}
                     placeholder="Tu nombre"
                     style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }} />
                 </div>
                 <div>
-                  <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>Disciplina principal</label>
+                  <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>{t("profile_main_disc",lang)}</label>
                   <input value={disc} onChange={e => setDisc(e.target.value)}
                     placeholder="BJJ, Boxeo, MMA..."
                     style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }} />
@@ -4061,7 +4396,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             {/* Idioma */}
             {onLangChange && (
               <div style={{ padding: "4px 8px 2px" }}>
-                <div style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>Idioma</div>
+                <div style={{ fontSize: 10, color: "var(--text-faint)", marginBottom: 5, fontWeight: 600, textTransform: "uppercase", letterSpacing: 0.5 }}>{t("settings_lang",lang)}</div>
                 <div style={{ display: "flex", gap: 6 }}>
                   {[{ code: "es", label: "ES · Español" }, { code: "en", label: "EN · English" }, { code: "ca", label: "CA · Català" }].map(({ code, label }) => (
                     <button key={code} onClick={() => onLangChange(code)}
@@ -4093,6 +4428,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
 // ── Campana de notificaciones ─────────────────────────────────────────────
 function NotificationBell({ userId, onNewNotif }) {
   const RED = "#C41A1A";
+  const lang = localStorage.getItem("em_lang") || "es";
   const [notifs, setNotifs] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef(null);
@@ -4156,9 +4492,9 @@ function NotificationBell({ userId, onNewNotif }) {
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, width: 320, background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", zIndex: 600, overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, width: 320, maxWidth: "calc(100vw - 16px)", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", zIndex: 600, overflow: "hidden" }}>
           <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>Notificaciones</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{t("settings_notif",lang)}</span>
             {unread > 0 && (
               <button onClick={markAllRead} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: RED, fontWeight: 600, padding: 0 }}>
                 Marcar todo leído
@@ -4536,6 +4872,7 @@ function CoachTutorialOverlay({ onDone }) {
 
 // ── Panel Fundador para CoachApp ─────────────────────────────────────────────
 function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfSuggForm, cfSuggSent, setCfSuggSent, cfSuggList, setCfSuggList, cfShowPlanes, setCfShowPlanes }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const GOLD = "#f59e0b";
   const coachPlan = profile?.plan || "free";
   const isCoachFundador = coachPlan === "fundador";
@@ -4543,7 +4880,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
   const coachRefLink = `https://elitemarcial.app/join?ref=${coachRefCode}`;
 
   const CHANGELOG = [
-    { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal más amplio (580px), hero header rojo con decoración, feature cards con iconos grandes, inputs más prominentes. Experiencia de invitación premium.", nuevo:true },
+    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
+    { version:"1.9", fecha:"Jun 2026", titulo:"Notificaciones en tiempo real + fixes QA", desc:"Toast en tiempo real via Supabase Realtime. Fix: sesión duplicada al crear desde técnica, atleta veía entrenador tras aceptar, selección de texto en formularios, sesión programada sin detalle." },
     { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
     { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
     { version:"1.6", fecha:"Jun 2026", titulo:"Técnicas, Notas, Calendario — rediseño futurista", desc:"Las tres vistas rediseñadas con KPI headers animados, cards con glow, ranking con barras animadas, filtros por tag y strip semanal interactivo." },
@@ -4557,8 +4895,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
   const ROADMAP = [
     { estado:"✅ Completado", titulo:"Notificaciones por email (Resend)", desc:"Sugerencias de Fundadores enviadas automáticamente vía Supabase Edge Functions + Resend. Función desplegada." },
     { estado:"✅ Completado", titulo:"Notificaciones en tiempo real", desc:"Notificaciones push in-app para mensajes, sesiones programadas, invitaciones y sesiones completadas." },
-    { estado:"🔨 En desarrollo", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización de rendimiento general." },
-    { estado:"📋 Planificado", titulo:"Notificaciones push nativas", desc:"Alertas push del navegador/OS para sesiones programadas. El service worker PWA ya está listo." },
+    { estado:"✅ Completado", titulo:"Push nativas del navegador (PWA)", desc:"Web Push API con VAPID, Edge Function send-push, service worker personalizado. Alertas del OS en móvil y desktop." },
+    { estado:"✅ Completado", titulo:"QA & optimización móvil — Fase 2", desc:"iOS zoom corregido, nav con panel 'Más', heatmap responsive, módulo lesiones expandido, 15+ fixes de UX móvil." },
     { estado:"📋 Planificado", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico." },
     { estado:"📋 Planificado", titulo:"Suscripciones recurrentes (Stripe)", desc:"Gestión de pagos para coaches: planes mensuales y anuales para sus atletas." },
     { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial y biometría." },
@@ -4686,15 +5024,15 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
       {isCoachFundador && (
         <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, overflow:"hidden" }}>
           <div style={{ background:`${GOLD}10`, padding:"14px 18px", borderBottom:"1px solid var(--border)" }}>
-            <div style={{ fontSize:11, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5 }}>Club Fundador</div>
+            <div style={{ fontSize:11, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5 }}>{t("club_title",lang)}</div>
           </div>
 
           {/* Tabs */}
-          <div style={{ display:"flex", borderBottom:"1px solid var(--border)" }}>
+          <div style={{ display:"flex", borderBottom:"1px solid var(--border)", overflowX:"auto", scrollbarWidth:"none" }}>
             {[{ k:"changelog",label:"🗒 Changelog"},{ k:"roadmap",label:"🗺 Roadmap"},{ k:"sugerir",label:"💡 Sugerir"}].map(t => (
               <button key={t.k} onClick={() => setCfTab(t.k)}
-                style={{ flex:1, padding:"14px 10px", border:"none", borderBottom: cfTab===t.k ? `2px solid ${GOLD}` : "2px solid transparent",
-                  background:"transparent", color: cfTab===t.k ? GOLD : "var(--text-faint)", fontSize:13, fontWeight:800, cursor:"pointer" }}>
+                style={{ flex:1, minWidth:90, padding:"12px 8px", border:"none", borderBottom: cfTab===t.k ? `2px solid ${GOLD}` : "2px solid transparent",
+                  background:"transparent", color: cfTab===t.k ? GOLD : "var(--text-faint)", fontSize:12, fontWeight:800, cursor:"pointer", whiteSpace:"nowrap" }}>
                 {t.label}
               </button>
             ))}
@@ -4704,7 +5042,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
             {cfTab === "changelog" && (() => {
               const isMb = window.innerWidth < 700;
               const clMap = {
-                "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
+                "2.0":{ icon:"🚀", color:"#10b981", tag:"Fase 2 ✓" },
+                "1.9":{ icon:"🔔", color:"#C41A1A", tag:"Notificaciones" },
                 "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
                 "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },
                 "1.6":{ icon:"⚡", color:"#10b981", tag:"Vistas" },
@@ -4778,8 +5117,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
               ];
               const items = [
                 { estado:"done", icon:"🔔", titulo:"Notificaciones en tiempo real", desc:"Notificaciones in-app para mensajes, sesiones y coach. Realtime vía Supabase.", color:"#10b981" },
-                { estado:"dev",  icon:"🔍", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización de rendimiento.", color:"#10b981" },
-                { estado:"plan", icon:"🔕", titulo:"Push nativas del navegador", desc:"Alertas push del OS para sesiones programadas. Service worker PWA ya listo.", color:"#3b82f6" },
+                { estado:"done", icon:"📲", titulo:"Push nativas del navegador", desc:"Web Push API + VAPID + Edge Function. Alertas del OS en móvil y desktop.", color:"#10b981" },
+                { estado:"done", icon:"📱", titulo:"QA & optimización móvil", desc:"iOS zoom corregido, nav con panel 'Más', heatmap responsive, 15+ fixes de UX.", color:"#10b981" },
                 { estado:"plan", icon:"📱", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico.", color:"#3b82f6" },
                 { estado:"plan", icon:"💳", titulo:"Suscripciones recurrentes", desc:"Gestión de pagos Stripe para coaches: planes mensuales/anuales para atletas.", color:"#3b82f6" },
                 { estado:"eval", icon:"🤖", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial de entrenamiento y biometría.", color:"#8b5cf6" },
@@ -4830,21 +5169,20 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
                   </div>
 
                   {/* ── Next items ── */}
-                  <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12 }}>Próximas mejoras</div>
+                  <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12 }}>{t("club_improvements",lang)}</div>
                   <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                     {items.map(item => {
                       const meta = estadoMeta[item.estado];
                       return (
                         <div key={item.titulo} style={{ display:"flex", alignItems:"center", gap:0, background:"var(--bg-card)", border:`1px solid var(--border)`, borderLeft:`4px solid ${item.color}`, borderRadius:"0 12px 12px 0", overflow:"hidden" }}>
-                          <div style={{ padding:"12px 14px 12px 14px", display:"flex", alignItems:"center", gap:13, flex:1 }}>
-                            <div style={{ width:38, height:38, borderRadius:10, background:`${item.color}18`, border:`1px solid ${item.color}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:19, flexShrink:0 }}>{item.icon}</div>
+                          <div style={{ padding:"12px 12px 12px 12px", display:"flex", alignItems:"flex-start", gap:10, flex:1 }}>
+                            <div style={{ width:36, height:36, borderRadius:10, background:`${item.color}18`, border:`1px solid ${item.color}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, flexShrink:0 }}>{item.icon}</div>
                             <div style={{ flex:1, minWidth:0 }}>
-                              <div style={{ fontSize:12, fontWeight:800, color:"var(--text)", marginBottom:2 }}>{item.titulo}</div>
+                              <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:3, flexWrap:"wrap" }}>
+                                <span style={{ fontSize:12, fontWeight:800, color:"var(--text)" }}>{item.titulo}</span>
+                                <span style={{ fontSize:9, fontWeight:800, color:meta.color, background:`${meta.color}18`, border:`1px solid ${meta.color}30`, borderRadius:20, padding:"1px 7px", whiteSpace:"nowrap" }}>{meta.dot && "● "}{meta.label}</span>
+                              </div>
                               <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.4 }}>{item.desc}</div>
-                            </div>
-                            <div style={{ display:"flex", alignItems:"center", gap:5, flexShrink:0 }}>
-                              {meta.dot && <span style={{ width:6, height:6, borderRadius:"50%", background:meta.color, display:"inline-block", boxShadow:`0 0 6px ${meta.color}` }} />}
-                              <span style={{ fontSize:9, fontWeight:800, color:meta.color, background:`${meta.color}18`, border:`1px solid ${meta.color}30`, borderRadius:20, padding:"2px 9px", whiteSpace:"nowrap" }}>{meta.label}</span>
                             </div>
                           </div>
                         </div>
@@ -4884,6 +5222,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
 
 // ── App del Coach (dashboard completo) ────────────────────────────────────
 function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const RED = "#C41A1A";
   const [profile, setProfile] = React.useState(profileProp);
   // Sync from prop AND do an independent fetch to ensure plan field is loaded
@@ -5519,7 +5858,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           // ─ Paso 2: Foto de perfil ─
           if (obStep === 2) return (
             <div style={{ textAlign:"center" }}>
-              <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", margin:"0 0 6px" }}>Pon cara a tu perfil</h2>
+              <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", margin:"0 0 6px" }}>{t("onb_avatar_title",lang)}</h2>
               <p style={{ fontSize:13, color:"var(--text-muted)", margin:"0 0 24px" }}>Tus atletas te reconocerán mejor con una foto.</p>
               <input ref={obFileRef} type="file" accept="image/*" style={{ display:"none" }} onChange={obHandleAvatar} />
               <div style={{ position:"relative", display:"inline-block", marginBottom:24 }}>
@@ -5541,7 +5880,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     Subir foto
                   </button>
               }
-              <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:4 }}>También puedes saltarte este paso</div>
+              <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:4 }}>{t("onb_skip",lang)}</div>
             </div>
           );
 
@@ -5574,7 +5913,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           return (
             <div style={{ textAlign:"center" }}>
               <div style={{ fontSize:56, marginBottom:12, lineHeight:1 }}>👥</div>
-              <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", margin:"0 0 6px" }}>Invita a tu primer atleta</h2>
+              <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", margin:"0 0 6px" }}>{t("onb_invite_title",lang)}</h2>
               <p style={{ fontSize:13, color:"var(--text-muted)", margin:"0 0 24px" }}>Envía una invitación y tu atleta recibirá acceso para registrar sus entrenamientos.</p>
               {obInviteStatus === "ok" ? (
                 <div style={{ padding:"20px", background:"#16a34a15", borderRadius:14, border:"1px solid #16a34a30", marginBottom:16 }}>
@@ -5585,7 +5924,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               ) : (
                 <>
                   <div style={{ textAlign:"left", marginBottom:12 }}>
-                    <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:8, textTransform:"uppercase", letterSpacing:0.5 }}>Email del atleta</label>
+                    <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:8, textTransform:"uppercase", letterSpacing:0.5 }}>{t("coach_athlete_email",lang)}</label>
                     <input value={obInviteEmail} onChange={e => setObInviteEmail(e.target.value)}
                       onKeyDown={e => { if (e.key==="Enter") obSendInvite(); }}
                       placeholder="atleta@email.com" type="email"
@@ -5702,7 +6041,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               <span className="em-coach-logo-text" style={{ fontSize: 15, fontWeight: 900, color: "var(--text)", letterSpacing: -0.5 }}>Élite Marcial</span>
               <span className="em-coach-logo-badge" style={{ fontSize: 9, color: RED, fontWeight: 800, background: RED+"22", border:`1px solid ${RED}40`, borderRadius: 5, padding: "2px 7px", letterSpacing: 1 }}>COACH</span>
             </div>
-            <div className="em-coach-logo-sub" style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>Panel de entrenador</div>
+            <div className="em-coach-logo-sub" style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>{t("coach_title",lang)}</div>
           </div>
         </div>
 
@@ -5769,9 +6108,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             onError={e => { e.target.src = "/logo-192.png"; }} />
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: -1 }}>Élite Marcial</div>
-            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>Panel de entrenador</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>{t("coach_title",lang)}</div>
           </div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 8 }}>Toca para cerrar</div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 8 }}>{t("lbl_tap_close",lang)}</div>
         </div>
       )}
 
@@ -5783,7 +6122,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         ) : coachView === "stats" ? (
           <>
             {/* Saludo */}
-            <div style={{ marginBottom: 28 }}>
+            <div className="em-coach-stats-saludo" style={{ marginBottom: 28 }}>
               <h1 style={{ fontSize: 28, fontWeight: 900, color: "var(--text)", letterSpacing: -0.8, marginBottom: 4, lineHeight: 1.1 }}>
                 {saludo}, <span style={{ color: RED }}>{nombre}</span> 🏆
               </h1>
@@ -5825,18 +6164,19 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     return (
                       <div key={a.id}
                         onClick={() => { setSelectedAthlete(a); setCoachView("equipo"); }}
+                        className="em-coach-activity-row"
                         style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer" }}>
                         <AthleteAvatar profile={a.profiles} size={34} fontSize={13} variant="dark" />
-                        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", width: 120, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <div className="em-coach-activity-name" style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", width: 120, flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {a.profiles?.nombre || "Atleta"}
                         </div>
                         <div style={{ flex: 1, height: 8, background: "var(--bg-input)", borderRadius: 4, overflow: "hidden" }}>
                           <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(90deg,${RED},${RED}aa)`, borderRadius: 4, transition: "width 0.4s" }} />
                         </div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", width: 60, textAlign: "right", flexShrink: 0 }}>
+                        <div className="em-coach-activity-ses" style={{ fontSize: 12, fontWeight: 700, color: "var(--text-muted)", width: 60, textAlign: "right", flexShrink: 0 }}>
                           {sessions.length} ses.
                         </div>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: rpeColor, width: 50, textAlign: "right", flexShrink: 0 }}>
+                        <div className="em-coach-activity-rpe" style={{ fontSize: 12, fontWeight: 700, color: rpeColor, width: 50, textAlign: "right", flexShrink: 0 }}>
                           RPE {rpe}
                         </div>
                       </div>
@@ -5852,24 +6192,24 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             <div className="em-coach-section-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
               <div>
                 <h2 style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", margin: 0 }}>📅 Agenda del equipo</h2>
-                <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>Todas las sesiones que has programado</p>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>{t("coach_sessions_sub",lang)}</p>
               </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
                 {/* Toggle lista / semana / calendario */}
                 <div style={{ display: "flex", background: "var(--bg-elevated)", borderRadius: 9, padding: 3, border: "1px solid var(--border)" }}>
-                  {[["list","☰ Lista"],["week","📋 Semana"],["cal","📆 Mes"]].map(([v,label]) => (
+                  {[["list","☰"],["week","📋 Sem."],["cal","📆 Mes"]].map(([v,label]) => (
                     <button key={v} onClick={() => setAgendaView(v)}
-                      style={{ padding: "6px 14px", borderRadius: 7, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer",
+                      style={{ padding: "6px 10px", borderRadius: 7, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer",
                         background: agendaView === v ? RED : "transparent",
                         color: agendaView === v ? "#fff" : "var(--text-muted)",
-                        transition: "all 0.15s" }}>
+                        transition: "all 0.15s", whiteSpace: "nowrap" }}>
                       {label}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => { if (selectedAthlete) { setShowSchedule(true); setScheduleOk(""); } else setCoachView("equipo"); }}
-                  style={{ padding: "10px 18px", borderRadius: 10, border: "none", background: `linear-gradient(135deg,${RED},#a31515)`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                  + Programar sesión
+                <button className="em-coach-agenda-btn" onClick={() => { if (selectedAthlete) { setShowSchedule(true); setScheduleOk(""); } else setCoachView("equipo"); }}
+                  style={{ padding: "10px 18px", borderRadius: 10, border: "none", background: `linear-gradient(135deg,${RED},#a31515)`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
+                  + Programar
                 </button>
               </div>
             </div>
@@ -5878,7 +6218,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             ) : allScheduled.length === 0 ? (
               <div style={{ textAlign: "center", padding: "60px 24px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 18 }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>📅</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>Sin sesiones programadas</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>{t("coach_no_sessions",lang)}</div>
                 <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>Ve a Equipo, selecciona un atleta y pulsa "Programar".</div>
                 <button onClick={() => setCoachView("equipo")}
                   style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: `linear-gradient(135deg,${RED},#a31515)`, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
@@ -5925,7 +6265,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, padding:"7px 14px", cursor:"pointer", color:"var(--text)", fontSize:14, fontWeight:700 }}>‹ Anterior</button>
                     <div style={{ textAlign:"center" }}>
                       <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", textTransform:"capitalize" }}>{weekLabel}</div>
-                      {isCurrentWeek && <div style={{ fontSize:11, color:RED, fontWeight:700, marginTop:2 }}>Semana actual</div>}
+                      {isCurrentWeek && <div style={{ fontSize:11, color:RED, fontWeight:700, marginTop:2 }}>{t("lbl_this_week",lang)}</div>}
                     </div>
                     <button onClick={() => setWeekOffset(w => w+1)}
                       style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, padding:"7px 14px", cursor:"pointer", color:"var(--text)", fontSize:14, fontWeight:700 }}>Siguiente ›</button>
@@ -6041,7 +6381,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         </span>
                       );
                     })}
-                    {weekSessions.length === 0 && <div style={{ fontSize:13, color:"var(--text-faint)", fontStyle:"italic" }}>Sin sesiones esta semana</div>}
+                    {weekSessions.length === 0 && <div style={{ fontSize:13, color:"var(--text-faint)", fontStyle:"italic" }}>{t("lbl_no_sessions",lang)}</div>}
                   </div>
                   <div style={{ marginTop:10, fontSize:11, color:"var(--text-faint)", textAlign:"center" }}>💡 Arrastra una sesión de un día a otro para moverla</div>
                   </div>{/* /em-coach-week-scroll */}
@@ -6185,7 +6525,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         <span style={{ marginLeft:10, fontSize:12, color:"var(--text-muted)", fontWeight:600 }}>{selectedSessions.length} sesión{selectedSessions.length!==1?"es":""}</span>
                       </div>
                       {selectedSessions.length === 0 ? (
-                        <div style={{ fontSize:13, color:"var(--text-faint)" }}>Sin sesiones</div>
+                        <div style={{ fontSize:13, color:"var(--text-faint)" }}>{t("lbl_no_sessions",lang)}</div>
                       ) : selectedSessions.map(s => {
                         const rel = athletes.find(a => a.atleta_id === s.atleta_id);
                         const nombre = rel?.profiles?.nombre || "Atleta";
@@ -6309,7 +6649,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
               const athleteIds = Object.keys(byAthlete);
               if (athleteIds.length === 0) return (
-                <div style={{ textAlign: "center", padding: 40, color: "var(--text-faint)" }}>Sin sesiones</div>
+                <div style={{ textAlign: "center", padding: 40, color: "var(--text-faint)" }}>{t("lbl_no_sessions",lang)}</div>
               );
 
               return (
@@ -6424,7 +6764,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             <div>
               <div style={{ marginBottom:24 }}>
                 <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", margin:0 }}>📊 Estadísticas del equipo</h2>
-                <p style={{ fontSize:13, color:"var(--text-muted)", margin:"4px 0 0" }}>Resumen de tus sesiones programadas</p>
+                <p style={{ fontSize:13, color:"var(--text-muted)", margin:"4px 0 0" }}>{t("coach_summary",lang)}</p>
               </div>
 
               {/* KPIs globales */}
@@ -6438,7 +6778,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               {/* Barra de tasa de compleción */}
               <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"18px 20px", marginBottom:20 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
-                  <span style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Tasa de compleción del equipo</span>
+                  <span style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>{t("coach_completion",lang)}</span>
                   <span style={{ fontSize:18, fontWeight:900, color: tasaComplecion>=70?"#4ade80":tasaComplecion>=40?"#f59e0b":"#ef4444" }}>{tasaComplecion}%</span>
                 </div>
                 <div style={{ height:10, background:"var(--bg-elevated)", borderRadius:10, overflow:"hidden" }}>
@@ -6475,7 +6815,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 <div style={{ flex:"1 1 200px", background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:14 }}>🥋 Disciplinas más programadas</div>
                   {topDiscs.length === 0 ? (
-                    <div style={{ fontSize:12, color:"var(--text-faint)" }}>Sin datos</div>
+                    <div style={{ fontSize:12, color:"var(--text-faint)" }}>{t("lbl_no_data",lang)}</div>
                   ) : topDiscs.map(([disc, count], i) => (
                     <div key={disc} style={{ marginBottom:10 }}>
                       <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
@@ -6494,7 +6834,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"18px 20px", marginTop:16 }}>
                 <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:14 }}>👥 Rendimiento por atleta</div>
                 {byAthleteStats.length === 0 ? (
-                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>Sin atletas activos</div>
+                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>{t("coach_no_active",lang)}</div>
                 ) : (
                   <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                     {byAthleteStats.map(a => (
@@ -6569,7 +6909,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               {/* Header */}
               <div style={{ marginBottom: 28 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 900, color: "var(--text)", margin: 0 }}>👤 Mi perfil</h2>
-                <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>Tu identidad como coach</p>
+                <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "4px 0 0" }}>{t("coach_identity",lang)}</p>
               </div>
 
               {/* Avatar */}
@@ -6601,14 +6941,14 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </div>
                 {/* Nombre */}
                 <div style={{ marginBottom:16 }}>
-                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Nombre</label>
+                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("lbl_nombre",lang)}</label>
                   <input value={profileNombre} onChange={e => setProfileNombre(e.target.value)}
                     placeholder="Tu nombre como coach"
                     style={{ width:"100%", padding:"11px 14px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, fontWeight:600, boxSizing:"border-box" }} />
                 </div>
                 {/* Bio */}
                 <div style={{ marginBottom:16 }}>
-                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Bio corta</label>
+                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("coach_bio_lbl",lang)}</label>
                   <textarea value={coachBio} onChange={e => setCoachBio(e.target.value)}
                     placeholder="Cuéntanos algo sobre ti como coach..."
                     rows={3}
@@ -6616,7 +6956,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </div>
                 {/* Experiencia */}
                 <div>
-                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>Años de experiencia</label>
+                  <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("coach_exp_lbl",lang)}</label>
                   <input value={coachExp} onChange={e => setCoachExp(e.target.value.replace(/[^0-9]/g,""))}
                     placeholder="0" type="text" inputMode="numeric" maxLength={2}
                     style={{ width:90, padding:"11px 14px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, fontWeight:700 }} />
@@ -6629,7 +6969,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:6, display:"flex", alignItems:"center", gap:8 }}>
                   <span style={{ fontSize:18 }}>🥊</span> Disciplinas que entrenas
                 </div>
-                <p style={{ fontSize:12, color:"var(--text-muted)", margin:"0 0 16px" }}>Selecciona las que impartes como coach</p>
+                <p style={{ fontSize:12, color:"var(--text-muted)", margin:"0 0 16px" }}>{t("coach_disc_select",lang)}</p>
                 <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                   {DISC_LIST.map(d => {
                     const active = coachDiscs.includes(d);
@@ -6659,7 +6999,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                   <div>
                     <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>Modo {darkMode ? "oscuro 🌙" : "claro ☀️"}</div>
-                    <div style={{ fontSize:12, color:"var(--text-muted)", marginTop:2 }}>Cambia el tema visual de la app</div>
+                    <div style={{ fontSize:12, color:"var(--text-muted)", marginTop:2 }}>{t("settings_dark",lang)}</div>
                   </div>
                   <button onClick={() => {
                     const next = !darkMode;
@@ -6794,7 +7134,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               {/* Breadcrumb */}
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 28, flexWrap: "wrap" }}>
                 <h1 style={{ fontSize: 24, fontWeight: 900, color: "var(--text)", letterSpacing: -0.5, margin: 0 }}>
-                  📆 <span style={{ color: RED }}>Periodización</span>
+                  📆 <span style={{ color: RED }}>{t("period_title",lang)}</span>
                 </h1>
                 {periodoView !== "list" && <>
                   <span style={{ color: "var(--text-faint)" }}>›</span>
@@ -6882,48 +7222,48 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     {/* Campos según tipo */}
                     {(macroForm.tipo === "macro" || !macroForm.tipo) && (<>
                       <div className="em-schedule-grid2" style={{ marginBottom: 12 }}>
-                        <div><label style={labelStyle}>Nombre *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Prep. Campeonato 2026" style={inputStyle} /></div>
-                        <div><label style={labelStyle}>Competición objetivo</label><input value={macroForm.competicion} onChange={e => setMacroForm(f => ({ ...f, competicion: e.target.value }))} placeholder="Ej: Nacional BJJ" style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("lbl_nombre",lang)} *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Prep. Campeonato 2026" style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("period_comp_obj",lang)}</label><input value={macroForm.competicion} onChange={e => setMacroForm(f => ({ ...f, competicion: e.target.value }))} placeholder="Ej: Nacional BJJ" style={inputStyle} /></div>
                         <div><label style={labelStyle}>Inicio *</label><input type="date" value={macroForm.inicio} onChange={e => setMacroForm(f => ({ ...f, inicio: e.target.value }))} style={inputStyle} /></div>
                         <div><label style={labelStyle}>Fecha objetivo *</label><input type="date" value={macroForm.fin} onChange={e => setMacroForm(f => ({ ...f, fin: e.target.value }))} style={inputStyle} /></div>
                       </div>
-                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>Notas</label><textarea value={macroForm.notas} onChange={e => setMacroForm(f => ({ ...f, notas: e.target.value }))} rows={2} placeholder="Objetivos generales, contexto..." style={{ ...inputStyle, resize: "vertical" }} /></div>
+                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>{t("lbl_notas_lbl",lang)}</label><textarea value={macroForm.notas} onChange={e => setMacroForm(f => ({ ...f, notas: e.target.value }))} rows={2} placeholder="Objetivos generales, contexto..." style={{ ...inputStyle, resize: "vertical" }} /></div>
                     </>)}
 
                     {macroForm.tipo === "meso" && (<>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 90px", gap: 10, marginBottom: 12 }}>
-                        <div><label style={labelStyle}>Nombre *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Bloque base 1" style={inputStyle} /></div>
-                        <div><label style={labelStyle}>Fase</label>
+                        <div><label style={labelStyle}>{t("lbl_nombre",lang)} *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Bloque base 1" style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("period_fase",lang)}</label>
                           <select value={macroForm.fase || "base"} onChange={e => setMacroForm(f => ({ ...f, fase: e.target.value }))} style={inputStyle}>
                             {Object.entries(FASE_INFO).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                           </select>
                         </div>
-                        <div><label style={labelStyle}>Semanas</label><input type="number" min={1} max={24} value={macroForm.semanas || 4} onChange={e => setMacroForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("period_weeks",lang)}</label><input type="number" min={1} max={24} value={macroForm.semanas || 4} onChange={e => setMacroForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
-                        <div><label style={labelStyle}>Inicio</label><input type="date" value={macroForm.inicio} onChange={e => setMacroForm(f => ({ ...f, inicio: e.target.value }))} style={inputStyle} /></div>
-                        <div><label style={labelStyle}>Fin</label><input type="date" value={macroForm.fin} onChange={e => setMacroForm(f => ({ ...f, fin: e.target.value }))} style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("lbl_inicio",lang)}</label><input type="date" value={macroForm.inicio} onChange={e => setMacroForm(f => ({ ...f, inicio: e.target.value }))} style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("period_fin",lang)}</label><input type="date" value={macroForm.fin} onChange={e => setMacroForm(f => ({ ...f, fin: e.target.value }))} style={inputStyle} /></div>
                       </div>
-                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>Objetivo del bloque</label><input value={macroForm.objetivo || ""} onChange={e => setMacroForm(f => ({ ...f, objetivo: e.target.value }))} placeholder="Ej: Desarrollar base aeróbica" style={inputStyle} /></div>
+                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>{t("period_obj_bloque",lang)}</label><input value={macroForm.objetivo || ""} onChange={e => setMacroForm(f => ({ ...f, objetivo: e.target.value }))} placeholder="Ej: Desarrollar base aeróbica" style={inputStyle} /></div>
                     </>)}
 
                     {macroForm.tipo === "micro" && (<>
                       <div style={{ marginBottom: 12 }}>
-                        <div><label style={labelStyle}>Nombre *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Semana tipo competición" style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("lbl_nombre",lang)} *</label><input value={macroForm.nombre} onChange={e => setMacroForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Semana tipo competición" style={inputStyle} /></div>
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
-                        <div><label style={labelStyle}>Fase</label>
+                        <div><label style={labelStyle}>{t("period_fase",lang)}</label>
                           <select value={macroForm.fase || "base"} onChange={e => setMacroForm(f => ({ ...f, fase: e.target.value }))} style={inputStyle}>
                             {Object.entries(FASE_INFO).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                           </select>
                         </div>
-                        <div><label style={labelStyle}>Semanas de duración</label><input type="number" min={1} max={8} value={macroForm.semanas || 1} onChange={e => setMacroForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
+                        <div><label style={labelStyle}>{t("period_weeks_dur",lang)}</label><input type="number" min={1} max={8} value={macroForm.semanas || 1} onChange={e => setMacroForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
                       </div>
-                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>Notas</label><textarea value={macroForm.notas} onChange={e => setMacroForm(f => ({ ...f, notas: e.target.value }))} rows={2} placeholder="Descripción de la semana tipo..." style={{ ...inputStyle, resize: "vertical" }} /></div>
+                      <div style={{ marginBottom: 14 }}><label style={labelStyle}>{t("lbl_notas_lbl",lang)}</label><textarea value={macroForm.notas} onChange={e => setMacroForm(f => ({ ...f, notas: e.target.value }))} rows={2} placeholder="Descripción de la semana tipo..." style={{ ...inputStyle, resize: "vertical" }} /></div>
                     </>)}
 
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                      <button onClick={() => { setShowMacroForm(false); setMacroForm({ tipo: "macro", nombre: "", competicion: "", inicio: "", fin: "", notas: "" }); }} style={{ padding: "8px 16px", background: "var(--bg-input)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--text-muted)", cursor: "pointer", fontSize: 13 }}>Cancelar</button>
+                      <button onClick={() => { setShowMacroForm(false); setMacroForm({ tipo: "macro", nombre: "", competicion: "", inicio: "", fin: "", notas: "" }); }} style={{ padding: "8px 16px", background: "var(--bg-input)", border: "1px solid var(--border)", borderRadius: 8, color: "var(--text-muted)", cursor: "pointer", fontSize: 13 }}>{t("btn_cancel",lang)}</button>
                       <button onClick={() => {
                         if (!macroForm.nombre.trim()) return;
                         const tipo = macroForm.tipo || "macro";
@@ -6974,21 +7314,21 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           {editingMacroId === macro.id && (
                           <div style={{ marginTop:12, background:"var(--bg-input)", borderRadius:10, padding:"14px 16px" }} onClick={e=>e.stopPropagation()}>
                             <div className="em-schedule-grid2" style={{ marginBottom:10 }}>
-                              <div><label style={labelStyle}>Nombre *</label><input value={editMacroForm.nombre} onChange={e=>setEditMacroForm(f=>({...f,nombre:e.target.value}))} style={inputStyle} /></div>
-                              <div><label style={labelStyle}>Competición</label><input value={editMacroForm.competicion} onChange={e=>setEditMacroForm(f=>({...f,competicion:e.target.value}))} style={inputStyle} /></div>
-                              <div><label style={labelStyle}>Inicio</label><input type="date" value={editMacroForm.inicio} onChange={e=>setEditMacroForm(f=>({...f,inicio:e.target.value}))} style={inputStyle} /></div>
-                              <div><label style={labelStyle}>Fecha objetivo</label><input type="date" value={editMacroForm.fin} onChange={e=>setEditMacroForm(f=>({...f,fin:e.target.value}))} style={inputStyle} /></div>
+                              <div><label style={labelStyle}>{t("lbl_nombre",lang)} *</label><input value={editMacroForm.nombre} onChange={e=>setEditMacroForm(f=>({...f,nombre:e.target.value}))} style={inputStyle} /></div>
+                              <div><label style={labelStyle}>{t("lbl_competicion",lang)}</label><input value={editMacroForm.competicion} onChange={e=>setEditMacroForm(f=>({...f,competicion:e.target.value}))} style={inputStyle} /></div>
+                              <div><label style={labelStyle}>{t("lbl_inicio",lang)}</label><input type="date" value={editMacroForm.inicio} onChange={e=>setEditMacroForm(f=>({...f,inicio:e.target.value}))} style={inputStyle} /></div>
+                              <div><label style={labelStyle}>{t("lbl_fecha_obj",lang)}</label><input type="date" value={editMacroForm.fin} onChange={e=>setEditMacroForm(f=>({...f,fin:e.target.value}))} style={inputStyle} /></div>
                             </div>
-                            <div style={{marginBottom:10}}><label style={labelStyle}>Notas</label><textarea value={editMacroForm.notas} onChange={e=>setEditMacroForm(f=>({...f,notas:e.target.value}))} rows={2} style={{...inputStyle,resize:"vertical"}} /></div>
+                            <div style={{marginBottom:10}}><label style={labelStyle}>{t("lbl_notas_lbl",lang)}</label><textarea value={editMacroForm.notas} onChange={e=>setEditMacroForm(f=>({...f,notas:e.target.value}))} rows={2} style={{...inputStyle,resize:"vertical"}} /></div>
                             <div style={{display:"flex",gap:8,justifyContent:"flex-end"}}>
-                              <button onClick={()=>setEditingMacroId(null)} style={{padding:"7px 14px",background:"var(--bg-elevated)",border:"1px solid var(--border)",borderRadius:7,color:"var(--text-muted)",cursor:"pointer",fontSize:13}}>Cancelar</button>
+                              <button onClick={()=>setEditingMacroId(null)} style={{padding:"7px 14px",background:"var(--bg-elevated)",border:"1px solid var(--border)",borderRadius:7,color:"var(--text-muted)",cursor:"pointer",fontSize:13}}>{t("btn_cancel",lang)}</button>
                               <button onClick={()=>{
                                 if(!editMacroForm.nombre.trim())return;
                                 const next=periodos.map(p=>p.id===macro.id?{...p,...editMacroForm}:p);
                                 savePeriodos(next);
                                 if(selectedMacro?.id===macro.id)setSelectedMacro(next.find(p=>p.id===macro.id));
                                 setEditingMacroId(null);
-                              }} style={{padding:"7px 14px",background:RED,color:"#fff",border:"none",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13}}>Guardar</button>
+                              }} style={{padding:"7px 14px",background:RED,color:"#fff",border:"none",borderRadius:7,fontWeight:700,cursor:"pointer",fontSize:13}}>{t("lbl_guardar",lang)}</button>
                             </div>
                           </div>
                         )}
@@ -7021,7 +7361,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   </div>
                   {selectedMacro.mesociclos.length > 0 && (
                     <div style={{ marginTop: 16 }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Línea de tiempo</div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>{t("period_timeline",lang)}</div>
                       <div style={{ display: "flex", height: 40, borderRadius: 8, overflow: "hidden", gap: 2 }}>
                         {selectedMacro.mesociclos.map(m => {
                           const fi = FASE_INFO[m.fase] || FASE_INFO.otro;
@@ -7041,31 +7381,31 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                  <div style={{ fontSize: 15, fontWeight: 800, color: "var(--text)" }}>Mesociclos</div>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: "var(--text)" }}>{t("period_meso",lang)}</div>
                   <button onClick={() => setShowMesoForm(true)} style={{ padding: "7px 15px", background: RED, color: "#fff", border: "none", borderRadius: 8, fontWeight: 700, fontSize: 12, cursor: "pointer" }}>+ Añadir bloque</button>
                 </div>
 
                 {showMesoForm && (
                   <div style={{ background: "var(--bg-card)", border: `1.5px solid ${RED}44`, borderRadius: 12, padding: 18, marginBottom: 16 }}>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 80px", gap: 10, marginBottom: 12 }}>
-                      <div><label style={labelStyle}>Nombre</label><input value={mesoForm.nombre} onChange={e => setMesoForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Bloque base 1" style={inputStyle} /></div>
-                      <div><label style={labelStyle}>Fase</label>
+                      <div><label style={labelStyle}>{t("lbl_nombre",lang)}</label><input value={mesoForm.nombre} onChange={e => setMesoForm(f => ({ ...f, nombre: e.target.value }))} placeholder="Ej: Bloque base 1" style={inputStyle} /></div>
+                      <div><label style={labelStyle}>{t("period_fase",lang)}</label>
                         <select value={mesoForm.fase} onChange={e => setMesoForm(f => ({ ...f, fase: e.target.value }))} style={inputStyle}>
                           {Object.entries(FASE_INFO).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
                         </select>
                       </div>
-                      <div><label style={labelStyle}>Semanas</label><input type="number" min={1} max={24} value={mesoForm.semanas} onChange={e => setMesoForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
+                      <div><label style={labelStyle}>{t("period_weeks",lang)}</label><input type="number" min={1} max={24} value={mesoForm.semanas} onChange={e => setMesoForm(f => ({ ...f, semanas: e.target.value }))} style={inputStyle} /></div>
                     </div>
-                    <div style={{ marginBottom: 12 }}><label style={labelStyle}>Objetivo del bloque</label><input value={mesoForm.objetivo} onChange={e => setMesoForm(f => ({ ...f, objetivo: e.target.value }))} placeholder="Ej: Desarrollar base aeróbica y posiciones fundamentales" style={inputStyle} /></div>
+                    <div style={{ marginBottom: 12 }}><label style={labelStyle}>{t("period_obj_bloque",lang)}</label><input value={mesoForm.objetivo} onChange={e => setMesoForm(f => ({ ...f, objetivo: e.target.value }))} placeholder="Ej: Desarrollar base aeróbica y posiciones fundamentales" style={inputStyle} /></div>
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                      <button onClick={() => { setShowMesoForm(false); setMesoForm({ nombre: "", fase: "base", semanas: 4, objetivo: "" }); }} style={{ padding: "7px 14px", background: "var(--bg-input)", border: "1px solid var(--border)", borderRadius: 7, color: "var(--text-muted)", cursor: "pointer", fontSize: 13 }}>Cancelar</button>
-                      <button onClick={createMeso} disabled={!mesoForm.nombre.trim()} style={{ padding: "7px 14px", background: RED, color: "#fff", border: "none", borderRadius: 7, fontWeight: 700, cursor: "pointer", fontSize: 13, opacity: !mesoForm.nombre.trim() ? 0.5 : 1 }}>Añadir</button>
+                      <button onClick={() => { setShowMesoForm(false); setMesoForm({ nombre: "", fase: "base", semanas: 4, objetivo: "" }); }} style={{ padding: "7px 14px", background: "var(--bg-input)", border: "1px solid var(--border)", borderRadius: 7, color: "var(--text-muted)", cursor: "pointer", fontSize: 13 }}>{t("btn_cancel",lang)}</button>
+                      <button onClick={createMeso} disabled={!mesoForm.nombre.trim()} style={{ padding: "7px 14px", background: RED, color: "#fff", border: "none", borderRadius: 7, fontWeight: 700, cursor: "pointer", fontSize: 13, opacity: !mesoForm.nombre.trim() ? 0.5 : 1 }}>{t("lbl_add",lang)}</button>
                     </div>
                   </div>
                 )}
 
                 {selectedMacro.mesociclos.length === 0 && !showMesoForm ? (
-                  <div style={{ textAlign: "center", padding: "36px 20px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, color: "var(--text-muted)", fontSize: 13 }}>Añade bloques para estructurar el plan de temporada</div>
+                  <div style={{ textAlign: "center", padding: "36px 20px", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 12, color: "var(--text-muted)", fontSize: 13 }}>{t("period_no_template",lang)}</div>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                     {selectedMacro.mesociclos.map((meso, idx) => {
@@ -7087,7 +7427,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                             </div>
                             <div style={{ textAlign: "right", flexShrink: 0 }}>
                               {totalSes > 0 && <><div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>{totalSes}×/sem</div><div style={{ fontSize: 10, color: "var(--text-faint)" }}>{(totalMin / 60).toFixed(1)}h/sem</div></>}
-                              {totalSes === 0 && <div style={{ fontSize: 11, color: "var(--text-faint)", fontStyle: "italic" }}>Sin plantilla</div>}
+                              {totalSes === 0 && <div style={{ fontSize: 11, color: "var(--text-faint)", fontStyle: "italic" }}>{t("period_no_template",lang)}</div>}
                             </div>
                             <div style={{display:"flex",gap:2,flexShrink:0}} onClick={e=>e.stopPropagation()}>
                               <button onClick={e=>{e.stopPropagation();setEditingMesoId(editingMesoId===meso.id?null:meso.id);setEditMesoForm({nombre:meso.nombre,fase:meso.fase,semanas:meso.semanas,objetivo:meso.objetivo||""});}}
@@ -7100,17 +7440,17 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           {editingMesoId === meso.id && (
                             <div style={{background:"var(--bg-card)",border:`1px solid ${fi.color}44`,borderLeft:`4px solid ${fi.color}`,borderRadius:10,padding:"14px 16px",marginTop:2}} onClick={e=>e.stopPropagation()}>
                               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 80px",gap:8,marginBottom:8}}>
-                                <div><label style={labelStyle}>Nombre</label><input value={editMesoForm.nombre} onChange={e=>setEditMesoForm(f=>({...f,nombre:e.target.value}))} style={inputStyle} /></div>
-                                <div><label style={labelStyle}>Fase</label>
+                                <div><label style={labelStyle}>{t("lbl_nombre",lang)}</label><input value={editMesoForm.nombre} onChange={e=>setEditMesoForm(f=>({...f,nombre:e.target.value}))} style={inputStyle} /></div>
+                                <div><label style={labelStyle}>{t("period_fase",lang)}</label>
                                   <select value={editMesoForm.fase} onChange={e=>setEditMesoForm(f=>({...f,fase:e.target.value}))} style={inputStyle}>
                                     {Object.entries(FASE_INFO).map(([k,v])=><option key={k} value={k}>{v.label}</option>)}
                                   </select>
                                 </div>
-                                <div><label style={labelStyle}>Semanas</label><input type="number" min={1} max={24} value={editMesoForm.semanas} onChange={e=>setEditMesoForm(f=>({...f,semanas:e.target.value}))} style={inputStyle} /></div>
+                                <div><label style={labelStyle}>{t("period_weeks",lang)}</label><input type="number" min={1} max={24} value={editMesoForm.semanas} onChange={e=>setEditMesoForm(f=>({...f,semanas:e.target.value}))} style={inputStyle} /></div>
                               </div>
-                              <div style={{marginBottom:8}}><label style={labelStyle}>Objetivo</label><input value={editMesoForm.objetivo} onChange={e=>setEditMesoForm(f=>({...f,objetivo:e.target.value}))} style={inputStyle} /></div>
+                              <div style={{marginBottom:8}}><label style={labelStyle}>{t("lbl_objetivo",lang)}</label><input value={editMesoForm.objetivo} onChange={e=>setEditMesoForm(f=>({...f,objetivo:e.target.value}))} style={inputStyle} /></div>
                               <div style={{display:"flex",gap:8,justifyContent:"flex-end"}}>
-                                <button onClick={()=>setEditingMesoId(null)} style={{padding:"6px 12px",background:"var(--bg-elevated)",border:"1px solid var(--border)",borderRadius:6,color:"var(--text-muted)",cursor:"pointer",fontSize:12}}>Cancelar</button>
+                                <button onClick={()=>setEditingMesoId(null)} style={{padding:"6px 12px",background:"var(--bg-elevated)",border:"1px solid var(--border)",borderRadius:6,color:"var(--text-muted)",cursor:"pointer",fontSize:12}}>{t("btn_cancel",lang)}</button>
                                 <button onClick={()=>{
                                   if(!editMesoForm.nombre.trim())return;
                                   const next=periodos.map(p=>p.id===selectedMacro.id?{...p,mesociclos:p.mesociclos.map(m=>m.id===meso.id?{...m,...editMesoForm,semanas:Number(editMesoForm.semanas)||4}:m)}:p);
@@ -7118,7 +7458,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                   const updMacro=next.find(p=>p.id===selectedMacro.id);
                                   setSelectedMacro(updMacro);
                                   setEditingMesoId(null);
-                                }} style={{padding:"6px 12px",background:RED,color:"#fff",border:"none",borderRadius:6,fontWeight:700,cursor:"pointer",fontSize:12}}>Guardar</button>
+                                }} style={{padding:"6px 12px",background:RED,color:"#fff",border:"none",borderRadius:6,fontWeight:700,cursor:"pointer",fontSize:12}}>{t("lbl_guardar",lang)}</button>
                               </div>
                             </div>
                           )}
@@ -7159,7 +7499,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: sesDia.length > 0 ? 10 : 0 }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                 <span style={{ fontSize: 11, fontWeight: 800, color: sesDia.length > 0 ? fi.color : "var(--text-faint)", textTransform: "uppercase", letterSpacing: 0.8, minWidth: 76 }}>{dLabel}</span>
-                                {sesDia.length === 0 && <span style={{ fontSize: 11, color: "var(--text-faint)", fontStyle: "italic" }}>Descanso</span>}
+                                {sesDia.length === 0 && <span style={{ fontSize: 11, color: "var(--text-faint)", fontStyle: "italic" }}>{t("period_descanso",lang)}</span>}
                               </div>
                               <button onClick={() => addSesion(selectedMeso.id, dia)}
                                 style={{ fontSize: 11, padding: "4px 10px", borderRadius: 6, border: `1px solid ${fi.color}`, background: fi.color + "14", color: fi.color, cursor: "pointer", fontWeight: 700 }}>+ Sesión</button>
@@ -7301,7 +7641,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   {athletes.length === 0 && (
                     <div style={{ padding:"40px 20px", textAlign:"center" }}>
                       <div style={{ fontSize:52, marginBottom:12 }}>🥋</div>
-                      <div style={{ fontSize:15, fontWeight:700, color:"var(--text)", marginBottom:6 }}>Sin atletas todavía</div>
+                      <div style={{ fontSize:15, fontWeight:700, color:"var(--text)", marginBottom:6 }}>{t("coach_no_athletes",lang)}</div>
                       <div style={{ fontSize:12, color:"var(--text-muted)", marginBottom:18, lineHeight:1.5 }}>Empieza invitando a tu primer atleta.</div>
                     </div>
                   )}
@@ -7318,9 +7658,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           <AthleteAvatar profile={a.profiles} size={36} fontSize={14} variant="dark" />
                           <div style={{ flex:1, minWidth:0 }}>
                             <div style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>{a.profiles?.nombre || "Atleta"}</div>
-                            <div style={{ fontSize:10, color:"var(--text-faint)" }}>Esperando que acepte</div>
+                            <div style={{ fontSize:10, color:"var(--text-faint)" }}>{t("coach_invite_pending_msg",lang)}</div>
                           </div>
-                          <span style={{ fontSize:9, fontWeight:700, color:"#a78bfa", background:"#a78bfa20", borderRadius:5, padding:"3px 8px", letterSpacing:0.5, textTransform:"uppercase", flexShrink:0 }}>Pendiente</span>
+                          <span style={{ fontSize:9, fontWeight:700, color:"#a78bfa", background:"#a78bfa20", borderRadius:5, padding:"3px 8px", letterSpacing:0.5, textTransform:"uppercase", flexShrink:0 }}>{t("lbl_pendiente",lang)}</span>
                         </div>
                       ))}
                     </div>
@@ -7417,7 +7757,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                     <span style={{ fontSize:11, fontWeight:800, color:rpeColor }}>{avgRpeAtleta}</span>
                                   </div>
                                 ) : (
-                                  <div style={{ fontSize:9, color:"var(--text-faint)" }}>Sin sesiones</div>
+                                  <div style={{ fontSize:9, color:"var(--text-faint)" }}>{t("lbl_no_sessions",lang)}</div>
                                 )}
 
                                 <div style={{ flex:1 }} />
@@ -7563,7 +7903,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           {chatMessages.length === 0 && (
                             <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", textAlign:"center", gap:8, paddingTop:40 }}>
                               <div style={{ fontSize:36 }}>💬</div>
-                              <div style={{ fontSize:13, fontWeight:700, color:"var(--text-muted)" }}>Sin mensajes aún</div>
+                              <div style={{ fontSize:13, fontWeight:700, color:"var(--text-muted)" }}>{t("coach_no_messages",lang)}</div>
                               <div style={{ fontSize:12, color:"var(--text-faint)" }}>Escribe para iniciar la conversación con {atletaNombre}</div>
                             </div>
                           )}
@@ -7780,7 +8120,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
                     {/* Sesiones recientes */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                      <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 0.8 }}>Historial de sesiones</div>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 0.8 }}>{t("coach_session_history",lang)}</div>
                       {athleteSessions.length > 0 && <span style={{ fontSize: 10, color: "var(--text-faint)", background: "var(--bg-input)", borderRadius: 10, padding: "1px 7px" }}>{athleteSessions.length}</span>}
                     </div>
                     {sessionsLoading ? (
@@ -7839,7 +8179,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   {/* Cabecera */}
                   <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)" }}>
                     <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>📊 Resumen del equipo</div>
-                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 2 }}>Selecciona un atleta para ver su detalle</div>
+                    <div style={{ fontSize: 11, color: "var(--text-faint)", marginTop: 2 }}>{t("coach_select_athlete",lang)}</div>
                   </div>
 
                   <div style={{ padding: "24px" }}>
@@ -7847,7 +8187,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:400, gap:0 }}>
                         {/* Decorative glow */}
                         <div style={{ width:120, height:120, borderRadius:"50%", background:`radial-gradient(circle,${RED}20 0%,transparent 70%)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:56, marginBottom:20 }}>🥋</div>
-                        <div style={{ fontSize:22, fontWeight:900, color:"var(--text)", marginBottom:8, textAlign:"center", letterSpacing:-0.5 }}>Empieza a construir tu equipo</div>
+                        <div style={{ fontSize:22, fontWeight:900, color:"var(--text)", marginBottom:8, textAlign:"center", letterSpacing:-0.5 }}>{t("coach_empty_team",lang)}</div>
                         <div style={{ fontSize:14, color:"var(--text-muted)", lineHeight:1.7, textAlign:"center", maxWidth:360, marginBottom:32 }}>
                           Invita a tus atletas por email. Una vez acepten podrás ver sus sesiones, RPE, biometría y evolución en tiempo real.
                         </div>
@@ -7873,7 +8213,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     ) : (
                       <>
                         {/* Ranking por sesiones */}
-                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>Actividad esta semana</div>
+                        <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 }}>{t("coach_team_activity",lang)}</div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 24 }}>
                           {[...activeAthletes].sort((a,b) => (recentSessions[b.atleta_id]||[]).length - (recentSessions[a.atleta_id]||[]).length).map((a, i) => {
                             const ses = (recentSessions[a.atleta_id] || []).length;
@@ -8486,8 +8826,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               <div style={{ display: "flex", alignItems: "center", gap: 20, position:"relative", zIndex:1 }}>
                 <div style={{ width: 80, height: 80, borderRadius: 40, background: "rgba(255,255,255,0.12)", border: "2px solid rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)", flexShrink: 0 }}>🥋</div>
                 <div>
-                  <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: -0.8, lineHeight: 1.1 }}>Invitar atleta</div>
-                  <div style={{ fontSize: 15, color: "rgba(255,255,255,0.70)", marginTop: 6, lineHeight: 1.4 }}>Añade a un atleta a tu equipo y empieza<br/>a entrenarle desde Élite Marcial</div>
+                  <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: -0.8, lineHeight: 1.1 }}>{t("coach_invite_btn",lang)}</div>
+                  <div style={{ fontSize: 15, color: "rgba(255,255,255,0.70)", marginTop: 6, lineHeight: 1.4 }}>{t("coach_empty_team_sub",lang)}</div>
                 </div>
               </div>
             </div>
@@ -8672,6 +9012,7 @@ function AthleteCard({ athlete, selected, onClick }) {
 
 // ── Vista del Coach ────────────────────────────────────────────────────────
 function CoachView({ user }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const RED = "#C41A1A";
   const [athletes, setAthletes] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -8762,7 +9103,7 @@ function CoachView({ user }) {
             {athletes.length === 0 && (
               <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 16, padding: "36px 24px", textAlign: "center" }}>
                 <div style={{ fontSize: 44, marginBottom: 12 }}>🥋</div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>Sin atletas todavía</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>{t("coach_no_athletes",lang)}</div>
                 <div style={{ fontSize: 13, color: "var(--text-muted)" }}>Añade tu primer atleta con el botón de arriba.</div>
               </div>
             )}
@@ -8789,7 +9130,7 @@ function CoachView({ user }) {
                 <div>
                   <div style={{ fontSize: 19, fontWeight: 800, color: "var(--text)" }}>{selected.profiles?.nombre || "Atleta"}</div>
                   <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{selected.profiles?.email}</div>
-                  {selected.estado === "pendiente" && <div style={{ fontSize: 11, color: "#f6ad55", fontWeight: 700, marginTop: 2 }}>Invitación pendiente de aceptar</div>}
+                  {selected.estado === "pendiente" && <div style={{ fontSize: 11, color: "#f6ad55", fontWeight: 700, marginTop: 2 }}>{t("coach_invite_pending2",lang)}</div>}
                 </div>
                 <button onClick={() => setSelected(null)} style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", fontSize: 22, lineHeight: 1, padding: 4 }}>×</button>
               </div>
@@ -8996,9 +9337,9 @@ function CoachView({ user }) {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
           onClick={e => { if (e.target === e.currentTarget) setShowInvite(false); }}>
           <div style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 20, padding: 28, width: "100%", maxWidth: 420 }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--text)", marginBottom: 4 }}>Añadir atleta</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--text)", marginBottom: 4 }}>{t("coach_add_athlete",lang)}</div>
             <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>El atleta debe estar registrado en Élite Marcial con rol "Atleta".</div>
-            <label style={{ fontSize: 12, color: "var(--text-muted)", display: "block", marginBottom: 5 }}>Email del atleta</label>
+            <label style={{ fontSize: 12, color: "var(--text-muted)", display: "block", marginBottom: 5 }}>{t("coach_athlete_email",lang)}</label>
             <input type="email" value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}
               onKeyDown={e => e.key === "Enter" && invite()}
               placeholder="atleta@email.com"
@@ -9032,6 +9373,7 @@ function CoachView({ user }) {
 
 // ── Pantalla de activación de plan tras pago Stripe ──────────────────────
 function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const [loading, setLoading] = React.useState(false);
   const [checking, setChecking] = React.useState(false);
   const [msg, setMsg] = React.useState("");
@@ -9135,6 +9477,7 @@ function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) 
 }
 
 function AuthScreen({ onAuth, darkMode, onToggleDark }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const [mode, setMode] = React.useState("login"); // "login" | "register" | "forgot" | "reset"
   const [form, setForm] = React.useState({ email: "", password: "", newPassword: "", nombre: "", rol: "atleta" });
   const [error, setError] = React.useState("");
@@ -9258,7 +9601,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
               onError={e => { e.target.src = "/logo-192.png"; }} />
           </div>
           <div style={{ fontSize:24, fontWeight:900, color:"var(--text)", letterSpacing:2, textTransform:"uppercase" }}>Élite Marcial</div>
-          <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:4, letterSpacing:3, textTransform:"uppercase" }}>Sistema de entrenamiento marcial</div>
+          <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:4, letterSpacing:3, textTransform:"uppercase" }}>{t("auth_subtitle",lang)}</div>
         </div>
 
         {/* forgot / reset */}
@@ -9280,7 +9623,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
                 </div>
               ) : (
                 <div style={{ marginBottom:20 }}>
-                  <label style={{ fontSize:11, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1, textTransform:"uppercase" }}>Nueva contraseña</label>
+                  <label style={{ fontSize:11, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1, textTransform:"uppercase" }}>{t("auth_new_password",lang)}</label>
                   <input type="password" value={form.newPassword} onChange={e => setF("newPassword", e.target.value)} placeholder="Mínimo 6 caracteres" required style={inputStyle} />
                 </div>
               )}
@@ -9321,7 +9664,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
             {/* Campos registro */}
             {mode === "register" && (
               <div style={{ marginBottom:14 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>Nombre</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>{t("lbl_nombre",lang)}</label>
                 <input value={form.nombre} onChange={e => setF("nombre", e.target.value)} placeholder="¿Cómo te llamamos?"
                   style={inputStyle} />
               </div>
@@ -9333,7 +9676,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
             </div>
 
             <div style={{ marginBottom: mode==="register" ? 20 : 24 }}>
-              <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>Contraseña</label>
+              <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>{t("auth_password",lang)}</label>
               <input type="password" value={form.password} onChange={e => setF("password", e.target.value)} placeholder="Mínimo 6 caracteres" required style={inputStyle} />
             </div>
 
@@ -9375,7 +9718,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
                       <div style={{ width:36, height:36, borderRadius:10, background: authPlan==="coach" ? `${BLUE}30` : "rgba(255,255,255,0.05)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18, border: authPlan==="coach" ? `1px solid ${BLUE}50` : "1px solid rgba(255,255,255,0.08)" }}>🎓</div>
                       <div>
                         <div style={{ fontSize:13, fontWeight:900, color: authPlan==="coach" ? BLUE : "var(--text)", letterSpacing:0.5 }}>ENTRENADOR</div>
-                        <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:1 }}>Panel coach completo</div>
+                        <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:1 }}>{t("auth_coach_feature",lang)}</div>
                       </div>
                     </div>
                     <div style={{ textAlign:"right" }}>
@@ -9448,8 +9791,8 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
                   style={{ marginTop:2, accentColor:RED, width:14, height:14, flexShrink:0 }} />
                 <span style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.5 }}>
                   He leído y acepto los{" "}
-                  <a href="/terminos.html" target="_blank" style={{ color:RED, fontWeight:600 }}>Términos de Uso</a>{" "}y la{" "}
-                  <a href="/privacidad.html" target="_blank" style={{ color:RED, fontWeight:600 }}>Política de Privacidad</a>
+                  <a href="/terminos.html" target="_blank" style={{ color:RED, fontWeight:600 }}>{t("auth_terms",lang)}</a>{" "}y la{" "}
+                  <a href="/privacidad.html" target="_blank" style={{ color:RED, fontWeight:600 }}>{t("auth_privacy",lang)}</a>
                 </span>
               </label>
             )}
@@ -9512,7 +9855,7 @@ function TutorialOverlay({ onDone }) {
   const [targetRect, setTargetRect] = React.useState(null);
   const isMobile = window.innerWidth < 600;
 
-  // Steps del tour — 5 pasos concisos
+  // Steps — targets adaptados a móvil (bottom nav) vs desktop (header nav)
   const STEPS = [
     {
       target: null, pos: null, icon: "🥋", accent: "#C41A1A",
@@ -9520,49 +9863,53 @@ function TutorialOverlay({ onDone }) {
       title: "Élite Marcial",
       subtitle: "El diario de alto rendimiento para atletas de combate",
       body: "Tour rápido de las secciones clave. Puedes saltarlo y empezar cuando quieras.",
-      features: ["📋 Sesiones & calendario", "⚖️ Biometría completa", "📊 Estadísticas & progreso", "🥋 Técnicas & notas"],
-      cta: "Empezar tour →",
+      features: ["📋 Sesiones & calendario", "⚖️ Biometría completa", "📊 Stats & progreso", "🥋 Técnicas & notas"],
+      cta: "Empezar →",
     },
     {
-      target: ".em-header-nav", pos: "bottom", icon: "🧭", accent: "#3b82f6",
+      target: isMobile ? ".em-bottom-nav" : ".em-header-nav",
+      pos: isMobile ? "top" : "bottom",
+      icon: "🧭", accent: "#3b82f6",
       label: "// NAVEGACIÓN",
-      title: "Tu menú principal",
-      body: "Accede a cada módulo con un clic. Desliza la barra si hay más secciones visibles.",
-      features: ["🏠 Inicio & resumen", "📋 Sesiones & cal.", "📊 Stats & progreso", "🥋 Técnicas & notas"],
+      title: "Tu menú",
+      body: isMobile
+        ? "La barra inferior te lleva a cada módulo. Toca ⊕ Más para ver Técnicas, Notas, Estadísticas y Perfil."
+        : "Accede a cada módulo con un clic. Desliza si hay más secciones.",
+      features: ["🏠 Inicio & resumen", "📋 Sesiones", "⚖️ Bio", isMobile ? "⊕ Más opciones" : "📊 Stats & progreso"],
       cta: "Siguiente →",
     },
     {
-      target: "[data-nav='sesiones']", pos: "bottom", icon: "📋", accent: "#C41A1A",
+      target: "[data-nav='sesiones']",
+      pos: isMobile ? "top" : "bottom",
+      icon: "📋", accent: "#C41A1A",
       label: "// SESIONES",
-      title: "Tu diario de entrenamientos",
-      body: "Registra disciplina, duración, RPE y técnicas. El Calendario muestra tu actividad por semana o mes.",
+      title: "Tu diario",
+      body: "Registra disciplina, duración, RPE y técnicas. El Calendario muestra tu actividad semanal y mensual.",
       features: ["🥋 Disciplina & técnicas", "⏱️ Duración & RPE", "📅 Vista semanal/mensual", "🔍 Filtros avanzados"],
       cta: "Siguiente →",
     },
     {
-      target: "[data-nav='cuerpo']", pos: "bottom", icon: "⚖️", accent: "#10b981",
+      target: "[data-nav='cuerpo']",
+      pos: isMobile ? "top" : "bottom",
+      icon: "⚖️", accent: "#10b981",
       label: "// BIOMETRÍA",
-      title: "Control total del cuerpo",
-      body: "Peso, hidratación, nutrición, lesiones y recuperación — todo en un módulo. Monitoriza tu estado físico día a día.",
+      title: "Control del cuerpo",
+      body: "Peso, hidratación, nutrición, lesiones y recuperación en un módulo. Monitoriza tu estado día a día.",
       features: ["⚖️ Peso & tendencia", "💧 Agua & nutrición", "🩹 Lesiones", "🧘 Recuperación"],
       cta: "Siguiente →",
     },
     {
-      target: "[data-nav='progreso']", pos: "bottom", icon: "🏅", accent: "#f59e0b",
-      label: "// PROGRESO",
-      title: "Récords, badges y metas",
-      body: "Sigue tu evolución con récords personales, badges por logros y metas con fecha límite. Las Estadísticas 📊 amplían el análisis.",
-      features: ["🏅 Récords personales", "🎖️ Badges & logros", "🎯 Metas con fecha", "📈 Gráficas de volumen"],
-      cta: "Siguiente →",
-    },
-    {
-      target: ".em-header-btn-new", pos: "bottom", icon: "➕", accent: "#C41A1A",
+      target: isMobile ? ".em-bottom-nav__fab" : ".em-header-btn-new",
+      pos: isMobile ? "top" : "bottom",
+      icon: "➕", accent: "#C41A1A",
       label: "// ¡A ENTRENAR!",
-      title: "Registra tu primera sesión",
-      body: "Pulsa el botón rojo para anotar tu primer entrenamiento. Disciplina, duración, RPE y técnicas en menos de un minuto.",
+      title: "Primera sesión",
+      body: isMobile
+        ? "Pulsa el botón rojo ＋ para registrar tu primer entrenamiento. Listo en menos de un minuto."
+        : "Pulsa el botón rojo para anotar tu primer entrenamiento. Disciplina, duración, RPE y técnicas en un minuto.",
       cta: "¡Empezar! 🥋",
       interactive: true,
-      hint: "👆 Pulsa el botón para abrir el formulario",
+      hint: isMobile ? "👆 Toca el botón rojo ＋" : "👆 Pulsa el botón para abrir el formulario",
     },
   ];
 
@@ -9570,23 +9917,20 @@ function TutorialOverlay({ onDone }) {
   const isLast  = step === STEPS.length - 1;
   const accent  = current.accent;
   const PAD     = 10;
-  const CARD_W  = isMobile ? window.innerWidth - 32 : 560;
-  const CARD_H  = isMobile ? 480 : 520;
+  const CARD_W  = isMobile ? window.innerWidth - 24 : 560;
 
   const next = React.useCallback(() => {
     if (isLast) onDone();
     else setStep(s => s + 1);
   }, [isLast, onDone]);
 
-  // Medir elemento objetivo y hacer scroll para que sea visible
+  // Medir elemento objetivo
   React.useEffect(() => {
     if (!current.target) { setTargetRect(null); return; }
     const update = () => {
       const el = document.querySelector(current.target);
       if (el) {
-        // Scroll the element into view within its scrollable parent (horizontal nav)
         el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-        // Small delay to let scroll settle before measuring
         setTimeout(() => {
           const r = el.getBoundingClientRect();
           setTargetRect({ top: r.top, left: r.left, width: r.width, height: r.height });
@@ -9598,7 +9942,7 @@ function TutorialOverlay({ onDone }) {
     return () => window.removeEventListener("resize", update);
   }, [step, current.target]);
 
-  // Pasos interactivos: clic en el elemento real avanza el tutorial
+  // Pasos interactivos
   React.useEffect(() => {
     if (!current.interactive || !current.target) return;
     const el = document.querySelector(current.target);
@@ -9615,19 +9959,27 @@ function TutorialOverlay({ onDone }) {
   const sW    = targetRect ? targetRect.width  + PAD * 2 : 0;
   const sH    = targetRect ? targetRect.height + PAD * 2 : 0;
 
+  // Posición de la card — en móvil siempre centrada verticalmente si no hay target
   let tipTop, tipLeft;
   if (!targetRect) {
-    tipTop  = vpH / 2 - CARD_H / 2;
-    tipLeft = isMobile ? 16 : vpW / 2 - CARD_W / 2;
+    tipTop  = Math.max(16, vpH * 0.12);
+    tipLeft = isMobile ? 12 : vpW / 2 - CARD_W / 2;
   } else if (current.pos === "top") {
-    tipTop  = sTop - CARD_H - 20;
-    if (tipTop < 10) tipTop = sTop + sH + 16;
-    tipLeft = Math.min(Math.max(isMobile ? 16 : sLeft + sW / 2 - CARD_W / 2, 16), vpW - CARD_W - 16);
+    tipTop  = Math.max(8, sTop - 16 - vpH * 0.52); // encima del elemento
+    if (tipTop < 8) tipTop = 8;
+    tipLeft = Math.min(Math.max(isMobile ? 12 : sLeft + sW / 2 - CARD_W / 2, 12), vpW - CARD_W - 12);
   } else {
     tipTop  = sTop + sH + 16;
-    if (tipTop + CARD_H > vpH - 10) tipTop = sTop - CARD_H - 20;
-    tipLeft = Math.min(Math.max(isMobile ? 16 : sLeft + sW / 2 - CARD_W / 2, 16), vpW - CARD_W - 16);
+    if (tipTop + vpH * 0.55 > vpH - 8) tipTop = Math.max(8, sTop - vpH * 0.55 - 16);
+    tipLeft = Math.min(Math.max(isMobile ? 12 : sLeft + sW / 2 - CARD_W / 2, 12), vpW - CARD_W - 12);
   }
+
+  // Tamaños adaptativos
+  const iconSz   = isMobile ? 52 : 72;
+  const iconFont = isMobile ? 26 : 36;
+  const titleSz  = isMobile ? 20 : 26;
+  const bodySz   = isMobile ? 13 : 15;
+  const hPad     = isMobile ? 16 : 28;
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 9000 }}>
@@ -9636,44 +9988,39 @@ function TutorialOverlay({ onDone }) {
         <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.88)", backdropFilter: "blur(6px)" }} />
       ) : (
         <>
-          <div
-            onClick={current.interactive ? next : undefined}
+          <div onClick={current.interactive ? next : undefined}
             style={{
               position: "absolute", top: sTop, left: sLeft, width: sW, height: sH,
               borderRadius: 16,
               boxShadow: `0 0 0 9999px rgba(0,0,0,0.84)`,
               border: `2.5px solid ${accent}`,
               cursor: current.interactive ? "pointer" : "default",
-              transition: "top 0.5s cubic-bezier(0.25,0.46,0.45,0.94), left 0.5s cubic-bezier(0.25,0.46,0.45,0.94), width 0.45s, height 0.45s, border-color 0.4s",
+              transition: "top 0.5s cubic-bezier(0.25,0.46,0.45,0.94), left 0.5s, width 0.45s, height 0.45s, border-color 0.4s",
               zIndex: 1,
-            }}
-          />
-          {/* Anillo pulsante para pasos interactivos */}
+            }} />
           {current.interactive && (
             <div className="em-tutorial-pulse-ring" style={{
-              position: "absolute",
-              top: sTop - 6, left: sLeft - 6,
-              width: sW + 12, height: sH + 12,
-              borderRadius: 22,
-              border: `3px solid ${accent}`,
-              pointerEvents: "none",
-              zIndex: 2,
+              position: "absolute", top: sTop - 6, left: sLeft - 6,
+              width: sW + 12, height: sH + 12, borderRadius: 22,
+              border: `3px solid ${accent}`, pointerEvents: "none", zIndex: 2,
             }} />
           )}
         </>
       )}
 
-      {/* Tarjeta tooltip — diseño futurista */}
+      {/* Tarjeta */}
       <div style={{
         position: "absolute", top: tipTop, left: tipLeft, width: CARD_W,
-        background: "var(--bg-elevated)", borderRadius: 24, overflow: "hidden",
-        boxShadow: `0 48px 100px rgba(0,0,0,0.75), 0 0 0 1px ${accent}35, 0 0 80px ${accent}18`,
+        background: "var(--bg-elevated)", borderRadius: 20, overflow: "hidden",
+        boxShadow: `0 32px 80px rgba(0,0,0,0.75), 0 0 0 1px ${accent}35, 0 0 60px ${accent}18`,
         animation: "em-focus-in 0.28s cubic-bezier(0.34,1.56,0.64,1) both",
-        transition: "top 0.5s cubic-bezier(0.25,0.46,0.45,0.94), left 0.5s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s",
+        transition: "top 0.5s cubic-bezier(0.25,0.46,0.45,0.94), left 0.5s, box-shadow 0.4s",
         zIndex: 10,
+        maxHeight: isMobile ? `${vpH - 32}px` : "none",
+        display: "flex", flexDirection: "column",
       }}>
-        {/* Barra progreso — fuera del key, width transiciona con CSS */}
-        <div style={{ height: 4, background: "rgba(255,255,255,0.06)", overflow:"hidden" }}>
+        {/* Barra progreso */}
+        <div style={{ height: 3, background: "rgba(255,255,255,0.06)", overflow:"hidden", flexShrink:0 }}>
           <div className="em-tutorial-progress-bar" style={{
             height: "100%", width: `${((step + 1) / STEPS.length) * 100}%`,
             background: `linear-gradient(90deg, ${accent}44, ${accent}, #fff8, ${accent}, ${accent}44)`,
@@ -9681,61 +10028,61 @@ function TutorialOverlay({ onDone }) {
           }} />
         </div>
 
-        {/* Dots — fuera del key, cada dot transiciona con CSS */}
-        <div style={{ display:"flex", gap:5, alignItems:"center", justifyContent:"flex-end", padding:"8px 22px 0" }}>
+        {/* Dots */}
+        <div style={{ display:"flex", gap:5, alignItems:"center", justifyContent:"flex-end", padding:`6px ${hPad}px 0`, flexShrink:0 }}>
           {STEPS.map((_, i) => (
             <div key={i} style={{
-              width: i === step ? 22 : 5, height: 5, borderRadius: 3,
+              width: i === step ? 18 : 5, height: 5, borderRadius: 3,
               background: i < step ? `${STEPS[i].accent}90` : i === step ? accent : "rgba(255,255,255,0.12)",
               transition: "all 0.4s cubic-bezier(0.34,1.56,0.64,1)",
-              boxShadow: i === step ? `0 0 8px ${accent}80` : "none",
+              boxShadow: i === step ? `0 0 6px ${accent}80` : "none",
             }} />
           ))}
         </div>
 
-        {/* Contenido — keyed: se reanima fluidamente en cada paso */}
-        <div key={step} style={{ animation: "em-tutorial-step-in 0.32s cubic-bezier(0.34,1.4,0.64,1) both" }}>
+        {/* Contenido — scroll si es necesario */}
+        <div key={step} style={{ animation: "em-tutorial-step-in 0.32s cubic-bezier(0.34,1.4,0.64,1) both", overflowY: "auto", flex:1 }}>
           {/* Header */}
-          <div style={{ position:"relative", padding:"20px 28px 22px", background:`linear-gradient(135deg,${accent}14,${accent}05,transparent)`, borderBottom:`1px solid ${accent}20`, overflow:"hidden" }}>
-            <div className="em-tutorial-bg-grid" style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(${accent}09 1px,transparent 1px),linear-gradient(90deg,${accent}09 1px,transparent 1px)`, backgroundSize:"20px 20px", pointerEvents:"none" }} />
-            <div className="em-tutorial-glow" style={{ position:"absolute", top:-20, right:-20, width:160, height:160, background:`radial-gradient(circle,${accent}28 0%,transparent 70%)`, pointerEvents:"none", borderRadius:"50%" }} />
+          <div style={{ position:"relative", padding:`${isMobile?14:20}px ${hPad}px ${isMobile?14:22}px`, background:`linear-gradient(135deg,${accent}14,${accent}05,transparent)`, borderBottom:`1px solid ${accent}20`, overflow:"hidden" }}>
+            <div style={{ position:"absolute", inset:0, backgroundImage:`linear-gradient(${accent}09 1px,transparent 1px),linear-gradient(90deg,${accent}09 1px,transparent 1px)`, backgroundSize:"20px 20px", pointerEvents:"none" }} />
+            <div style={{ position:"absolute", top:-20, right:-20, width:120, height:120, background:`radial-gradient(circle,${accent}28 0%,transparent 70%)`, pointerEvents:"none", borderRadius:"50%" }} />
 
             {current.label && (
-              <div className="em-tutorial-label" style={{ fontSize:10, fontWeight:900, letterSpacing:3, color:accent, textTransform:"uppercase", marginBottom:14, position:"relative" }}>{current.label}</div>
+              <div style={{ fontSize:9, fontWeight:900, letterSpacing:3, color:accent, textTransform:"uppercase", marginBottom:10, position:"relative" }}>{current.label}</div>
             )}
 
-            <div style={{ display:"flex", alignItems:"flex-start", gap:18, position:"relative" }}>
-              <div className="em-tutorial-icon" style={{
-                flexShrink:0, width:72, height:72, borderRadius:22,
+            <div style={{ display:"flex", alignItems:"center", gap:isMobile?12:18, position:"relative" }}>
+              <div style={{
+                flexShrink:0, width:iconSz, height:iconSz, borderRadius:isMobile?16:22,
                 background:`linear-gradient(135deg,${accent}22,${accent}0a)`,
-                border:`2px solid ${accent}40`, fontSize:36,
-                boxShadow:`0 8px 32px ${accent}35, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                border:`2px solid ${accent}40`, fontSize:iconFont,
+                display:"flex", alignItems:"center", justifyContent:"center",
+                boxShadow:`0 6px 24px ${accent}35`,
               }}>
                 {current.icon}
               </div>
-              <div style={{ flex:1 }}>
-                <div style={{ fontSize:26, fontWeight:900, color:"var(--text)", lineHeight:1.1, letterSpacing:-0.8 }}>{current.title}</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <div style={{ fontSize:titleSz, fontWeight:900, color:"var(--text)", lineHeight:1.15, letterSpacing:-0.5 }}>{current.title}</div>
                 {current.subtitle && (
-                  <div style={{ fontSize:13, color:accent, fontWeight:700, marginTop:6, letterSpacing:0.3, opacity:0.9 }}>{current.subtitle}</div>
+                  <div style={{ fontSize:isMobile?11:13, color:accent, fontWeight:700, marginTop:4, opacity:0.9 }}>{current.subtitle}</div>
                 )}
               </div>
             </div>
           </div>
 
           {/* Cuerpo */}
-          <div style={{ padding:"20px 28px 22px", maxHeight:"55vh", overflowY:"auto" }}>
-            <div style={{ fontSize:15, color:"var(--text-muted)", lineHeight:1.75, marginBottom: (current.features || current.hint) ? 16 : 20 }}>
+          <div style={{ padding:`${isMobile?14:20}px ${hPad}px ${isMobile?16:22}px` }}>
+            <div style={{ fontSize:bodySz, color:"var(--text-muted)", lineHeight:1.65, marginBottom:(current.features||current.hint)?12:16 }}>
               {current.body}
             </div>
 
             {current.features && (
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:18 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6, marginBottom:14 }}>
                 {current.features.map((f, i) => (
-                  <div key={i} className="em-tutorial-chip" style={{
-                    fontSize:12, fontWeight:700, padding:"10px 12px", borderRadius:10,
+                  <div key={i} style={{
+                    fontSize:isMobile?11:12, fontWeight:700, padding:isMobile?"8px 10px":"10px 12px", borderRadius:10,
                     background:`${accent}0e`, border:`1px solid ${accent}28`,
-                    color:"var(--text)", display:"flex", alignItems:"center", gap:8,
-                    boxShadow:`inset 0 1px 0 rgba(255,255,255,0.04)`,
+                    color:"var(--text)", display:"flex", alignItems:"center", gap:6,
                   }}>
                     {f}
                   </div>
@@ -9744,42 +10091,106 @@ function TutorialOverlay({ onDone }) {
             )}
 
             {current.hint && (
-              <div className="em-tutorial-hint" style={{
-                fontSize:13, fontWeight:700, color:accent,
+              <div style={{
+                fontSize:isMobile?12:13, fontWeight:700, color:accent,
                 background:`${accent}12`, border:`1px solid ${accent}38`,
-                borderRadius:10, padding:"11px 15px", marginBottom:18,
-                display:"flex", alignItems:"center", gap:10,
-                boxShadow:`0 2px 12px ${accent}20`,
+                borderRadius:10, padding:isMobile?"9px 12px":"11px 15px", marginBottom:14,
+                display:"flex", alignItems:"center", gap:8,
               }}>
                 {current.hint}
               </div>
             )}
 
-            <div style={{ display:"flex", gap:10 }}>
+            <div style={{ display:"flex", gap:8 }}>
               <button onClick={onDone} style={{
-                padding:"12px 18px", borderRadius:12,
+                padding:isMobile?"10px 14px":"12px 18px", borderRadius:12,
                 border:"1px solid rgba(255,255,255,0.08)", background:"rgba(255,255,255,0.03)",
-                color:"var(--text-faint)", fontSize:13, cursor:"pointer", whiteSpace:"nowrap", fontWeight:600,
-                transition:"all 0.15s",
+                color:"var(--text-faint)", fontSize:isMobile?12:13, cursor:"pointer", whiteSpace:"nowrap", fontWeight:600,
               }}>
                 Saltar
               </button>
               <button onClick={next} style={{
-                flex:1, padding:"14px", borderRadius:14, border:"none",
+                flex:1, padding:isMobile?"12px":"14px", borderRadius:14, border:"none",
                 background:`linear-gradient(135deg, ${accent} 0%, ${accent}bb 100%)`,
-                color:"#fff", fontSize:16, fontWeight:900, cursor:"pointer",
-                boxShadow:`0 6px 26px ${accent}55, inset 0 1px 0 rgba(255,255,255,0.15)`,
-                letterSpacing:0.4, transition:"all 0.15s",
+                color:"#fff", fontSize:isMobile?14:16, fontWeight:900, cursor:"pointer",
+                boxShadow:`0 4px 20px ${accent}55`,
+                letterSpacing:0.3,
               }}>
                 {current.cta}
               </button>
             </div>
 
-            <div style={{ textAlign:"center", marginTop:12, fontSize:11, color:"rgba(255,255,255,0.22)", fontWeight:700, letterSpacing:3 }}>
+            <div style={{ textAlign:"center", marginTop:10, fontSize:10, color:"rgba(255,255,255,0.22)", fontWeight:700, letterSpacing:3 }}>
               {step + 1} / {STEPS.length}
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Toggle de notificaciones push (componente limpio, sin IIFE) ───────────────
+function NotifToggle({ userId, lang }) {
+  const [perm, setPerm] = React.useState(() =>
+    ("Notification" in window) ? Notification.permission : "unsupported"
+  );
+  const [loading, setLoading] = React.useState(false);
+
+  if (perm === "unsupported") return null;
+
+  const handleEnable = async () => {
+    setLoading(true);
+    try {
+      const result = await Notification.requestPermission();
+      setPerm(result);
+      if (result === "granted") await subscribePush(userId);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDisable = async () => {
+    setLoading(true);
+    try {
+      await unsubscribePush(userId);
+      setPerm("default");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ padding:"10px 0", borderBottom:"1px solid var(--border)" }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <span style={{ fontSize:18 }}>🔔</span>
+          <div>
+            <div style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>{t("settings_notif", lang)}</div>
+            {perm === "denied" && (
+              <div style={{ fontSize:10, color:"#f97316", marginTop:2 }}>
+                {t("notif_blocked_hint", lang)}
+              </div>
+            )}
+          </div>
+        </div>
+        {perm === "denied" ? (
+          <span style={{ fontSize:11, color:"var(--text-faint)", fontWeight:600 }}>🚫 {t("notif_blocked", lang)}</span>
+        ) : perm === "granted" ? (
+          <button
+            onClick={handleDisable}
+            disabled={loading}
+            style={{ background:"#C41A1A20", border:"1px solid #C41A1A40", color:"#C41A1A", borderRadius:8, padding:"5px 12px", fontSize:12, fontWeight:700, cursor:"pointer", opacity: loading ? 0.6 : 1 }}>
+            {loading ? "…" : t("notif_disable", lang)}
+          </button>
+        ) : (
+          <button
+            onClick={handleEnable}
+            disabled={loading}
+            style={{ background:"#C41A1A", border:"none", color:"#fff", borderRadius:8, padding:"6px 14px", fontSize:12, fontWeight:700, cursor:"pointer", boxShadow:"0 2px 8px #C41A1A40", opacity: loading ? 0.7 : 1 }}>
+            {loading ? "…" : t("notif_enable", lang)}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -9791,7 +10202,7 @@ export default function App() {
   const [form, setForm] = useState(EMPTY_SESSION);
   const [detailId, setDetailId] = useState(null);
   const [weekGoal, setWeekGoal] = useState(() => {
-    try { return parseInt(localStorage.getItem(GOAL_KEY)) || 4; } catch { return 4; }
+    try { return 4; } catch { return 4; } // loaded per-user in useEffect
   });
   const [sortBy, setSortBy] = useState("fecha");
   const [search, setSearch] = useState("");
@@ -9801,10 +10212,10 @@ export default function App() {
   const [filterRpe, setFilterRpe] = useState(""); // "": all, "easy": ≤4, "mod": 5-7, "hard": ≥8
   const [compactView, setCompactView] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
-  const [goals, setGoals] = useState(() => { try { return JSON.parse(localStorage.getItem(GOALS_KEY)) || []; } catch { return []; } });
-  const [bodyEntries, setBodyEntries] = useState(() => { try { return JSON.parse(localStorage.getItem(BODY_KEY)) || []; } catch { return []; } });
-  const [injuries, setInjuries] = useState(() => { try { return JSON.parse(localStorage.getItem(INJURIES_KEY)) || []; } catch { return []; } });
-  const [rango, setRango] = useState(() => { try { const r = JSON.parse(localStorage.getItem(RANGO_KEY)) || {}; return { disc:"", cinturon:0, fecha:"", stripes:0, ...r }; } catch { return { disc:"", cinturon:0, fecha:"", stripes:0 }; } });
+  const [goals, setGoals] = useState([]);
+  const [bodyEntries, setBodyEntries] = useState([]);
+  const [injuries, setInjuries] = useState([]);
+  const [rango, setRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
   const [editRango, setEditRango] = useState(false);
   const [tmpRango, setTmpRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
   const [newGoal, setNewGoal] = useState({ texto: "", fecha: "" });
@@ -9816,6 +10227,56 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("em_theme_v2") === "dark");
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
+  // ── Update disponible (Service Worker) ──────────────────────────────────────
+  const [swUpdateReady, setSwUpdateReady] = useState(false);
+  const swRegistrationRef = useRef(null);
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+
+    const handleSWUpdate = (reg) => {
+      swRegistrationRef.current = reg;
+
+      const trackInstalling = (sw) => {
+        if (!sw) return;
+        sw.addEventListener("statechange", () => {
+          if (sw.state === "installed" && navigator.serviceWorker.controller) {
+            setSwUpdateReady(true);
+          }
+        });
+        // Ya está instalado y esperando (race condition cubierta)
+        if (sw.state === "installed" && navigator.serviceWorker.controller) {
+          setSwUpdateReady(true);
+        }
+      };
+
+      // SW ya en waiting cuando montamos (p.ej. refresh tras deploy)
+      if (reg.waiting) { setSwUpdateReady(true); return; }
+
+      // SW instalándose ahora mismo
+      if (reg.installing) { trackInstalling(reg.installing); }
+
+      // Futuros updates
+      reg.addEventListener("updatefound", () => trackInstalling(reg.installing));
+    };
+
+    // Registro activo
+    navigator.serviceWorker.ready.then(handleSWUpdate);
+
+    // Mensaje del SW al activarse
+    navigator.serviceWorker.addEventListener("message", (e) => {
+      if (e.data?.type === "SW_ACTIVATED") setSwUpdateReady(true);
+    });
+
+    // Comprobar update al montar (sin esperar 30 min)
+    navigator.serviceWorker.ready.then((reg) => reg.update().catch(() => {}));
+
+    // Polling cada 30 min
+    const interval = setInterval(() => {
+      navigator.serviceWorker.ready.then((reg) => reg.update().catch(() => {}));
+    }, 30 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
   // Plan y estado Fundador
   const userPlan = profile?.plan || "free";
   const isFundador = userPlan === "fundador";
@@ -9896,15 +10357,17 @@ export default function App() {
     setSessions([]);
     setShowTutorial(false);
 
-    // Request push permission after login (once per session)
-    if ("Notification" in window && Notification.permission === "default") {
-      setTimeout(async () => {
-        const perm = await Notification.requestPermission();
-        if (perm === "granted") subscribePush(user.id);
-      }, 3000); // delay 3s so app is loaded first
-    } else if (Notification.permission === "granted") {
+    // Push: solo suscribir si ya tiene permiso concedido previamente (nunca pedir automático)
+    if ("Notification" in window && Notification.permission === "granted") {
       subscribePush(user.id);
     }
+
+    // ── Cargar datos de localStorage con clave de usuario ──────────────────
+    try { setWeekGoal(parseInt(localStorage.getItem(GOAL_KEY(user.id))) || 4); } catch {}
+    try { const g = JSON.parse(localStorage.getItem(GOALS_KEY(user.id))); if (g) setGoals(g); } catch {}
+    try { const b = JSON.parse(localStorage.getItem(BODY_KEY(user.id))); if (b) setBodyEntries(b); } catch {}
+    try { const inj = JSON.parse(localStorage.getItem(INJURIES_KEY(user.id))); if (inj) setInjuries(inj); } catch {}
+    try { const r = JSON.parse(localStorage.getItem(RANGO_KEY(user.id))); if (r) setRango(prev => ({ ...prev, ...r })); } catch {}
 
     const sync = async () => {
       setSyncing(true);
@@ -9919,18 +10382,18 @@ export default function App() {
           // Supabase es la fuente de verdad
           const mapped = remote.map(supabaseToSession);
           setSessions(mapped);
-          saveSessions(mapped);
+          saveSessions(mapped, user?.id);
           setShowTutorial(false);
         } else {
           // No remote sessions: show tutorial for new users
           setSessions([]);
-          saveSessions([]);
+          saveSessions([], user?.id);
           setShowTutorial(true);
         }
       } catch (err) {
         console.error("Sync error:", err);
         // On network error, try localStorage as fallback (same-device last session)
-        const local = loadSessions();
+        const local = loadSessions(user?.id);
         if (local.length > 0) setSessions(local);
         else setShowTutorial(true);
       }
@@ -9998,13 +10461,15 @@ export default function App() {
   const fileInputRef = useRef(null);
   const timerIntervalRef = useRef(null);
 
-  useEffect(() => { saveSessions(sessions); }, [sessions]);
+  useEffect(() => { if (user?.id) saveSessions(sessions, user?.id); }, [sessions, user?.id]);
   useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [view]);
   useEffect(() => { localStorage.setItem("em_theme_v2", darkMode ? "dark" : "light"); }, [darkMode]);
   useEffect(() => { localStorage.setItem("em_lang", lang); }, [lang]);
-  useEffect(() => { try { localStorage.setItem(GOAL_KEY, weekGoal); } catch {} }, [weekGoal]);
-  useEffect(() => { try { localStorage.setItem(GOALS_KEY, JSON.stringify(goals)); } catch {} }, [goals]);
-  useEffect(() => { try { localStorage.setItem(BODY_KEY, JSON.stringify(bodyEntries)); } catch {} }, [bodyEntries]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOAL_KEY(user.id), weekGoal); } catch {} }, [weekGoal, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOALS_KEY(user.id), JSON.stringify(goals)); } catch {} }, [goals, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(BODY_KEY(user.id), JSON.stringify(bodyEntries)); } catch {} }, [bodyEntries, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(injuries)); } catch {} }, [injuries, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(RANGO_KEY(user.id), JSON.stringify(rango)); } catch {} }, [rango, user?.id]);
 
   useEffect(() => {
     if (timerRunning) {
@@ -10045,18 +10510,19 @@ export default function App() {
     if (view === "form" && !form.id) {
       const hasContent = form.nombre || form.disciplina || form.notas || form.entrenamiento;
       if (hasContent) {
-        try { localStorage.setItem(DRAFT_KEY, JSON.stringify(form)); } catch {}
+        try { localStorage.setItem(DRAFT_KEY(user?.id), JSON.stringify(form)); } catch {}
       }
     }
   }, [form, view]);
 
-  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY); } catch {} };
+  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY(user?.id)); } catch {} };
 
   const [linkedScheduledId, setLinkedScheduledId] = useState(null);
   const [confirmingScheduledId, setConfirmingScheduledId] = useState(null); // id de sesión en espera de confirmación
   const [confirmingLoading, setConfirmingLoading] = useState(false);
   const [detailScheduled, setDetailScheduled] = useState(null); // modal detalle sesión programada
   const [isSavingSession, setIsSavingSession] = useState(false);
+  const [showMoreNav, setShowMoreNav] = useState(false);
   const [myCoachId, setMyCoachId] = useState(null);
   const [showChat, setShowChat] = useState(false);
   const [chatMessages, setChatMessages] = useState([]);
@@ -10184,12 +10650,10 @@ export default function App() {
     setIsSavingSession(true);
     // Validar campos requeridos
     const errs = {};
-    if (!form.nombre.trim())    errs.nombre     = "El nombre es obligatorio";
-    if (!form.fecha)            errs.fecha       = "La fecha es obligatoria";
-    if (!form.hora)             errs.hora        = "La hora es obligatoria";
-    if (!form.disciplina)       errs.disciplina  = "Selecciona una disciplina";
-    if (!form.tipo_sesion)      errs.tipo_sesion = "Selecciona el tipo de sesión";
-    if (!form.duracionMin)      errs.duracionMin = "Indica la duración";
+    if (!form.nombre.trim())    errs.nombre     = tr("err_nombre");
+    if (!form.fecha)            errs.fecha       = tr("err_fecha");
+    if (!form.disciplina)       errs.disciplina  = tr("err_disciplina");
+    if (!form.duracionMin)      errs.duracionMin = tr("err_duracion");
     if (Object.keys(errs).length > 0) {
       setFormErrors(errs);
       setFormStep(1); setFormStepDir(-1);
@@ -10380,7 +10844,7 @@ export default function App() {
     const elapsedMins = timerElapsed > 0 ? String(Math.max(1, Math.round(timerElapsed / 60))) : "";
     resetTimer();
     try {
-      const raw = localStorage.getItem(DRAFT_KEY);
+      const raw = localStorage.getItem(DRAFT_KEY(user?.id));
       if (raw) {
         const draft = JSON.parse(raw);
         setForm({ ...draft, id: null, duracionMin: draft.duracionMin || elapsedMins });
@@ -10458,7 +10922,7 @@ export default function App() {
   const globalResults = useMemo(() => {
     const q = globalSearch.trim().toLowerCase();
     if (!q || q.length < 2) return null;
-    const notasRapidas = (() => { try { return JSON.parse(localStorage.getItem(NOTAS_KEY)) || []; } catch { return []; } })();
+    const notasRapidas = (() => { try { return JSON.parse(localStorage.getItem(NOTAS_KEY(user?.id))) || []; } catch { return []; } })();
     const sesResult = sessions.filter(ss =>
       (ss.nombre||"").toLowerCase().includes(q) ||
       (ss.disciplina||"").toLowerCase().includes(q) ||
@@ -10524,6 +10988,44 @@ export default function App() {
           )}
         </div>
       )}
+      {/* Banner de actualización disponible */}
+      {swUpdateReady && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 9999,
+          background: "linear-gradient(90deg, #C41A1A 0%, #9b1111 100%)",
+          color: "#fff", display: "flex", alignItems: "center",
+          justifyContent: "space-between", padding: "10px 16px",
+          boxShadow: "0 2px 16px rgba(196,26,26,0.45)",
+          paddingTop: `max(10px, calc(env(safe-area-inset-top) + 10px))`,
+          gap: 12,
+        }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+            <span style={{ fontSize:18 }}>🚀</span>
+            <div>
+              <div style={{ fontSize:13, fontWeight:700, lineHeight:1.3 }}>{t("update_ready_title", lang)}</div>
+              <div style={{ fontSize:11, opacity:0.85 }}>{t("update_ready_body", lang)}</div>
+            </div>
+          </div>
+          <div style={{ display:"flex", gap:8, flexShrink:0 }}>
+            <button
+              onClick={() => setSwUpdateReady(false)}
+              style={{ background:"rgba(255,255,255,0.15)", border:"none", color:"#fff", borderRadius:8, padding:"6px 12px", fontSize:12, cursor:"pointer", fontWeight:600 }}
+            >{t("update_later", lang)}</button>
+            <button
+              onClick={() => {
+                const reg = swRegistrationRef.current;
+                if (reg?.waiting) {
+                  reg.waiting.postMessage({ type: "SKIP_WAITING" });
+                  navigator.serviceWorker.addEventListener("controllerchange", () => window.location.reload(), { once: true });
+                } else {
+                  window.location.reload();
+                }
+              }}
+              style={{ background:"#fff", border:"none", color:"#C41A1A", borderRadius:8, padding:"6px 14px", fontSize:12, cursor:"pointer", fontWeight:800 }}
+            >{t("update_now", lang)}</button>
+          </div>
+        </div>
+      )}
       {/* Splash screen */}
       {!splashDone && (
         <div className="em-splash">
@@ -10578,7 +11080,7 @@ export default function App() {
               <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: -1 }}>Élite Marcial</div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase", marginTop: 4 }}>{tr("logo_sub")}</div>
             </div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 8 }}>Toca para cerrar</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", marginTop: 8 }}>{t("lbl_tap_close",lang)}</div>
           </div>
         )}
 
@@ -10783,7 +11285,7 @@ export default function App() {
                       : coachInitials}
                   </div>
                   <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", textTransform:"uppercase", letterSpacing:1, marginBottom:3 }}>Tu entrenador</div>
+                    <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", textTransform:"uppercase", letterSpacing:1, marginBottom:3 }}>{t("athlete_coach_title",lang)}</div>
                     <div style={{ fontSize:18, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:4 }}>{coachName}</div>
                     {coachProfile?.bio && <div style={{ fontSize:12, color:"var(--text-muted)", lineHeight:1.5, overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{coachProfile.bio}</div>}
                     {coachProfile?.experiencia_anos && <div style={{ fontSize:11, color:"#3b82f6", fontWeight:700, marginTop:4 }}>🏅 {coachProfile.experiencia_anos} años de experiencia</div>}
@@ -10792,7 +11294,7 @@ export default function App() {
               ) : (
                 <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, padding:"28px 22px", marginBottom:20, textAlign:"center" }}>
                   <div style={{ fontSize:40, marginBottom:10 }}>🎓</div>
-                  <div style={{ fontSize:16, fontWeight:800, color:"var(--text)", marginBottom:6 }}>Sin entrenador asignado</div>
+                  <div style={{ fontSize:16, fontWeight:800, color:"var(--text)", marginBottom:6 }}>{t("athlete_no_coach",lang)}</div>
                   <div style={{ fontSize:13, color:"var(--text-muted)" }}>Cuando un coach te invite y aceptes, verás sus sesiones aquí.</div>
                 </div>
               )}
@@ -10870,7 +11372,7 @@ export default function App() {
                         {/* Bloques de entrenamiento */}
                         {displayMacro.mesociclos?.length > 0 && (
                           <div style={{ padding:"14px 18px" }}>
-                            <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:10 }}>Bloques de entrenamiento</div>
+                            <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:10 }}>{t("athlete_blocks",lang)}</div>
                             <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
                               {displayMacro.mesociclos.map((meso, idx) => {
                                 const fi = FASE_I[meso.fase] || FASE_I.otro;
@@ -10951,7 +11453,7 @@ export default function App() {
                 <div style={{ marginBottom:24 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:12 }}>
                     <div style={{ width:6, height:6, borderRadius:3, background:RED_COACH, animation:"pulse 1.5s ease-in-out infinite" }}/>
-                    <span style={{ fontSize:11, fontWeight:800, color:RED_COACH, textTransform:"uppercase", letterSpacing:1.2 }}>Próximas sesiones</span>
+                    <span style={{ fontSize:11, fontWeight:800, color:RED_COACH, textTransform:"uppercase", letterSpacing:1.2 }}>{t("athlete_next_sessions",lang)}</span>
                     <span style={{ fontSize:10, fontWeight:700, color:RED_COACH, background:RED_COACH+"20", borderRadius:10, padding:"1px 8px" }}>{sesionesProgr.length}</span>
                   </div>
                   <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -11046,7 +11548,7 @@ export default function App() {
         })()}
 
         {/* NOTAS RÁPIDAS */}
-        {view === "notas" && <NotasView lang={lang} />}
+        {view === "notas" && <NotasView lang={lang} userId={user?.id} />}
 
         {/* CUERPO */}
         {view === "cuerpo" && (
@@ -11057,6 +11559,7 @@ export default function App() {
             injuries={injuries}
             setInjuries={setInjuries}
             lang={lang}
+            userId={user?.id}
           />
         )}
 
@@ -11068,7 +11571,7 @@ export default function App() {
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22 }}>
                 <div>
                   <div style={{ fontSize:22, fontWeight:900, color:"var(--text)" }}>Elite Marcial</div>
-                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>Elige tu plan</div>
+                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>{t("auth_choose_plan",lang)}</div>
                 </div>
                 <button onClick={() => setShowPlanesModal(false)}
                   style={{ width:32, height:32, borderRadius:16, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:16, cursor:"pointer" }}>✕</button>
@@ -11098,12 +11601,12 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                     <span style={{ fontSize:24 }}>📋</span>
                     <div>
-                      <div style={{ fontSize:16, fontWeight:900, color:"var(--text)" }}>Atleta</div>
+                      <div style={{ fontSize:16, fontWeight:900, color:"var(--text)" }}>{t("auth_plan_atleta",lang)}</div>
                       <div style={{ fontSize:11, color:"var(--text-faint)" }}>Diario de entrenamiento personal completo.</div>
                     </div>
                   </div>
                   <div style={{ textAlign:"right" }}>
-                    <div style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>Gratis</div>
+                    <div style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>{t("auth_plan_free",lang)}</div>
                     <div style={{ fontSize:10, color:"var(--text-faint)" }}>para siempre</div>
                   </div>
                 </div>
@@ -11124,7 +11627,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                     <span style={{ fontSize:24 }}>🎓</span>
                     <div>
-                      <div style={{ fontSize:16, fontWeight:900, color:"#3b82f6" }}>Entrenador</div>
+                      <div style={{ fontSize:16, fontWeight:900, color:"#3b82f6" }}>{t("auth_plan_coach",lang)}</div>
                       <div style={{ fontSize:11, color:"var(--text-faint)" }}>Gestión completa de tu equipo.</div>
                     </div>
                   </div>
@@ -11174,7 +11677,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                     <span style={{ fontSize:28 }}>🏅</span>
                     <div>
-                      <div style={{ fontSize:18, fontWeight:900, color:"#f59e0b", letterSpacing:-0.5 }}>Fundador</div>
+                      <div style={{ fontSize:18, fontWeight:900, color:"#f59e0b", letterSpacing:-0.5 }}>{t("auth_plan_founder",lang)}</div>
                       <div style={{ fontSize:11, color:"var(--text-faint)" }}>El plan que cierra cuando se llena.</div>
                     </div>
                   </div>
@@ -11270,7 +11773,8 @@ export default function App() {
           };
 
           const CHANGELOG = [
-      { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal más amplio (580px), hero header rojo con decoración, feature cards con iconos grandes, inputs más prominentes. Experiencia de invitación premium.", nuevo:true },
+      { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
+      { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal más amplio (580px), hero header rojo con decoración, feature cards con iconos grandes, inputs más prominentes. Experiencia de invitación premium." },
       { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
       { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
       { version:"1.6", fecha:"Jun 2026", titulo:"Técnicas, Notas, Calendario — rediseño futurista", desc:"Las tres vistas rediseñadas con KPI headers animados, cards con glow, ranking con barras animadas, filtros por tag y strip semanal interactivo." },
@@ -11284,8 +11788,8 @@ export default function App() {
 
           const ROADMAP = [
       { estado:"✅ Completado", titulo:"Notificaciones por email (Resend)", desc:"Sugerencias de Fundadores enviadas automáticamente vía Supabase Edge Functions + Resend. Función desplegada." },
-      { estado:"🔨 En desarrollo", titulo:"Notificaciones push nativas", desc:"Alertas push para sesiones programadas y objetivos. El service worker PWA ya está listo." },
-      { estado:"🔨 En desarrollo", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización de rendimiento general." },
+      { estado:"✅ Completado", titulo:"Notificaciones push nativas", desc:"Web Push API + VAPID + Edge Function desplegada. Alertas para sesiones programadas, mensajes y objetivos." },
+      { estado:"✅ Completado", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización mobile. Tutorial y panel de entrenador optimizados." },
       { estado:"📋 Planificado", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico." },
       { estado:"📋 Planificado", titulo:"Suscripciones recurrentes (Stripe)", desc:"Gestión de pagos para coaches: planes mensuales y anuales para sus atletas." },
       { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial y biometría." },
@@ -11302,7 +11806,7 @@ export default function App() {
                 <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:12 }}>
                   <div style={{ width:52, height:52, borderRadius:16, background:`${GOLD}22`, border:`2px solid ${GOLD}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>🏅</div>
                   <div>
-                    <div style={{ fontSize:11, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5, marginBottom:2 }}>Club Fundador</div>
+                    <div style={{ fontSize:11, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5, marginBottom:2 }}>{t("club_title",lang)}</div>
                     <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", lineHeight:1.2 }}>{profile?.nombre || "Fundador"}</div>
                     <div style={{ fontSize:11, color:"var(--text-faint)" }}>Miembro fundador · Acceso vitalicio</div>
                   </div>
@@ -11330,6 +11834,7 @@ export default function App() {
               {activeTab === "changelog" && (() => {
                 const isMb = window.innerWidth < 700;
                 const clMap = {
+                  "2.0":{ icon:"🔔", color:"#C41A1A", tag:"Fase 2" },
                   "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
                   "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
                   "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },
@@ -11449,7 +11954,7 @@ export default function App() {
                       </div>
                     </div>
                     {/* Items */}
-                    <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>Próximas mejoras</div>
+                    <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>{t("club_improvements",lang)}</div>
                     <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                       {items.map(item => {
                         const meta = estadoMeta[item.estado];
@@ -11505,7 +12010,7 @@ export default function App() {
                   </div>
                   {suggList.length > 0 && (
                     <div>
-                      <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:8 }}>Tus sugerencias anteriores</div>
+                      <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:8 }}>{t("club_suggestions",lang)}</div>
                       {suggList.slice(0,5).map(s => (
                         <div key={s.id} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:10, padding:"10px 14px", marginBottom:6 }}>
                           <div style={{ display:"flex", gap:6, marginBottom:4 }}>
@@ -11692,7 +12197,7 @@ export default function App() {
                       </div>
                     ))}
                     <div>
-                      <div style={{ fontSize:10, color:"var(--text-muted)", marginBottom:4 }}>Categoría de peso</div>
+                      <div style={{ fontSize:10, color:"var(--text-muted)", marginBottom:4 }}>{t("cuerpo_weight_cat",lang)}</div>
                       {catOptions.length > 0 ? (
                         <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
                           {catOptions.map(c => (
@@ -11727,7 +12232,7 @@ export default function App() {
                       </div>
                     ))}
                     {!athExt.club && !athExt.pais && !athExt.year_inicio && !athExt.peso_cat && (
-                      <div style={{ fontSize:12, color:"var(--text-faint)", fontStyle:"italic" }}>Pulsa Editar para añadir info deportiva</div>
+                      <div style={{ fontSize:12, color:"var(--text-faint)", fontStyle:"italic" }}>{t("profile_sport_empty",lang)}</div>
                     )}
                   </div>
                 )}
@@ -11750,7 +12255,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderBottom:"1px solid var(--border)" }}>
                     <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                       <span style={{ fontSize:18 }}>{darkMode ? "🌙" : "☀️"}</span>
-                      <span style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>Modo oscuro</span>
+                      <span style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>{t("settings_dark",lang)}</span>
                     </div>
                     <button onClick={() => { const next = !darkMode; localStorage.setItem("em_theme_v2", next?"dark":"light"); window.dispatchEvent(new Event("em_theme_change")); }}
                       style={{ width:44, height:24, borderRadius:12, border:"none", cursor:"pointer", position:"relative", padding:0,
@@ -11759,11 +12264,13 @@ export default function App() {
                         left: darkMode ? 22 : 2, transition:"left 0.2s" }} />
                     </button>
                   </div>
+                  {/* Notificaciones push */}
+                  <NotifToggle userId={user?.id} lang={lang} />
                   {/* Idioma */}
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderBottom:"1px solid var(--border)" }}>
                     <div style={{ display:"flex", alignItems:"center", gap:10 }}>
                       <span style={{ fontSize:18 }}>🌐</span>
-                      <span style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>Idioma</span>
+                      <span style={{ fontSize:13, fontWeight:700, color:"var(--text)" }}>{t("settings_lang",lang)}</span>
                     </div>
                     <select value={lang} onChange={e => { const l=e.target.value; localStorage.setItem("em_lang",l); window.location.reload(); }}
                       style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, padding:"4px 10px", color:"var(--text)", fontSize:12 }}>
@@ -11776,7 +12283,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 0" }}>
                     <span style={{ fontSize:18 }}>✉️</span>
                     <div>
-                      <div style={{ fontSize:10, color:"var(--text-faint)" }}>Cuenta</div>
+                      <div style={{ fontSize:10, color:"var(--text-faint)" }}>{t("settings_account",lang)}</div>
                       <div style={{ fontSize:12, color:"var(--text-muted)" }}>{user?.email}</div>
                     </div>
                   </div>
@@ -11904,7 +12411,7 @@ export default function App() {
                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ fontSize:18 }}>🎓</span>
                     <div>
-                      <div style={{ fontSize:11, fontWeight:900, color:"rgba(255,255,255,0.7)", textTransform:"uppercase", letterSpacing:1 }}>Sesión de hoy</div>
+                      <div style={{ fontSize:11, fontWeight:900, color:"rgba(255,255,255,0.7)", textTransform:"uppercase", letterSpacing:1 }}>{t("home_today_session",lang)}</div>
                       <div style={{ fontSize:15, fontWeight:900, color:"#fff" }}>{sp.titulo || sp.disciplina || "Entrenamiento"}</div>
                     </div>
                   </div>
@@ -11969,7 +12476,7 @@ export default function App() {
                     {spMeta.tipo && <span style={{ fontSize:10, fontWeight:700, color:tipoColor, background:tipoColor+"18", borderRadius:4, padding:"0 5px" }}>{getTipoIcon(spMeta.tipo)} {spMeta.tipo}</span>}
                     {sp.duracion_min && <span style={{ fontSize:10, color:"var(--text-faint)" }}>⏱ {sp.duracion_min}min</span>}
                     {spMeta.rpe && <span style={{ fontSize:10, fontWeight:700, color:rpeColor }}>⚡ RPE {spMeta.rpe}</span>}
-                    {isPast && <span style={{ fontSize:9, fontWeight:700, color:"#f87171", background:"#f8717115", borderRadius:4, padding:"0 5px" }}>Pendiente</span>}
+                    {isPast && <span style={{ fontSize:9, fontWeight:700, color:"#f87171", background:"#f8717115", borderRadius:4, padding:"0 5px" }}>{t("lbl_pendiente",lang)}</span>}
                   </div>
                 </div>
                 {/* Flecha */}
@@ -11983,7 +12490,7 @@ export default function App() {
             {/* Cabecera sección */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
               <div style={{ width: 6, height: 6, borderRadius: 3, background: "#3b82f6", animation: "pulse 1.5s ease-in-out infinite" }} />
-              <span style={{ fontSize: 10, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase", letterSpacing: 1.2 }}>Tu entrenador te ha programado</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: "#3b82f6", textTransform: "uppercase", letterSpacing: 1.2 }}>{t("home_coach_scheduled",lang)}</span>
               <span style={{ fontSize: 10, fontWeight: 700, color: "#3b82f6", background: "#3b82f620", borderRadius: 10, padding: "1px 8px" }}>{sesionesProgr.length}</span>
             </div>
 
@@ -11993,7 +12500,7 @@ export default function App() {
             {/* Próximas sesiones */}
             {upcoming.length > 0 && (
               <>
-                {sessionToday && <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Próximas</div>}
+                {sessionToday && <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("home_upcoming",lang)}</div>}
                 <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
                   {upcoming.map(sp => <SpCard key={sp.id} sp={sp} isHero={false} />)}
                 </div>
@@ -12003,7 +12510,7 @@ export default function App() {
           );
         })()}
 
-        {/* ────── SECCIÓN ANTIGUA — REMOVIDA, reemplazada arriba ────── */}
+        {/* ────── SESIONES PROGRAMADAS (ver SpCard hero arriba) ────── */}
         {false && view === "sesiones" && sesionesProgr.length > 0 && (
           <div style={{ marginBottom: 28 }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -12035,7 +12542,7 @@ export default function App() {
                             {sp.titulo || sp.disciplina || "Sesión programada"}
                           </div>
                           {isToday && <span style={{ fontSize: 9, fontWeight: 800, color: "#f59e0b", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 5, padding: "2px 7px", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>HOY</span>}
-                          {isPast && !isToday && <span style={{ fontSize: 9, fontWeight: 800, color: "#f87171", background: "#f8717120", border: "1px solid #f8717140", borderRadius: 5, padding: "2px 7px", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>Pendiente</span>}
+                          {isPast && !isToday && <span style={{ fontSize: 9, fontWeight: 800, color: "#f87171", background: "#f8717120", border: "1px solid #f8717140", borderRadius: 5, padding: "2px 7px", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>{t("lbl_pendiente",lang)}</span>}
                         </div>
                         {/* Chips de metadata */}
                         <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: (spTexto || spMeta.tecnicas) ? 8 : 0 }}>
@@ -12163,34 +12670,34 @@ export default function App() {
             <div style={{ marginBottom:16 }}>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
                 {/* Sesiones semana */}
-                <div style={{ background:"var(--bg-card)", border:`1px solid ${RED_K}25`, borderRadius:14, padding:12, textAlign:"center" }}>
+                <div style={{ background:"var(--bg-card)", border:`1px solid ${RED_K}25`, borderRadius:14, padding:10, textAlign:"center" }}>
                   <div style={{ fontSize:22, fontWeight:900, color:RED_K, lineHeight:1 }}>{comp.tw.n}</div>
                   {dnSess && <div style={{ fontSize:10, color: dnSess.up ? GREEN_K : GOLD_K, fontWeight:700, marginTop:2 }}>{dnSess.up?"↑":"↓"} vs sem</div>}
-                  <div style={{ fontSize:8, color:"var(--text-faint)", marginTop:4, textTransform:"uppercase", letterSpacing:0.8 }}>Esta semana</div>
+                  <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:4, textTransform:"uppercase", letterSpacing:0.5 }}>{t("stats_this_week_short",lang)}</div>
                 </div>
                 {/* Tiempo total */}
-                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:12, textAlign:"center" }}>
+                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:10, textAlign:"center" }}>
                   <div style={{ fontSize:22, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{fmtMin(comp.tw.min)}</div>
-                  <div style={{ fontSize:8, color:"var(--text-faint)", marginTop:6, textTransform:"uppercase", letterSpacing:0.8 }}>Tiempo total</div>
+                  <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("stats_time_lbl",lang)}</div>
                 </div>
                 {/* RPE medio */}
-                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:12, textAlign:"center" }}>
+                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:10, textAlign:"center" }}>
                   <div style={{ fontSize:22, fontWeight:900, color: comp.tw.rpe >= 8 ? "#ef4444" : comp.tw.rpe >= 6 ? GOLD_K : GREEN_K, lineHeight:1 }}>
                     {comp.tw.rpe ? comp.tw.rpe.toFixed(1) : "—"}
                   </div>
-                  <div style={{ fontSize:8, color:"var(--text-faint)", marginTop:6, textTransform:"uppercase", letterSpacing:0.8 }}>RPE medio</div>
+                  <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6, textTransform:"uppercase", letterSpacing:0.5 }}>RPE</div>
                 </div>
                 {/* Meta semanal */}
-                <div style={{ background:"var(--bg-card)", border:`1px solid ${goalDone ? GREEN_K+"40" : "var(--border)"}`, borderRadius:14, padding:12, textAlign:"center" }}>
+                <div style={{ background:"var(--bg-card)", border:`1px solid ${goalDone ? GREEN_K+"40" : "var(--border)"}`, borderRadius:14, padding:10, textAlign:"center" }}>
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:4, marginBottom:4 }}>
-                    <button onClick={() => setWeekGoal(g => Math.max(1,g-1))} style={{ width:18,height:18,borderRadius:4,border:"1px solid var(--border)",background:"var(--bg-input)",color:"var(--text-faint)",fontSize:11,cursor:"pointer",padding:0,lineHeight:1 }}>−</button>
-                    <span style={{ fontSize:18, fontWeight:900, color: goalDone ? GREEN_K : RED_K, minWidth:32, textAlign:"center" }}>{goalDone ? "✓" : `${comp.tw.n}/${weekGoal}`}</span>
-                    <button onClick={() => setWeekGoal(g => Math.min(14,g+1))} style={{ width:18,height:18,borderRadius:4,border:"1px solid var(--border)",background:"var(--bg-input)",color:"var(--text-faint)",fontSize:11,cursor:"pointer",padding:0,lineHeight:1 }}>+</button>
+                    <button onClick={() => setWeekGoal(g => Math.max(1,g-1))} style={{ width:24,height:24,borderRadius:6,border:"1px solid var(--border)",background:"var(--bg-input)",color:"var(--text-faint)",fontSize:13,cursor:"pointer",padding:0,lineHeight:1,flexShrink:0 }}>−</button>
+                    <span style={{ fontSize:16, fontWeight:900, color: goalDone ? GREEN_K : RED_K, minWidth:28, textAlign:"center" }}>{goalDone ? "✓" : `${comp.tw.n}/${weekGoal}`}</span>
+                    <button onClick={() => setWeekGoal(g => Math.min(14,g+1))} style={{ width:24,height:24,borderRadius:6,border:"1px solid var(--border)",background:"var(--bg-input)",color:"var(--text-faint)",fontSize:13,cursor:"pointer",padding:0,lineHeight:1,flexShrink:0 }}>+</button>
                   </div>
                   <div style={{ height:3, borderRadius:3, background:"var(--bg-input)", overflow:"hidden", marginBottom:4 }}>
                     <div style={{ height:"100%", width:`${goalPct}%`, background: goalDone ? GREEN_K : RED_K, borderRadius:3, transition:"width 0.4s" }}/>
                   </div>
-                  <div style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8 }}>Meta semana</div>
+                  <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5 }}>{t("lbl_meta",lang)}</div>
                 </div>
               </div>
               {streaks.current >= 3 && (
@@ -12362,7 +12869,7 @@ export default function App() {
                 </div>
 
                 {/* Feature cards */}
-                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>Explora las secciones</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text-faint)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 12 }}>{t("home_explore",lang)}</div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))", gap: 10 }}>
                   {[
                     { icon: "📋", title: tr("feat_sessions_t"), desc: tr("feat_sessions_d"), view: "sesiones", accent: "#3b82f6" },
@@ -12437,7 +12944,7 @@ export default function App() {
                     {ss.fromCoach && (
                       <div style={{ background:"linear-gradient(90deg,#1d4ed8,#2563eb,#3b82f6)", padding:"5px 14px", display:"flex", alignItems:"center", gap:7 }}>
                         <span style={{ fontSize:11 }}>🎓</span>
-                        <span style={{ fontSize:10, fontWeight:800, color:"#fff", letterSpacing:0.5, textTransform:"uppercase" }}>Programada por tu entrenador</span>
+                        <span style={{ fontSize:10, fontWeight:800, color:"#fff", letterSpacing:0.5, textTransform:"uppercase" }}>{t("home_session_by_coach",lang)}</span>
                       </div>
                     )}
 
@@ -13069,16 +13576,16 @@ export default function App() {
               })()}
 
               {/* Hero banner */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 18 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 18 }}>
                 {[
                   { icon: "🥋", val: sessions.length, label: tr("pro_sessions") },
                   { icon: "⏱", val: totalHoras, label: tr("pro_total_time") },
                   { icon: "📅", val: discSet.length || 0, label: tr("pro_disciplines") },
                 ].map(h => (
-                  <div key={h.label} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderTop: `3px solid ${RED}`, borderRadius: 12, padding: "22px 16px", textAlign: "center" }}>
-                    <div style={{ fontSize: 32, marginBottom: 10 }}>{h.icon}</div>
-                    <div style={{ fontSize: 28, fontWeight: 800, color: "var(--text)", marginBottom: 4, lineHeight: 1 }}>{h.val}</div>
-                    <div style={{ fontSize: 12, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.8px" }}>{h.label}</div>
+                  <div key={h.label} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderTop: `3px solid ${RED}`, borderRadius: 12, padding: "14px 8px", textAlign: "center" }}>
+                    <div style={{ fontSize: 26, marginBottom: 6 }}>{h.icon}</div>
+                    <div style={{ fontSize: 22, fontWeight: 800, color: "var(--text)", marginBottom: 4, lineHeight: 1 }}>{h.val}</div>
+                    <div style={{ fontSize: 10, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h.label}</div>
                   </div>
                 ))}
               </div>
@@ -13197,14 +13704,16 @@ export default function App() {
                     </span>
                   )}
                 </div>
-                <div style={{ display:"flex", gap:8, marginBottom:14, flexWrap:"wrap" }}>
-                  <input style={{ flex:1, minWidth:160, padding:"9px 12px", borderRadius:9, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none", boxSizing:"border-box" }}
+                <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:14 }}>
+                  <input style={{ flex:1, width:"100%", padding:"9px 12px", borderRadius:9, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:16, outline:"none", boxSizing:"border-box" }}
                     placeholder={tr("pro_goal_ph")} value={newGoal.texto}
                     onChange={e => setNewGoal(g => ({ ...g, texto: e.target.value }))}
                     onKeyDown={e => e.key === "Enter" && addGoal()} />
-                  <input type="date" style={{ width:140, flexShrink:0, padding:"9px 10px", borderRadius:9, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none" }}
-                    value={newGoal.fecha} onChange={e => setNewGoal(g => ({ ...g, fecha: e.target.value }))} />
-                  <button style={{ padding:"9px 18px", borderRadius:9, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer" }} onClick={addGoal}>+</button>
+                  <div style={{ display:"flex", gap:8 }}>
+                    <input type="date" style={{ flex:1, padding:"9px 10px", borderRadius:9, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:16, outline:"none", boxSizing:"border-box" }}
+                      value={newGoal.fecha} onChange={e => setNewGoal(g => ({ ...g, fecha: e.target.value }))} />
+                    <button style={{ padding:"9px 20px", borderRadius:9, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer", flexShrink:0 }} onClick={addGoal}>+</button>
+                  </div>
                 </div>
                 {goals.length === 0 ? (
                   <div style={{ textAlign:"center", padding:"20px 0", color:"var(--text-faint)", fontSize:13 }}>{tr("pro_no_goals")}</div>
@@ -13249,7 +13758,7 @@ export default function App() {
               {/* ── Header futurista ── */}
               <div style={{ marginBottom:20 }}>
                 <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// Análisis de rendimiento</div>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end" }}>
+                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
                   <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>ESTADÍSTICAS</h1>
                   <div style={{ display:"flex", gap:6 }}>
                     <button style={{ padding:"6px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text-faint)", fontSize:10, fontWeight:700, cursor:"pointer", letterSpacing:0.5 }} onClick={() => exportCSV(sessions)}>↓ CSV</button>
@@ -13536,8 +14045,8 @@ export default function App() {
               <div style={{ background: "linear-gradient(135deg,#3b82f618,#3b82f608)", border: "1px solid #3b82f640", borderRadius: 12, padding: "10px 14px", marginBottom: 16, display: "flex", alignItems: "center", gap: 10 }}>
                 <span style={{ fontSize: 18 }}>👨‍💼</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: "#3b82f6" }}>Sesión de tu coach</div>
-                  <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>Los campos se han rellenado automáticamente. Añade tu RPE y sensaciones al terminar.</div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: "#3b82f6" }}>{t("home_coach_session",lang)}</div>
+                  <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1 }}>{tr("coach_session_autofill")}</div>
                 </div>
               </div>
             )}
@@ -13922,7 +14431,7 @@ export default function App() {
                   <textarea style={s.textarea} className="em-textarea"
                     value={form.proximaSesion}
                     onChange={e => setF("proximaSesion", e.target.value)}
-                    placeholder="..." />
+                    placeholder={tr("form_next_ph")} />
                 </div>
               </>
               </div>
@@ -13944,12 +14453,10 @@ export default function App() {
                     onClick={() => {
                       if (formStep === 1) {
                         const errs = {};
-                        if (!form.nombre.trim())  errs.nombre     = "El nombre es obligatorio";
-                        if (!form.fecha)          errs.fecha      = "La fecha es obligatoria";
-                        if (!form.hora)           errs.hora       = "La hora es obligatoria";
-                        if (!form.disciplina)     errs.disciplina = "Selecciona una disciplina";
-                        if (!form.tipo_sesion)    errs.tipo_sesion = "Selecciona el tipo";
-                        if (!form.duracionMin)    errs.duracionMin = "Indica la duración";
+                        if (!form.nombre.trim())  errs.nombre     = tr("err_nombre");
+                        if (!form.fecha)          errs.fecha      = tr("err_fecha");
+                        if (!form.disciplina)     errs.disciplina = tr("err_disciplina");
+                        if (!form.duracionMin)    errs.duracionMin = tr("err_duracion");
                         if (Object.keys(errs).length > 0) { setFormErrors(errs); window.scrollTo({top:0,behavior:"smooth"}); return; }
                       }
                       setFormErrors({}); setFormStepDir(1); setFormStep(s => s + 1); window.scrollTo({ top:0, behavior:"smooth" });
@@ -13958,11 +14465,10 @@ export default function App() {
                   </button>
                 ) : (
                   <button type="button"
-                    style={{ padding:"12px 28px", borderRadius:10, border:"none", background:RED, color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer", boxShadow:`0 4px 14px ${RED}40` }}
                     onClick={saveSession}
                     disabled={isSavingSession}
                     style={{ padding:"12px 28px", borderRadius:10, border:"none", background: isSavingSession ? "#999" : RED, color:"#fff", fontSize:14, fontWeight:700, cursor: isSavingSession ? "not-allowed" : "pointer", boxShadow: isSavingSession ? "none" : `0 4px 14px ${RED}40` }}>
-                    {isSavingSession ? "Guardando…" : tr("btn_save")}
+                    {isSavingSession ? tr("saving") : tr("btn_save")}
                   </button>
                 )}
               </div>
@@ -13980,8 +14486,8 @@ export default function App() {
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(12px)", WebkitBackdropFilter:"blur(12px)", zIndex:3000, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
           <div style={{ background:"var(--bg-elevated)", border:"1px solid #10b98140", borderRadius:24, padding:"36px 32px", maxWidth:340, width:"100%", textAlign:"center", boxShadow:"0 0 60px rgba(16,185,129,0.15), 0 24px 80px rgba(0,0,0,0.6)", animation:"fadeIn 0.3s ease" }}>
             <div style={{ width:72, height:72, borderRadius:36, background:"rgba(16,185,129,0.12)", border:"2px solid rgba(16,185,129,0.4)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:36, margin:"0 auto 20px", boxShadow:"0 0 30px rgba(16,185,129,0.2)" }}>✓</div>
-            <div style={{ fontSize:11, fontWeight:800, color:"#10b981", letterSpacing:3, textTransform:"uppercase", marginBottom:8 }}>// Sesión guardada</div>
-            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:6 }}>{savedSummary?.nombre || "Sesión registrada"}</div>
+            <div style={{ fontSize:11, fontWeight:800, color:"#10b981", letterSpacing:3, textTransform:"uppercase", marginBottom:8 }}>{tr("save_success_label")}</div>
+            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:6 }}>{savedSummary?.nombre || tr("save_success_fallback")}</div>
             {savedSummary && (
               <div style={{ display:"flex", gap:8, justifyContent:"center", flexWrap:"wrap", marginTop:12 }}>
                 {savedSummary.fecha && <span style={{ fontSize:12, color:"var(--text-faint)", background:"var(--bg-input)", padding:"4px 10px", borderRadius:20 }}>📅 {savedSummary.fecha}</span>}
@@ -13990,7 +14496,7 @@ export default function App() {
                 {savedSummary.disciplina && <span style={{ fontSize:12, color:"#C41A1A", background:"rgba(196,26,26,0.1)", padding:"4px 10px", borderRadius:20 }}>🥋 {discLabel(savedSummary.disciplina, lang)}</span>}
               </div>
             )}
-            <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:20 }}>Volviendo a sesiones...</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:20 }}>{tr("save_returning")}</div>
           </div>
         </div>
       )}

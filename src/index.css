@@ -553,17 +553,45 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 16px !important;
   }
 
-  /* Ocultar nav tabs y logo text en header (el bottom nav los cubre) */
+  /* ── Header: safe area top + altura ajustada ── */
+  .em-header {
+    padding-top: env(safe-area-inset-top, 0px) !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    height: calc(56px + env(safe-area-inset-top, 0px)) !important;
+    gap: 8px !important;
+  }
+
+  /* Logo más pequeño en móvil */
+  .em-logo-img {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 9px !important;
+  }
+
+  /* Ocultar nav tabs, logo text, separadores en header (bottom nav los cubre) */
   .em-header nav,
   .em-header-nav .em-nav-btn,
   .em-header-nav .em-btn-new,
-  .em-logo-text {
+  .em-logo-text,
+  .em-header-sep,
+  /* Ocultar búsqueda y +Nueva del header (el FAB del bottom nav los cubre) */
+  .em-search-btn,
+  .em-header-btn-new,
+  .em-coach-panel-back-btn {
     display: none !important;
   }
 
-  /* Añadir padding al main para que no tape el bottom nav */
+  /* Header actions más compacto: solo campana + avatar */
+  .em-header-actions {
+    gap: 6px !important;
+  }
+
+  /* Ajustar padding del main para bottom nav + safe area */
   .em-main {
-    padding-bottom: 80px !important;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 
   .em-bottom-nav {

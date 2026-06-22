@@ -11107,12 +11107,11 @@ export default function App() {
           : 80,
       }}>
         {/* ── Logo ── */}
-        {(() => { const mob = window.innerWidth < 600; return (
-        <div style={{ display: "flex", alignItems: "center", gap: mob ? 8 : 11, flexShrink: 0, marginRight: mob ? 0 : 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth<600 ? 8 : 11, flexShrink: 0, marginRight: window.innerWidth<600 ? 0 : 20 }}>
           <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setLogoZoomed(true)}>
             <img src="/logo-512.png" alt="Élite Marcial"
               className="em-logo-img"
-            style={{ width: mob ? 36 : 62, height: mob ? 36 : 62, borderRadius: mob ? 9 : 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45), 0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s, box-shadow 0.18s", display: "block" }}
+            style={{ width: window.innerWidth<600 ? 36 : 62, height: window.innerWidth<600 ? 36 : 62, borderRadius: window.innerWidth<600 ? 9 : 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45), 0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s, box-shadow 0.18s", display: "block" }}
               onError={e => { e.target.src = "/logo-192.png"; }}
               onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.08)"; e.currentTarget.style.boxShadow = "0 0 0 2px rgba(196,26,26,0.6), 0 6px 22px rgba(196,26,26,0.5)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 0 0 1px rgba(196,26,26,0.45), 0 4px 16px rgba(196,26,26,0.4)"; }}
@@ -11124,7 +11123,6 @@ export default function App() {
             <div style={{ fontSize: 10, color: "var(--text-faint)", fontWeight: 600, letterSpacing: 1, textTransform: "uppercase" }}>{tr("logo_sub")}</div>
           </div>
         </div>
-        ); })()}
 
         {/* ── Logo zoom overlay ── */}
         {logoZoomed && (
@@ -11186,10 +11184,9 @@ export default function App() {
         <div className="em-header-sep" style={{ width: 1, height: 32, background: "var(--border)", marginLeft: 12, marginRight: 14, flexShrink: 0, opacity: 0.5 }} />
 
         {/* ── Acciones derecha ── */}
-        {(() => { const mob = window.innerWidth < 600; return (
-        <div className="em-header-actions" style={{ display: "flex", alignItems: "center", gap: mob ? 6 : 8, flexShrink: 0 }}>
+        <div className="em-header-actions" style={{ display: "flex", alignItems: "center", gap: window.innerWidth<600 ? 6 : 8, flexShrink: 0 }}>
           {/* Coach panel toggle — oculto en móvil (bottom nav lo cubre) */}
-          {!mob && profile?.rol === "coach" && coachDiaryMode && (
+          {!(window.innerWidth<600) && profile?.rol === "coach" && coachDiaryMode && (
             <button className="em-coach-panel-back-btn" onClick={() => setCoachDiaryMode(false)}
               style={{ padding: "7px 13px", borderRadius: 10, border: "1px solid rgba(196,26,26,0.4)", background: "rgba(196,26,26,0.12)", color: "#e53e3e", fontSize: 12, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", letterSpacing: 0.3 }}>
               🏆 Panel
@@ -11197,7 +11194,7 @@ export default function App() {
           )}
 
           {/* Buscar — oculto en móvil */}
-          {!mob && (
+          {!(window.innerWidth<600) && (
             <button
               className={coachDiaryMode ? "em-search-btn em-search-btn--hidden-coach" : "em-search-btn"}
               onClick={() => { setShowGlobalSearch(true); setTimeout(() => globalSearchRef.current?.focus(), 50); }}
@@ -11208,7 +11205,7 @@ export default function App() {
           )}
 
           {/* + Nueva — oculto en móvil (FAB del bottom nav lo cubre) */}
-          {!mob && (
+          {!(window.innerWidth<600) && (
             <button className="em-header-btn-new" onClick={openNew}
               style={{ height: 40, padding: "0 18px", borderRadius: 10, border: "none", background: "linear-gradient(135deg, #C41A1A 0%, #a31515 100%)", color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer", whiteSpace: "nowrap", boxShadow: "0 4px 14px rgba(196,26,26,0.45), inset 0 1px 0 rgba(255,255,255,0.15)", transition: "all 0.15s", letterSpacing: 0.3 }}>
               {tr("btn_new")}
@@ -11234,7 +11231,6 @@ export default function App() {
             </span>
           )}
         </div>
-        ); })()}
       </header>
 
 

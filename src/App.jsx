@@ -4467,6 +4467,17 @@ function NotificationBell({ userId, onNewNotif }) {
     setNotifs(prev => prev.map(n => ({ ...n, leida: true })));
   };
 
+  const deleteNotif = async (e, id) => {
+    e.stopPropagation();
+    await supabase.from("notificaciones").delete().eq("id", id);
+    setNotifs(prev => prev.filter(n => n.id !== id));
+  };
+
+  const deleteAllRead = async () => {
+    await supabase.from("notificaciones").delete().eq("user_id", userId).eq("leida", true);
+    setNotifs(prev => prev.filter(n => !n.leida));
+  };
+
   const timeAgo = (dateStr) => {
     const diff = Date.now() - new Date(dateStr).getTime();
     const mins = Math.floor(diff / 60000);
@@ -4509,19 +4520,31 @@ function NotificationBell({ userId, onNewNotif }) {
               </div>
             ) : notifs.map(n => (
               <div key={n.id} onClick={() => markRead(n.id)}
-                style={{ padding: "12px 16px", borderBottom: "1px solid var(--border-sub)", cursor: "pointer", background: n.leida ? "transparent" : RED + "08", display: "flex", gap: 10, alignItems: "flex-start" }}
-                onMouseEnter={e => e.currentTarget.style.background = "var(--bg-hover)"}
-                onMouseLeave={e => e.currentTarget.style.background = n.leida ? "transparent" : RED + "08"}>
+                style={{ padding: "12px 16px", borderBottom: "1px solid var(--border-sub)", cursor: "pointer", background: n.leida ? "transparent" : RED + "08", display: "flex", gap: 10, alignItems: "flex-start", position: "relative" }}
+                onMouseEnter={e => { e.currentTarget.style.background = "var(--bg-hover)"; e.currentTarget.querySelector(".notif-del")?.style && (e.currentTarget.querySelector(".notif-del").style.opacity = "1"); }}
+                onMouseLeave={e => { e.currentTarget.style.background = n.leida ? "transparent" : RED + "08"; e.currentTarget.querySelector(".notif-del")?.style && (e.currentTarget.querySelector(".notif-del").style.opacity = "0"); }}>
                 <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>{TIPO_ICON[n.tipo] || "📌"}</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 13, fontWeight: n.leida ? 400 : 700, color: "var(--text)", marginBottom: 2 }}>{n.titulo}</div>
                   {n.cuerpo && <div style={{ fontSize: 11, color: "var(--text-muted)", lineHeight: 1.4 }}>{n.cuerpo}</div>}
                   <div style={{ fontSize: 10, color: "var(--text-faint)", marginTop: 4 }}>{timeAgo(n.created_at)}</div>
                 </div>
-                {!n.leida && <div style={{ width: 7, height: 7, borderRadius: 4, background: RED, flexShrink: 0, marginTop: 5 }} />}
+                <button className="notif-del" onClick={(e) => deleteNotif(e, n.id)}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", fontSize: 14, padding: "2px 4px", borderRadius: 6, flexShrink: 0, opacity: 1, transition: "opacity 0.15s, color 0.15s", lineHeight: 1 }}
+                  onMouseEnter={e => e.currentTarget.style.color = RED}
+                  onMouseLeave={e => e.currentTarget.style.color = "var(--text-faint)"}>
+                  ✕
+                </button>
               </div>
             ))}
           </div>
+          {notifs.some(n => n.leida) && (
+            <div style={{ padding: "10px 16px", borderTop: "1px solid var(--border)", textAlign: "center" }}>
+              <button onClick={deleteAllRead} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--text-faint)", fontWeight: 600, padding: 0 }}>
+                🗑 Limpiar notificaciones leídas
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

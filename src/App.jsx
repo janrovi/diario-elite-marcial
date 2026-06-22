@@ -14705,11 +14705,9 @@ export default function App() {
         );
       })()}
 
-      {/* ── Bottom nav atleta (solo mobile) ── */}
-      {/* Bottom nav atleta + coach diary mode (mobile) */}
-      {(!coachDiaryMode || window.innerWidth < 600) && (
-        <nav className="em-bottom-nav" aria-label="Navegación principal">
-          {/* Botón volver al panel coach — solo en coachDiaryMode mobile */}
+      {/* Bottom nav — visible en mobile siempre, CSS lo oculta en desktop */}
+      <nav className="em-bottom-nav" aria-label="Navegación principal">
+          {/* Botón volver al panel coach — solo en coachDiaryMode */}
           {coachDiaryMode && (
             <button
               className="em-bottom-nav__item"
@@ -14745,8 +14743,7 @@ export default function App() {
             );
           })}
           <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
-        </nav>
-      )}
+      </nav>
 
     </div>
   );

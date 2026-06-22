@@ -14683,8 +14683,19 @@ export default function App() {
       })()}
 
       {/* ── Bottom nav atleta (solo mobile) ── */}
-      {!coachDiaryMode && (
+      {/* Bottom nav atleta + coach diary mode (mobile) */}
+      {(!coachDiaryMode || window.innerWidth < 600) && (
         <nav className="em-bottom-nav" aria-label="Navegación principal">
+          {/* Botón volver al panel coach — solo en coachDiaryMode mobile */}
+          {coachDiaryMode && (
+            <button
+              className="em-bottom-nav__item"
+              onClick={() => setCoachDiaryMode(false)}
+              style={{ color:"#C41A1A" }}>
+              <span className="em-bottom-nav__icon">🏆</span>
+              <span className="em-bottom-nav__label">Panel</span>
+            </button>
+          )}
           {[
             { key:"home",      icon:"🏠", label:"Inicio"    },
             { key:"sesiones",  icon:"📋", label:"Sesiones"  },
@@ -14694,7 +14705,7 @@ export default function App() {
             { key:"progreso",  icon:"🏅", label:"Progreso"  },
             { key:"notas",     icon:"📝", label:"Notas"      },
             { key:"cuerpo",    icon:"⚖️", label:"Bio"        },
-            profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
+            !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
             { key:"perfil",    icon:"👤", label:"Perfil"    },
           ].filter(Boolean).map(({ key, icon, label, badge }) => {
             const active = view === key || (key === "sesiones" && view === "detail");

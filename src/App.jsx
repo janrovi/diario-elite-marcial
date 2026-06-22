@@ -10277,6 +10277,30 @@ export default function App() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // ── Notificación en campanita cuando hay nueva versión ───────────────────
+  useEffect(() => {
+    if (!user?.id) return;
+    fetch('/version.json?t=' + Date.now())
+      .then(r => r.json())
+      .then(async ({ v }) => {
+        if (!v) return;
+        const key = `em_last_version_${user.id}`;
+        const lastV = localStorage.getItem(key);
+        if (lastV && lastV !== v) {
+          // Nueva versión detectada → notificación en campanita
+          await supabase.from('notificaciones').insert({
+            user_id: user.id,
+            tipo: 'general',
+            titulo: '🚀 App actualizada',
+            cuerpo: 'Hay mejoras disponibles. Recarga para aplicarlas.'
+          });
+        }
+        localStorage.setItem(key, v);
+      })
+      .catch(() => {});
+  }, [user?.id]);
+
   // Plan y estado Fundador
   const userPlan = profile?.plan || "free";
   const isFundador = userPlan === "fundador";

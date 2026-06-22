@@ -6019,9 +6019,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
       {/* Header */}
       <header className="em-coach-header" style={{
-        background: darkMode ? "linear-gradient(180deg,#1a1a1a 0%,#141414 100%)" : "linear-gradient(180deg,#ffffff 0%,#f8f8f8 100%)",
-        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.08)",
-        boxShadow: darkMode ? "0 1px 30px rgba(0,0,0,0.5),0 0 0 0.5px rgba(255,255,255,0.04)" : "0 1px 20px rgba(0,0,0,0.08)",
+        background: darkMode ? "linear-gradient(180deg,#1a1a1a 0%,#141414 100%)" : "linear-gradient(180deg,#f5f5f5 0%,#ebebeb 100%)",
+        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.15)",
+        boxShadow: darkMode ? "0 1px 30px rgba(0,0,0,0.5),0 0 0 0.5px rgba(255,255,255,0.04)" : "0 2px 12px rgba(0,0,0,0.12)",
         paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: 0,
         paddingLeft: window.innerWidth < 600 ? 12 : 20, paddingRight: window.innerWidth < 600 ? 12 : 20,
         minHeight: window.innerWidth < 600 ? "calc(56px + env(safe-area-inset-top, 0px))" : 80,
@@ -11068,11 +11068,11 @@ export default function App() {
         alignItems: "center",
         background: darkMode
           ? "linear-gradient(180deg, #1a1a1a 0%, #141414 100%)"
-          : "linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)",
-        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.08)",
+          : "linear-gradient(180deg, #f5f5f5 0%, #ebebeb 100%)",
+        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.15)",
         boxShadow: darkMode
           ? "0 1px 30px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04)"
-          : "0 1px 20px rgba(0,0,0,0.08)",
+          : "0 2px 12px rgba(0,0,0,0.12)",
         position: "sticky", top: 0, zIndex: 100,
         paddingTop: "env(safe-area-inset-top, 0px)",
         paddingBottom: 0,

@@ -560,6 +560,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     padding-right: 12px !important;
     height: calc(56px + env(safe-area-inset-top, 0px)) !important;
     gap: 8px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.10) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
   }
 
   /* Logo más pequeño en móvil */
@@ -2073,5 +2075,13 @@ input, textarea, select {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Notas KPI: 3 cols → 3 cols pero compactos */
-/* ── Coach diary mode: forzar bott
+  /* Notas KPI y Cal KPI: compactos */
+  .em-nota-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .em-cal-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+}

@@ -4236,6 +4236,26 @@ function SubField({ label, value }) {
 
 
 
+// ── Utilidad: compresión de imagen antes de subir avatar ──────────────────
+function compressImage(file, maxPx = 800, quality = 0.85) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => resolve(blob || file), "image/jpeg", quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // ── Menú de usuario (avatar + dropdown) ───────────────────────────────────
 function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileUpdate, lang, onLangChange }) {
   const RED = "#C41A1A";
@@ -4279,11 +4299,10 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
     if (!file) return;
     setAvatarLoading(true);
     try {
-      // Asegurar que existe el bucket (falla silenciosamente si ya existe)
       await supabase.storage.createBucket("avatars", { public: true }).catch(() => {});
-      const ext = file.name.split(".").pop().toLowerCase() || "jpg";
-      const fileName = `${user.id}/avatar.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, file, { upsert: true, contentType: file.type });
+      const compressed = await compressImage(file);
+      const fileName = `${user.id}/avatar.jpg`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, compressed, { upsert: true, contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(fileName);
       const url = `${publicUrl}?t=${Date.now()}`;
@@ -4294,7 +4313,6 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
       console.error("Error subiendo foto de perfil:", err);
     }
     setAvatarLoading(false);
-    // Resetear input para permitir subir la misma imagen de nuevo
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -5431,9 +5449,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
     setObAvatarLoading(true);
     try {
       await supabase.storage.createBucket("avatars", { public: true }).catch(() => {});
-      const ext = file.name.split(".").pop().toLowerCase() || "jpg";
-      const fileName = `${user.id}/avatar.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, file, { upsert: true, contentType: file.type });
+      const compressed = await compressImage(file);
+      const fileName = `${user.id}/avatar.jpg`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, compressed, { upsert: true, contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(fileName);
       const url = `${publicUrl}?t=${Date.now()}`;
@@ -6934,9 +6952,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             setProfileAvatarLoading(true);
             try {
               await supabase.storage.createBucket("avatars", { public: true }).catch(() => {});
-              const ext = file.name.split(".").pop().toLowerCase() || "jpg";
-              const fileName = `${user.id}/avatar.${ext}`;
-              const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, file, { upsert: true, contentType: file.type });
+              const compressed = await compressImage(file);
+              const fileName = `${user.id}/avatar.jpg`;
+              const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, compressed, { upsert: true, contentType: "image/jpeg" });
               if (upErr) throw upErr;
               const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(fileName);
               const url = `${publicUrl}?t=${Date.now()}`;
@@ -10388,9 +10406,9 @@ export default function App() {
     setAthAvatarLoading(true);
     try {
       await supabase.storage.createBucket("avatars", { public: true }).catch(() => {});
-      const ext = file.name.split(".").pop().toLowerCase() || "jpg";
-      const fileName = `${user.id}/avatar.${ext}`;
-      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, file, { upsert: true, contentType: file.type });
+      const compressed = await compressImage(file);
+      const fileName = `${user.id}/avatar.jpg`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, compressed, { upsert: true, contentType: "image/jpeg" });
       if (upErr) throw upErr;
       const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(fileName);
       const url = `${publicUrl}?t=${Date.now()}`;
@@ -14776,27 +14794,4 @@ export default function App() {
             !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
             coachDiaryMode && { key:"stats", icon:"📊", label:"Stats" },
             coachDiaryMode && { key:"notas", icon:"📝", label:"Notas" },
-          ].filter(Boolean).map(({ key, icon, label, badge }) => {
-            const active = view === key || (key === "sesiones" && view === "detail");
-            return (
-              <button key={key} className={`em-bottom-nav__item${active ? " active" : ""}`} onClick={() => setView(key)}>
-                <div style={{ position:"relative", display:"inline-block" }}>
-                  <span className="em-bottom-nav__icon">{icon}</span>
-                  {badge > 0 && <span style={{ position:"absolute", top:-4, right:-6, width:14, height:14, borderRadius:"50%", background:"#3b82f6", color:"#fff", fontSize:8, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", border:"1.5px solid var(--bg)" }}>{badge > 9 ? "9+" : badge}</span>}
-                </div>
-                <span className="em-bottom-nav__label">{label}</span>
-              </button>
-            );
-          })}
-          {/* FAB nueva sesión */}
-          <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
-          {/* Más */}
-          <button className={`em-bottom-nav__item${showMoreNav ? " active" : ""}`} onClick={() => setShowMoreNav(v => !v)}>
-            <span className="em-bottom-nav__icon">⋯</span>
-            <span className="em-bottom-nav__label">Más</span>
-          </button>
-      </nav>
-
-    </div>
-  );
-}
+          ].filter(Boolean).map(({ key, 

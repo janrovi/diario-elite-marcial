@@ -1770,18 +1770,31 @@ input, textarea, select {
 
 @media (max-width: 900px) {
 
-  /* ── Header compacto ── */
+  /* ── Header coach mobile optimizado ── */
   .em-coach-header {
-    height: 54px !important;
-    padding: 0 10px !important;
+    min-height: calc(56px + env(safe-area-inset-top, 0px)) !important;
+    padding-top: env(safe-area-inset-top, 0px) !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    justify-content: space-between !important;
+    border-bottom: 1px solid rgba(196,26,26,0.18) !important;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.6), 0 1px 0 rgba(196,26,26,0.10) !important;
   }
   .em-coach-header-nav   { display: none !important; }
   .em-coach-header-sep   { display: none !important; }
   .em-coach-header-diary { display: none !important; }
 
+  /* Mostrar badge COACH y subtítulo en mobile */
+  .em-coach-logo-badge { display: inline-flex !important; font-size: 8px !important; padding: 2px 5px !important; }
+  .em-coach-logo-sub   { display: none !important; }
+
+  /* Logo compacto */
+  .em-logo-img { width: 32px !important; height: 32px !important; border-radius: 8px !important; }
+  .em-coach-logo-text { font-size: 13px !important; }
+
   /* ── Main padding reducido ── */
   .em-coach-main {
-    padding: 14px 12px 90px !important;
+    padding: 14px 12px calc(env(safe-area-inset-bottom, 0px) + 90px) !important;
   }
 
   /* ── Sidebar + panel: full-width apilados ── */
@@ -1852,20 +1865,17 @@ input, textarea, select {
   }
   .em-coach-header-actions {
     margin-left: auto !important;
-    gap: 4px !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
   }
   .em-coach-header-actions > button,
   .em-coach-header-actions > div > button {
-    width: 36px !important;
-    height: 36px !important;
+    width: 38px !important;
+    height: 38px !important;
     padding: 0 !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
   }
-
-  /* Logo simplificado en mobile */
-  .em-coach-logo-sub   { display: none !important; }
-  .em-coach-logo-badge { display: none !important; }
 
   /* Stats: saludo compacto */
   .em-coach-stats-saludo h1 {

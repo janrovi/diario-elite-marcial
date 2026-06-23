@@ -6060,9 +6060,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
       {/* Header */}
       <header className="em-coach-header" style={{
-        background: darkMode ? "linear-gradient(180deg,#1a1a1a 0%,#141414 100%)" : "linear-gradient(180deg,#f5f5f5 0%,#ebebeb 100%)",
-        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.15)",
-        boxShadow: darkMode ? "0 1px 30px rgba(0,0,0,0.5),0 0 0 0.5px rgba(255,255,255,0.04)" : "0 2px 12px rgba(0,0,0,0.12)",
+        background: darkMode ? "linear-gradient(135deg,#1e1e1e 0%,#181818 60%,#1a0a0a 100%)" : "linear-gradient(180deg,#f8f8f8 0%,#efefef 100%)",
+        borderBottom: darkMode ? "1px solid rgba(196,26,26,0.2)" : "1px solid rgba(0,0,0,0.12)",
+        boxShadow: darkMode ? "0 2px 20px rgba(0,0,0,0.7),0 1px 0 rgba(196,26,26,0.12)" : "0 2px 12px rgba(0,0,0,0.10)",
         paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: 0,
         paddingLeft: window.innerWidth < 600 ? 12 : 20, paddingRight: window.innerWidth < 600 ? 12 : 20,
         minHeight: window.innerWidth < 600 ? "calc(56px + env(safe-area-inset-top, 0px))" : 80,
@@ -6158,7 +6158,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         </div>
       )}
 
-      <div className="em-coach-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px 80px" }}>
+      <div className="em-coach-main" style={{ maxWidth: 1100, margin: "0 auto", padding: window.innerWidth < 600 ? "16px 12px calc(env(safe-area-inset-bottom,0px) + 90px)" : "32px 24px 80px" }}>
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", padding: 80 }}>
             <div style={{ width: 36, height: 36, border: "3px solid #C41A1A", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
@@ -9603,12 +9603,12 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
   const planColor = authPlan === "coach" ? BLUE : authPlan === "fundador" ? GOLD : RED;
 
   const inputStyle = {
-    width: "100%", padding: "12px 14px", borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.08)",
-    background: "rgba(255,255,255,0.04)",
-    color: "var(--text)", fontSize: 14, outline: "none",
+    width: "100%", padding: "13px 15px", borderRadius: 12,
+    border: darkMode ? "1px solid rgba(255,255,255,0.10)" : "1px solid rgba(0,0,0,0.14)",
+    background: darkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)",
+    color: "var(--text)", fontSize: 15, outline: "none",
     boxSizing: "border-box", fontFamily: "inherit",
-    transition: "border 0.2s",
+    transition: "border 0.2s, box-shadow 0.2s",
   };
 
   return (
@@ -9630,7 +9630,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
 
       {/* Toggle dark/light */}
       <button onClick={onToggleDark} title={darkMode ? "Modo claro" : "Modo oscuro"}
-        style={{ position:"absolute", top:20, right:20, background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:12, width:40, height:40, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:18 }}>
+        style={{ position:"absolute", top:"calc(env(safe-area-inset-top,0px) + 16px)", right:16, background: darkMode ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)", border: darkMode ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(0,0,0,0.12)", borderRadius:12, width:42, height:42, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", fontSize:18 }}>
         {darkMode ? "☀️" : "🌙"}
       </button>
 

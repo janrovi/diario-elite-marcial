@@ -7,7 +7,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 // ── Workbox precache (injected by VitePWA) ──────────────────────────────────
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
-// NO skipWaiting automático — el usuario decide cuándo actualizar
+// skipWaiting automático: activa el nuevo SW inmediatamente aunque la app crashee
+self.addEventListener('install', () => { self.skipWaiting(); });
 clientsClaim();
 
 // ── Activación: avisar a todos los clientes que hay nueva versión ────────────

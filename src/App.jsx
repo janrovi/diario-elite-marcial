@@ -4316,7 +4316,16 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
 
       {/* Dropdown */}
       {open && (
-        <div style={{ position: "absolute", top: 44, right: 0, width: 280, maxWidth: "calc(100vw - 16px)", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.4)", zIndex: 500, overflow: "hidden" }}>
+        <div style={{
+          position: window.innerWidth < 600 ? "fixed" : "absolute",
+          top: window.innerWidth < 600 ? "auto" : 44,
+          bottom: window.innerWidth < 600 ? "calc(env(safe-area-inset-bottom, 0px) + 72px)" : "auto",
+          left: window.innerWidth < 600 ? 8 : "auto",
+          right: window.innerWidth < 600 ? 8 : 0,
+          width: window.innerWidth < 600 ? "auto" : 280,
+          maxWidth: "calc(100vw - 16px)",
+          background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.4)", zIndex: 500, overflow: "hidden"
+        }}>
 
           {/* Cabecera perfil */}
           <div style={{ padding: "16px 18px 14px", borderBottom: "1px solid var(--border)" }}>
@@ -4503,7 +4512,16 @@ function NotificationBell({ userId, onNewNotif }) {
       </button>
 
       {open && (
-        <div style={{ position: "absolute", top: "calc(100% + 8px)", right: 0, width: 320, maxWidth: "calc(100vw - 16px)", background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", zIndex: 600, overflow: "hidden" }}>
+        <div style={{
+          position: window.innerWidth < 600 ? "fixed" : "absolute",
+          top: window.innerWidth < 600 ? "auto" : "calc(100% + 8px)",
+          bottom: window.innerWidth < 600 ? "calc(env(safe-area-inset-bottom, 0px) + 72px)" : "auto",
+          left: window.innerWidth < 600 ? 8 : "auto",
+          right: window.innerWidth < 600 ? 8 : 0,
+          width: window.innerWidth < 600 ? "auto" : 320,
+          maxWidth: window.innerWidth < 600 ? "none" : "calc(100vw - 16px)",
+          background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", zIndex: 600, overflow: "hidden"
+        }}>
           <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{t("settings_notif",lang)}</span>
             {unread > 0 && (
@@ -11090,11 +11108,11 @@ export default function App() {
         display: view === "form" ? "none" : "flex",
         alignItems: "center",
         background: darkMode
-          ? "linear-gradient(180deg, #1a1a1a 0%, #141414 100%)"
+          ? "linear-gradient(180deg, #222222 0%, #1a1a1a 100%)"
           : "linear-gradient(180deg, #f5f5f5 0%, #ebebeb 100%)",
-        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.15)",
+        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(0,0,0,0.15)",
         boxShadow: darkMode
-          ? "0 1px 30px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.04)"
+          ? "0 2px 16px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06)"
           : "0 2px 12px rgba(0,0,0,0.12)",
         position: "sticky", top: 0, zIndex: 100,
         paddingTop: "env(safe-area-inset-top, 0px)",

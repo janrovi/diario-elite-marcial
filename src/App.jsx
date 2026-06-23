@@ -10958,6 +10958,15 @@ function MainApp() {
   const [athSuggSent, setAthSuggSent] = useState(false);
   const [athSuggList, setAthSuggList] = useState(() => { try { return JSON.parse(localStorage.getItem("em_sugerencias")||"[]"); } catch { return []; } });
   const [athFundTab, setAthFundTab] = useState("changelog");
+  const [athUsername, setAthUsername] = useState("");
+  const [athUsernameSaving, setAthUsernameSaving] = useState(false);
+  const [athUsernameError, setAthUsernameError] = useState("");
+  const [athRoadmapVotes, setAthRoadmapVotes] = useState([]);
+  const [athRoadmapCounts, setAthRoadmapCounts] = useState({});
+  const [athFundadores, setAthFundadores] = useState([]);
+  const [athFundadoresLoaded, setAthFundadoresLoaded] = useState(false);
+  const [athMensajeFund, setAthMensajeFund] = useState("");
+  const [athMensajeSent, setAthMensajeSent] = useState(false);
   // Hoisted from view="perfil" IIFE
   const [athEditName, setAthEditName] = useState("");
   const [athEditBio, setAthEditBio] = useState("");
@@ -10992,6 +11001,7 @@ function MainApp() {
 
   // Sincronizar campos editables del perfil cuando cambian los datos externos
   React.useEffect(() => {
+    setAthUsername(profile?.username || "");
     setAthEditName(profile?.nombre || "");
     setAthEditBio(athExt?.bio || profile?.bio || "");
     setAthEditClub(athExt?.club || "");

@@ -10967,6 +10967,29 @@ function MainApp() {
   const [athEditPeso, setAthEditPeso] = useState("");
   const [athEditing, setAthEditing] = useState(false);
 
+  // Cargar votos del roadmap cuando se entra al tab (hooks deben estar en componente, no en IIFE)
+  React.useEffect(() => {
+    if (view !== "fundador" || athFundTab !== "roadmap" || !user?.id) return;
+    supabase.from("roadmap_votes").select("item_id").eq("user_id", user.id)
+      .then(({ data }) => { if (data) setAthRoadmapVotes(data.map(v => v.item_id)); });
+    supabase.from("roadmap_votes").select("item_id")
+      .then(({ data }) => {
+        if (!data) return;
+        const counts = {};
+        data.forEach(v => { counts[v.item_id] = (counts[v.item_id]||0)+1; });
+        setAthRoadmapCounts(counts);
+      });
+  }, [view, athFundTab, user?.id]);
+
+  React.useEffect(() => {
+    if (view !== "fundador" || athFundTab !== "comunidad" || athFundadoresLoaded) return;
+    supabase.from("profiles")
+      .select("id, nombre, avatar_url, username, created_at")
+      .eq("plan", "fundador")
+      .order("created_at", { ascending: true })
+      .then(({ data }) => { setAthFundadores(data || []); setAthFundadoresLoaded(true); });
+  }, [view, athFundTab, athFundadoresLoaded]);
+
   // Sincronizar campos editables del perfil cuando cambian los datos externos
   React.useEffect(() => {
     setAthEditName(profile?.nombre || "");
@@ -11975,29 +11998,6 @@ function MainApp() {
             }
           };
 
-          const loadVotes = React.useCallback(async () => {
-            if (!user?.id) return;
-            supabase.from("roadmap_votes").select("item_id").eq("user_id", user.id)
-              .then(({ data }) => { if (data) setAthRoadmapVotes(data.map(v => v.item_id)); });
-            supabase.from("roadmap_votes").select("item_id")
-              .then(({ data }) => {
-                if (!data) return;
-                const counts = {};
-                data.forEach(v => { counts[v.item_id] = (counts[v.item_id]||0)+1; });
-                setAthRoadmapCounts(counts);
-              });
-          }, [user?.id]);
-
-          const loadFundadores = async () => {
-            if (athFundadoresLoaded) return;
-            const { data } = await supabase.from("profiles")
-              .select("id, nombre, avatar_url, username, created_at")
-              .eq("plan", "fundador")
-              .order("created_at", { ascending: true });
-            setAthFundadores(data || []);
-            setAthFundadoresLoaded(true);
-          };
-
           const saveUsername = async () => {
             const val = athUsername.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
             if (!val || val.length < 3) { setAthUsernameError("Mínimo 3 caracteres (a-z, 0-9, _)"); return; }
@@ -12020,9 +12020,6 @@ function MainApp() {
             setAthMensajeFund(""); setAthMensajeSent(true);
             setTimeout(() => setAthMensajeSent(false), 3500);
           };
-
-          React.useEffect(() => { if (activeTab === "roadmap") loadVotes(); }, [activeTab]);
-          React.useEffect(() => { if (activeTab === "comunidad") loadFundadores(); }, [activeTab]);
 
           const CHANGELOG = [
             { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes.", nuevo:true },

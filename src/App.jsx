@@ -14613,4 +14613,186 @@ export default function App() {
           onClick={() => setRestoreConfirm({ open:false, data:null })}>
           <div style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"28px 28px 24px", maxWidth:380, width:"100%", boxShadow:"0 24px 80px rgba(0,0,0,0.6)" }}
             onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize:18, fontWeight:800, color:"var(--text)", textAlign:"center", marginBottom:
+            <div style={{ fontSize:18, fontWeight:800, color:"var(--text)", textAlign:"center", marginBottom:8 }}>{tr("modal_restore_title")}</div>
+            <div style={{ fontSize:13, color:"var(--text-muted)", textAlign:"center", lineHeight:1.6, marginBottom:24 }}>
+              {tr("modal_restore_exported")}: {restoreConfirm.data?.exportedAt ? new Date(restoreConfirm.data.exportedAt).toLocaleString() : "—"}<br/>
+              <span style={{ fontSize:11, color:"var(--text-faint)" }}>
+                {restoreConfirm.data?.sessions?.length || 0} {tr("modal_restore_sessions")} · {restoreConfirm.data?.goals?.length || 0} {tr("modal_restore_goals")}
+              </span><br/>
+              {tr("modal_restore_replace")} {tr("modal_restore_current")}
+            </div>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setRestoreConfirm({ open:false, data:null })}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"transparent", color:"var(--text)", fontSize:14, fontWeight:600, cursor:"pointer" }}>
+                {tr("modal_cancel")}
+              </button>
+              <button
+                onClick={() => {
+                  const data = restoreConfirm.data;
+                  setRestoreConfirm({ open:false, data:null });
+                  if (data?.sessions) setSessions(data.sessions);
+                  if (data?.goals) setGoals(data.goals);
+                  showToast(tr("toast_restored"));
+                }}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:"none", background:"#3b82f6", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 14px #3b82f640" }}>
+                {tr("modal_restore_btn")}
+              </button>
+                </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal: detalle sesión programada ── */}
+      {detailScheduled && (() => {
+        const { sp, spTexto, spMeta } = detailScheduled;
+        const discColor = getDiscColor(sp.disciplina);
+        const tipoColor = getTipoColor(spMeta.tipo || "");
+        const isToday = sp.fecha === new Date().toISOString().slice(0, 10);
+        const isPast = sp.fecha < new Date().toISOString().slice(0, 10);
+        return (
+          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)", zIndex:3000, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:"0 0 0 0" }}
+            onClick={() => setDetailScheduled(null)}>
+            <div style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:"24px 24px 0 0", padding:"28px 24px 36px", maxWidth:560, width:"100%", boxShadow:"0 -20px 60px rgba(0,0,0,0.5)", maxHeight:"85vh", overflowY:"auto" }}
+              onClick={e => e.stopPropagation()}>
+              {/* Handle */}
+              <div style={{ width:40, height:4, borderRadius:2, background:"var(--border)", margin:"0 auto 20px" }} />
+              {/* Header */}
+              <div style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:18 }}>
+                <div style={{ width:5, flexShrink:0, borderRadius:3, background:`linear-gradient(180deg,${discColor},${discColor}60)`, alignSelf:"stretch", minHeight:48 }} />
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", lineHeight:1.2, marginBottom:6 }}>
+                    {sp.titulo || sp.disciplina || "Sesión programada"}
+                  </div>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
+                    <span style={{ fontSize:11, color:"#3b82f6", background:"#3b82f615", borderRadius:5, padding:"2px 9px", fontWeight:700 }}>📅 {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{weekday:"short",day:"numeric",month:"long"})}</span>
+                    {sp.hora && <span style={{ fontSize:11, color:"var(--text-muted)", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>🕐 {sp.hora}</span>}
+                    {sp.disciplina && <span style={{ fontSize:11, fontWeight:700, color:discColor, background:discColor+"18", borderRadius:5, padding:"2px 9px" }}>{sp.disciplina}</span>}
+                    {spMeta.tipo && <span style={{ fontSize:11, fontWeight:700, color:tipoColor, background:tipoColor+"18", borderRadius:5, padding:"2px 9px" }}>{spMeta.tipo}</span>}
+                    {sp.duracion_min && <span style={{ fontSize:11, color:"var(--text-muted)", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>⏱ {sp.duracion_min} min</span>}
+                    {spMeta.rpe && <span style={{ fontSize:11, fontWeight:700, color:Number(spMeta.rpe)>=8?"#f87171":Number(spMeta.rpe)>=6?"#f6ad55":"#4ade80", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>⚡ RPE {spMeta.rpe}</span>}
+                    {isToday && <span style={{ fontSize:10, fontWeight:800, color:"#f59e0b", background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:5, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>HOY</span>}
+                    {isPast && !isToday && <span style={{ fontSize:10, fontWeight:800, color:"#f87171", background:"#f8717120", border:"1px solid #f8717140", borderRadius:5, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>Pendiente</span>}
+                  </div>
+                </div>
+              </div>
+              {/* Técnicas */}
+              {spMeta.tecnicas && (
+                <div style={{ background:"#3b82f610", border:"1px solid #3b82f625", borderRadius:10, padding:"10px 14px", marginBottom:12 }}>
+                  <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>🎯 Técnicas</div>
+                  <div style={{ fontSize:13, color:"var(--text)", lineHeight:1.5 }}>{spMeta.tecnicas}</div>
+                </div>
+              )}
+              {/* Ejercicios */}
+              {spMeta.ejercicios && spMeta.ejercicios.length > 0 && (
+                <div style={{ background:"var(--bg-input)", borderRadius:10, overflow:"hidden", marginBottom:12 }}>
+                  <div style={{ background:tipoColor+"15", borderBottom:"1px solid var(--border)", padding:"8px 12px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:12, fontWeight:800, color:tipoColor }}>🏋️ Entrenamiento — {spMeta.ejercicios.length} ejercicio{spMeta.ejercicios.length!==1?"s":""}</span>
+                  </div>
+                  {spMeta.ejercicios.map((ej, i) => (
+                    <div key={i} style={{ padding:"10px 12px", borderBottom:i<spMeta.ejercicios.length-1?"1px solid var(--border)":"none" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                        <div style={{ flex:1, fontSize:13, fontWeight:700, color:"var(--text)" }}>{ej.nombre}</div>
+                        <div style={{ display:"flex", gap:8 }}>
+                          {ej.series && <span style={{ fontSize:12, fontWeight:800, color:tipoColor }}>{ej.series}×{ej.reps||"?"}</span>}
+                          {ej.descanso && <span style={{ fontSize:11, color:"var(--text-faint)" }}>💤{ej.descanso}</span>}
+                        </div>
+                      </div>
+                      {ej.notas && <div style={{ fontSize:11, color:"var(--text-faint)", fontStyle:"italic", marginTop:3 }}>↳ {ej.notas}</div>}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Instrucciones del coach */}
+              {spTexto && (
+                <div style={{ background:"var(--bg-input)", border:"1px solid var(--border)", borderLeft:"3px solid #3b82f660", borderRadius:10, padding:"12px 14px", marginBottom:12 }}>
+                  <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>💬 Instrucciones del coach</div>
+                  <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6, fontStyle:"italic" }}>"{spTexto}"</div>
+                </div>
+              )}
+              {/* Acciones */}
+              <div style={{ display:"flex", gap:10, marginTop:20 }}>
+                <button onClick={() => { setDetailScheduled(null); openFromScheduled(sp); }}
+                  style={{ flex:1, padding:"14px", borderRadius:14, border:"none", background:"linear-gradient(135deg,#3b82f6,#1d4ed8)", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px #3b82f640" }}>
+                  📝 Registrar sesión
+                </button>
+                <button onClick={() => setDetailScheduled(null)}
+                  style={{ padding:"14px 18px", borderRadius:14, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", fontSize:14, fontWeight:600, cursor:"pointer" }}>
+                  ✕
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── "Más" drawer — items secundarios del bottom nav ── */}
+      {showMoreNav && (
+        <div style={{ position:"fixed", inset:0, zIndex:290 }} onClick={() => setShowMoreNav(false)}>
+          <div style={{ position:"absolute", bottom:"calc(env(safe-area-inset-bottom,0px) + 68px)", left:0, right:0, background:"var(--bg-card)", borderTop:"1px solid var(--border)", borderRadius:"20px 20px 0 0", padding:"8px 12px 12px", boxShadow:"0 -8px 32px rgba(0,0,0,0.3)" }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ width:36, height:4, borderRadius:2, background:"var(--border)", margin:"4px auto 14px" }} />
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+              {[
+                { key:"cal",      icon:"📅", label:"Cal"      },
+                { key:"tecnicas", icon:"🥋", label:"Técnicas" },
+                { key:"progreso", icon:"🏅", label:"Progreso" },
+                { key:"notas",    icon:"📝", label:"Notas"    },
+                { key:"cuerpo",   icon:"⚖️", label:"Bio"      },
+                { key:"stats",    icon:"📊", label:"Stats"    },
+                { key:"perfil",   icon:"👤", label:"Perfil"   },
+              ].map(({ key, icon, label }) => {
+                const active = view === key;
+                return (
+                  <button key={key}
+                    onClick={() => { setView(key); setShowMoreNav(false); }}
+                    style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 4px", borderRadius:14, border:"none", cursor:"pointer", background: active ? "rgba(196,26,26,0.12)" : "var(--bg-input)", color: active ? "#C41A1A" : "var(--text-muted)", transition:"all 0.15s" }}>
+                    <span style={{ fontSize:22 }}>{icon}</span>
+                    <span style={{ fontSize:10, fontWeight:600, letterSpacing:0.2 }}>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom nav — visible en mobile siempre, CSS lo oculta en desktop */}
+      <nav className="em-bottom-nav" aria-label="Navegación principal">
+          {/* Botón volver al panel coach — solo en coachDiaryMode */}
+          {coachDiaryMode && (
+            <button className="em-bottom-nav__item" onClick={() => setCoachDiaryMode(false)} style={{ color:"#C41A1A" }}>
+              <span className="em-bottom-nav__icon">🏆</span>
+              <span className="em-bottom-nav__label">Panel</span>
+            </button>
+          )}
+          {/* Items principales (5 max) */}
+          {[
+            { key:"home",      icon:"🏠", label:"Inicio" },
+            { key:"sesiones",  icon:"📋", label:"Sesiones" },
+            !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
+            coachDiaryMode && { key:"stats", icon:"📊", label:"Stats" },
+            coachDiaryMode && { key:"notas", icon:"📝", label:"Notas" },
+          ].filter(Boolean).map(({ key, icon, label, badge }) => {
+            const active = view === key || (key === "sesiones" && view === "detail");
+            return (
+              <button key={key} className={`em-bottom-nav__item${active ? " active" : ""}`} onClick={() => setView(key)}>
+                <div style={{ position:"relative", display:"inline-block" }}>
+                  <span className="em-bottom-nav__icon">{icon}</span>
+                  {badge > 0 && <span style={{ position:"absolute", top:-4, right:-6, width:14, height:14, borderRadius:"50%", background:"#3b82f6", color:"#fff", fontSize:8, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", border:"1.5px solid var(--bg)" }}>{badge > 9 ? "9+" : badge}</span>}
+                </div>
+                <span className="em-bottom-nav__label">{label}</span>
+              </button>
+            );
+          })}
+          {/* FAB nueva sesión */}
+          <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
+          {/* Más */}
+          <button className={`em-bottom-nav__item${showMoreNav ? " active" : ""}`} onClick={() => setShowMoreNav(v => !v)}>
+            <span className="em-bottom-nav__icon">⋯</span>
+            <span className="em-bottom-nav__label">Más</span>
+          </button>
+      </nav>
+
+    </div>
+  );
+}

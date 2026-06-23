@@ -571,17 +571,43 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 9px !important;
   }
 
-  /* Ocultar nav tabs, logo text, separadores en header (bottom nav los cubre) */
+  /* Ocultar nav tabs, separadores en header (bottom nav los cubre) */
   .em-header nav,
+  .em-header-nav,
   .em-header-nav .em-nav-btn,
   .em-header-nav .em-btn-new,
-  .em-logo-text,
   .em-header-sep,
   /* Ocultar búsqueda y +Nueva del header (el FAB del bottom nav los cubre) */
   .em-search-btn,
   .em-header-btn-new,
   .em-coach-panel-back-btn {
     display: none !important;
+  }
+
+  /* Mostrar nombre de la app en mobile — compacto */
+  .em-logo-text {
+    display: block !important;
+  }
+  .em-logo-text > div:first-child {
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.3px !important;
+  }
+  .em-logo-text > div:last-child {
+    font-size: 8px !important;
+    letter-spacing: 0.8px !important;
+  }
+
+  /* Logo img más pequeño */
+  .em-logo-img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Header: logo en la izquierda, acciones en la derecha */
+  .em-header {
+    justify-content: space-between !important;
   }
 
   /* Header actions más compacto: solo campana + avatar */

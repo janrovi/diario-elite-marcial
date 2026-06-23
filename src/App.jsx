@@ -11108,12 +11108,12 @@ export default function App() {
         display: view === "form" ? "none" : "flex",
         alignItems: "center",
         background: darkMode
-          ? "linear-gradient(180deg, #222222 0%, #1a1a1a 100%)"
-          : "linear-gradient(180deg, #f5f5f5 0%, #ebebeb 100%)",
-        borderBottom: darkMode ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(0,0,0,0.15)",
+          ? "linear-gradient(135deg, #1e1e1e 0%, #181818 60%, #1a0a0a 100%)"
+          : "linear-gradient(180deg, #f8f8f8 0%, #efefef 100%)",
+        borderBottom: darkMode ? "1px solid rgba(196,26,26,0.2)" : "1px solid rgba(0,0,0,0.12)",
         boxShadow: darkMode
-          ? "0 2px 16px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06)"
-          : "0 2px 12px rgba(0,0,0,0.12)",
+          ? "0 2px 20px rgba(0,0,0,0.7), 0 1px 0 rgba(196,26,26,0.12)"
+          : "0 2px 12px rgba(0,0,0,0.10)",
         position: "sticky", top: 0, zIndex: 100,
         paddingTop: "env(safe-area-inset-top, 0px)",
         paddingBottom: 0,

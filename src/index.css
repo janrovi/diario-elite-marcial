@@ -2067,25 +2067,18 @@ input, textarea, select {
   }
 
   /* Notas KPI: 3 cols → 3 cols pero compactos */
-  .em-nota-kpi-grid {
-    gap: 6px;
+/* ── Coach diary mode: forzar bottom nav visible en mobile ── */
+@media (max-width: 600px) {
+  .em-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 300 !important;
   }
-  .em-nota-kpi .em-nota-kpi-val {
-    font-size: 18px;
-  }
-
-  /* Calendario KPI: OK en 3 cols */
-  .em-cal-kpi-grid {
-    gap: 6px;
-  }
-
-  /* Técnicas — tabs texto más corto */
-  .em-tec-tab-btn {
-    font-size: 11px;
-    padding: 8px 4px;
-  }
-
-  /* Filtros fila: input + select en columna */
+}
+ Filtros fila: input + select en columna */
   .em-tec-filters {
     flex-direction: column;
   }

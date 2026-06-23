@@ -5153,7 +5153,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
               const fases = [
                 { n:1, nombre:"Atleta Individual", icon:"🥋", color:"#10b981", desc:"Diario, cinturón, estadísticas, técnicas, biometría y progreso.", fecha:"Jun 2026", progreso:100, done:true },
                 { n:2, nombre:"Coach + Plataforma", icon:"🎯", color:GOLD, desc:"Panel coach, periodización, chat, biometría avanzada, Fundadores.", fecha:"Jun 2026", progreso:100, done:true },
-                { n:3, nombre:"Comunidad + IA", icon:"🚀", color:"#8b5cf6", desc:"Red social, vídeos técnicos e IA de análisis personalizado.", fecha:"2026", progreso:0, done:false },
+                { n:3, nombre:"Marketing & Comunidad", icon:"🚀", color:"#8b5cf6", desc:"Go-to-market, Stripe, perfil público coach, IA de rendimiento.", fecha:"2026", progreso:25, done:false },
                 { n:4, nombre:"App Nativa", icon:"📱", color:"#3b82f6", desc:"iOS/Android con push notifications, offline y wearables.", fecha:"2027", progreso:0, done:false },
               ];
               const items = [
@@ -11850,7 +11850,9 @@ export default function App() {
           };
 
           const CHANGELOG = [
-      { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
+      { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes. Coach header con badge COACH optimizado.", nuevo:true },
+      { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones individuales, botón Limpiar leídas. Notificación automática al desplegar nueva versión (version.json + build hook).", nuevo:false },
+      { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:false },
       { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal más amplio (580px), hero header rojo con decoración, feature cards con iconos grandes, inputs más prominentes. Experiencia de invitación premium." },
       { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
       { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
@@ -11864,14 +11866,16 @@ export default function App() {
     ];
 
           const ROADMAP = [
-      { estado:"✅ Completado", titulo:"Notificaciones por email (Resend)", desc:"Sugerencias de Fundadores enviadas automáticamente vía Supabase Edge Functions + Resend. Función desplegada." },
-      { estado:"✅ Completado", titulo:"Notificaciones push nativas", desc:"Web Push API + VAPID + Edge Function desplegada. Alertas para sesiones programadas, mensajes y objetivos." },
-      { estado:"✅ Completado", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización mobile. Tutorial y panel de entrenador optimizados." },
-      { estado:"📋 Planificado", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico." },
-      { estado:"📋 Planificado", titulo:"Suscripciones recurrentes (Stripe)", desc:"Gestión de pagos para coaches: planes mensuales y anuales para sus atletas." },
-      { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial y biometría." },
-      { estado:"💡 Evaluando", titulo:"Torneos y competiciones", desc:"Registro de resultados, historial de competición y ranking interno." },
-      { estado:"💡 Evaluando", titulo:"Vídeos técnicos & comunidad", desc:"Biblioteca multimedia y red social entre atletas y coaches." },
+      { estado:"✅ Completado", titulo:"Notificaciones push nativas (Web Push + VAPID)", desc:"Alertas para sesiones programadas, mensajes del coach y objetivos. Edge Function en Supabase." },
+      { estado:"✅ Completado", titulo:"Notificaciones in-app con Realtime", desc:"Campanita con badge, marcar leídas, eliminar individual y limpiar leídas. Panel flotante mobile." },
+      { estado:"✅ Completado", titulo:"Notificación automática de nuevas versiones", desc:"Detecta deploy nuevo y notifica al usuario con version.json generado en cada build." },
+      { estado:"✅ Completado", titulo:"Mobile UX — iOS optimizado", desc:"Header con safe area, bottom nav con drawer Más, dropdowns como paneles flotantes." },
+      { estado:"✅ Completado", titulo:"Despliegue en Vercel (auto-deploy)", desc:"CI/CD automático desde GitHub main. Cada commit se despliega en producción." },
+      { estado:"📋 Planificado", titulo:"Suscripciones recurrentes (Stripe)", desc:"Pagos mensuales y anuales para Coach Pro y Academia. Gestión desde el panel." },
+      { estado:"📋 Planificado", titulo:"Perfil público de coach", desc:"Página pública con especialidades, ubicación y reseñas. SEO para captación orgánica." },
+      { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento (Claude API)", desc:"Análisis del historial, recomendaciones de carga y predicción de fatiga." },
+      { estado:"💡 Evaluando", titulo:"Feed de actividad & Comunidad", desc:"Actividad entre atletas del mismo equipo, challenges semanales y torneos." },
+      { estado:"💡 Evaluando", titulo:"App nativa iOS/Android", desc:"Versión nativa post-validación de mercado con acceso biométrico y offline avanzado." },
     ];
 
           const activeTab = athFundTab; const setActiveTab = setAthFundTab;
@@ -11911,7 +11915,9 @@ export default function App() {
               {activeTab === "changelog" && (() => {
                 const isMb = window.innerWidth < 700;
                 const clMap = {
-                  "2.0":{ icon:"🔔", color:"#C41A1A", tag:"Fase 2" },
+                  "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" },
+                  "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
+                  "2.0":{ icon:"🚀", color:"#C41A1A", tag:"Fase 2" },
                   "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
                   "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
                   "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },
@@ -14607,186 +14613,4 @@ export default function App() {
           onClick={() => setRestoreConfirm({ open:false, data:null })}>
           <div style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"28px 28px 24px", maxWidth:380, width:"100%", boxShadow:"0 24px 80px rgba(0,0,0,0.6)" }}
             onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize:18, fontWeight:800, color:"var(--text)", textAlign:"center", marginBottom:8 }}>{tr("modal_restore_title")}</div>
-            <div style={{ fontSize:13, color:"var(--text-muted)", textAlign:"center", lineHeight:1.6, marginBottom:24 }}>
-              {tr("modal_restore_exported")}: {restoreConfirm.data?.exportedAt ? new Date(restoreConfirm.data.exportedAt).toLocaleString() : "—"}<br/>
-              <span style={{ fontSize:11, color:"var(--text-faint)" }}>
-                {restoreConfirm.data?.sessions?.length || 0} {tr("modal_restore_sessions")} · {restoreConfirm.data?.goals?.length || 0} {tr("modal_restore_goals")}
-              </span><br/>
-              {tr("modal_restore_replace")} {tr("modal_restore_current")}
-            </div>
-            <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setRestoreConfirm({ open:false, data:null })}
-                style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"transparent", color:"var(--text)", fontSize:14, fontWeight:600, cursor:"pointer" }}>
-                {tr("modal_cancel")}
-              </button>
-              <button
-                onClick={() => {
-                  const data = restoreConfirm.data;
-                  setRestoreConfirm({ open:false, data:null });
-                  if (data?.sessions) setSessions(data.sessions);
-                  if (data?.goals) setGoals(data.goals);
-                  showToast(tr("toast_restored"));
-                }}
-                style={{ flex:1, padding:"12px", borderRadius:12, border:"none", background:"#3b82f6", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 14px #3b82f640" }}>
-                {tr("modal_restore_btn")}
-              </button>
-                </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Modal: detalle sesión programada ── */}
-      {detailScheduled && (() => {
-        const { sp, spTexto, spMeta } = detailScheduled;
-        const discColor = getDiscColor(sp.disciplina);
-        const tipoColor = getTipoColor(spMeta.tipo || "");
-        const isToday = sp.fecha === new Date().toISOString().slice(0, 10);
-        const isPast = sp.fecha < new Date().toISOString().slice(0, 10);
-        return (
-          <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", backdropFilter:"blur(10px)", WebkitBackdropFilter:"blur(10px)", zIndex:3000, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:"0 0 0 0" }}
-            onClick={() => setDetailScheduled(null)}>
-            <div style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:"24px 24px 0 0", padding:"28px 24px 36px", maxWidth:560, width:"100%", boxShadow:"0 -20px 60px rgba(0,0,0,0.5)", maxHeight:"85vh", overflowY:"auto" }}
-              onClick={e => e.stopPropagation()}>
-              {/* Handle */}
-              <div style={{ width:40, height:4, borderRadius:2, background:"var(--border)", margin:"0 auto 20px" }} />
-              {/* Header */}
-              <div style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:18 }}>
-                <div style={{ width:5, flexShrink:0, borderRadius:3, background:`linear-gradient(180deg,${discColor},${discColor}60)`, alignSelf:"stretch", minHeight:48 }} />
-                <div style={{ flex:1 }}>
-                  <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", lineHeight:1.2, marginBottom:6 }}>
-                    {sp.titulo || sp.disciplina || "Sesión programada"}
-                  </div>
-                  <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
-                    <span style={{ fontSize:11, color:"#3b82f6", background:"#3b82f615", borderRadius:5, padding:"2px 9px", fontWeight:700 }}>📅 {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{weekday:"short",day:"numeric",month:"long"})}</span>
-                    {sp.hora && <span style={{ fontSize:11, color:"var(--text-muted)", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>🕐 {sp.hora}</span>}
-                    {sp.disciplina && <span style={{ fontSize:11, fontWeight:700, color:discColor, background:discColor+"18", borderRadius:5, padding:"2px 9px" }}>{sp.disciplina}</span>}
-                    {spMeta.tipo && <span style={{ fontSize:11, fontWeight:700, color:tipoColor, background:tipoColor+"18", borderRadius:5, padding:"2px 9px" }}>{spMeta.tipo}</span>}
-                    {sp.duracion_min && <span style={{ fontSize:11, color:"var(--text-muted)", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>⏱ {sp.duracion_min} min</span>}
-                    {spMeta.rpe && <span style={{ fontSize:11, fontWeight:700, color:Number(spMeta.rpe)>=8?"#f87171":Number(spMeta.rpe)>=6?"#f6ad55":"#4ade80", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>⚡ RPE {spMeta.rpe}</span>}
-                    {isToday && <span style={{ fontSize:10, fontWeight:800, color:"#f59e0b", background:"#f59e0b20", border:"1px solid #f59e0b40", borderRadius:5, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>HOY</span>}
-                    {isPast && !isToday && <span style={{ fontSize:10, fontWeight:800, color:"#f87171", background:"#f8717120", border:"1px solid #f8717140", borderRadius:5, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>Pendiente</span>}
-                  </div>
-                </div>
-              </div>
-              {/* Técnicas */}
-              {spMeta.tecnicas && (
-                <div style={{ background:"#3b82f610", border:"1px solid #3b82f625", borderRadius:10, padding:"10px 14px", marginBottom:12 }}>
-                  <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", marginBottom:4, textTransform:"uppercase", letterSpacing:0.5 }}>🎯 Técnicas</div>
-                  <div style={{ fontSize:13, color:"var(--text)", lineHeight:1.5 }}>{spMeta.tecnicas}</div>
-                </div>
-              )}
-              {/* Ejercicios */}
-              {spMeta.ejercicios && spMeta.ejercicios.length > 0 && (
-                <div style={{ background:"var(--bg-input)", borderRadius:10, overflow:"hidden", marginBottom:12 }}>
-                  <div style={{ background:tipoColor+"15", borderBottom:"1px solid var(--border)", padding:"8px 12px", display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:12, fontWeight:800, color:tipoColor }}>🏋️ Entrenamiento — {spMeta.ejercicios.length} ejercicio{spMeta.ejercicios.length!==1?"s":""}</span>
-                  </div>
-                  {spMeta.ejercicios.map((ej, i) => (
-                    <div key={i} style={{ padding:"10px 12px", borderBottom:i<spMeta.ejercicios.length-1?"1px solid var(--border)":"none" }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                        <div style={{ flex:1, fontSize:13, fontWeight:700, color:"var(--text)" }}>{ej.nombre}</div>
-                        <div style={{ display:"flex", gap:8 }}>
-                          {ej.series && <span style={{ fontSize:12, fontWeight:800, color:tipoColor }}>{ej.series}×{ej.reps||"?"}</span>}
-                          {ej.descanso && <span style={{ fontSize:11, color:"var(--text-faint)" }}>💤{ej.descanso}</span>}
-                        </div>
-                      </div>
-                      {ej.notas && <div style={{ fontSize:11, color:"var(--text-faint)", fontStyle:"italic", marginTop:3 }}>↳ {ej.notas}</div>}
-                    </div>
-                  ))}
-                </div>
-              )}
-              {/* Instrucciones del coach */}
-              {spTexto && (
-                <div style={{ background:"var(--bg-input)", border:"1px solid var(--border)", borderLeft:"3px solid #3b82f660", borderRadius:10, padding:"12px 14px", marginBottom:12 }}>
-                  <div style={{ fontSize:11, fontWeight:800, color:"#3b82f6", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>💬 Instrucciones del coach</div>
-                  <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6, fontStyle:"italic" }}>"{spTexto}"</div>
-                </div>
-              )}
-              {/* Acciones */}
-              <div style={{ display:"flex", gap:10, marginTop:20 }}>
-                <button onClick={() => { setDetailScheduled(null); openFromScheduled(sp); }}
-                  style={{ flex:1, padding:"14px", borderRadius:14, border:"none", background:"linear-gradient(135deg,#3b82f6,#1d4ed8)", color:"#fff", fontSize:14, fontWeight:800, cursor:"pointer", boxShadow:"0 4px 16px #3b82f640" }}>
-                  📝 Registrar sesión
-                </button>
-                <button onClick={() => setDetailScheduled(null)}
-                  style={{ padding:"14px 18px", borderRadius:14, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", fontSize:14, fontWeight:600, cursor:"pointer" }}>
-                  ✕
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* ── "Más" drawer — items secundarios del bottom nav ── */}
-      {showMoreNav && (
-        <div style={{ position:"fixed", inset:0, zIndex:290 }} onClick={() => setShowMoreNav(false)}>
-          <div style={{ position:"absolute", bottom:"calc(env(safe-area-inset-bottom,0px) + 68px)", left:0, right:0, background:"var(--bg-card)", borderTop:"1px solid var(--border)", borderRadius:"20px 20px 0 0", padding:"8px 12px 12px", boxShadow:"0 -8px 32px rgba(0,0,0,0.3)" }}
-            onClick={e => e.stopPropagation()}>
-            <div style={{ width:36, height:4, borderRadius:2, background:"var(--border)", margin:"4px auto 14px" }} />
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
-              {[
-                { key:"cal",      icon:"📅", label:"Cal"      },
-                { key:"tecnicas", icon:"🥋", label:"Técnicas" },
-                { key:"progreso", icon:"🏅", label:"Progreso" },
-                { key:"notas",    icon:"📝", label:"Notas"    },
-                { key:"cuerpo",   icon:"⚖️", label:"Bio"      },
-                { key:"stats",    icon:"📊", label:"Stats"    },
-                { key:"perfil",   icon:"👤", label:"Perfil"   },
-              ].map(({ key, icon, label }) => {
-                const active = view === key;
-                return (
-                  <button key={key}
-                    onClick={() => { setView(key); setShowMoreNav(false); }}
-                    style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 4px", borderRadius:14, border:"none", cursor:"pointer", background: active ? "rgba(196,26,26,0.12)" : "var(--bg-input)", color: active ? "#C41A1A" : "var(--text-muted)", transition:"all 0.15s" }}>
-                    <span style={{ fontSize:22 }}>{icon}</span>
-                    <span style={{ fontSize:10, fontWeight:600, letterSpacing:0.2 }}>{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Bottom nav — visible en mobile siempre, CSS lo oculta en desktop */}
-      <nav className="em-bottom-nav" aria-label="Navegación principal">
-          {/* Botón volver al panel coach — solo en coachDiaryMode */}
-          {coachDiaryMode && (
-            <button className="em-bottom-nav__item" onClick={() => setCoachDiaryMode(false)} style={{ color:"#C41A1A" }}>
-              <span className="em-bottom-nav__icon">🏆</span>
-              <span className="em-bottom-nav__label">Panel</span>
-            </button>
-          )}
-          {/* Items principales (5 max) */}
-          {[
-            { key:"home",      icon:"🏠", label:"Inicio" },
-            { key:"sesiones",  icon:"📋", label:"Sesiones" },
-            !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
-            coachDiaryMode && { key:"stats", icon:"📊", label:"Stats" },
-            coachDiaryMode && { key:"notas", icon:"📝", label:"Notas" },
-          ].filter(Boolean).map(({ key, icon, label, badge }) => {
-            const active = view === key || (key === "sesiones" && view === "detail");
-            return (
-              <button key={key} className={`em-bottom-nav__item${active ? " active" : ""}`} onClick={() => setView(key)}>
-                <div style={{ position:"relative", display:"inline-block" }}>
-                  <span className="em-bottom-nav__icon">{icon}</span>
-                  {badge > 0 && <span style={{ position:"absolute", top:-4, right:-6, width:14, height:14, borderRadius:"50%", background:"#3b82f6", color:"#fff", fontSize:8, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", border:"1.5px solid var(--bg)" }}>{badge > 9 ? "9+" : badge}</span>}
-                </div>
-                <span className="em-bottom-nav__label">{label}</span>
-              </button>
-            );
-          })}
-          {/* FAB nueva sesión */}
-          <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
-          {/* Más */}
-          <button className={`em-bottom-nav__item${showMoreNav ? " active" : ""}`} onClick={() => setShowMoreNav(v => !v)}>
-            <span className="em-bottom-nav__icon">⋯</span>
-            <span className="em-bottom-nav__label">Más</span>
-          </button>
-      </nav>
-
-    </div>
-  );
-}
+            <div style={{ fontSize:18, fontWeight:800, color:"var(--text)", textAlign:"center", marginBottom:

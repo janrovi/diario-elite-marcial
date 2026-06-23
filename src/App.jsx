@@ -4236,6 +4236,109 @@ function SubField({ label, value }) {
 
 
 
+
+
+// ── Perfil público del coach (/coach/:id) ──────────────────────────────────
+function CoachPublicProfile({ coachId }) {
+  const RED = "#C41A1A";
+  const [coach, setCoach] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const [notFound, setNotFound] = React.useState(false);
+
+  React.useEffect(() => {
+    supabase
+      .from("profiles")
+      .select("id, nombre, avatar_url, bio, experiencia_anos, disciplinas_coach, rol")
+      .eq("id", coachId)
+      .eq("rol", "coach")
+      .single()
+      .then(({ data, error }) => {
+        if (error || !data) setNotFound(true);
+        else setCoach(data);
+        setLoading(false);
+      });
+  }, [coachId]);
+
+  const initials = (coach?.nombre || "C").slice(0, 2).toUpperCase();
+  const discs = (() => {
+    try { return Array.isArray(coach?.disciplinas_coach) ? coach.disciplinas_coach : JSON.parse(coach?.disciplinas_coach || "[]"); }
+    catch { return []; }
+  })();
+
+  if (loading) return (
+    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"#111" }}>
+      <div style={{ width:32, height:32, border:"3px solid "+RED, borderTopColor:"transparent", borderRadius:"50%", animation:"spin 0.8s linear infinite" }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+  if (notFound) return (
+    <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:"#111", color:"#fff", textAlign:"center", padding:32 }}>
+      <div style={{ fontSize:64, marginBottom:16 }}>🥋</div>
+      <div style={{ fontSize:22, fontWeight:900, marginBottom:8 }}>Coach no encontrado</div>
+      <div style={{ fontSize:14, color:"#666", marginBottom:24 }}>Este perfil no existe o ya no está disponible.</div>
+      <a href="/" style={{ color:RED, fontWeight:700, fontSize:14 }}>← Ir a Élite Marcial</a>
+    </div>
+  );
+
+  return (
+    <div style={{ minHeight:"100vh", background:"#111", color:"#fff", fontFamily:"system-ui,-apple-system,sans-serif" }}>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div style={{ background:"#1a1a1a", borderBottom:"1px solid #222", padding:"14px 20px", display:"flex", alignItems:"center", gap:10 }}>
+        <div style={{ width:28, height:28, background:RED, borderRadius:8, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14 }}>🥋</div>
+        <span style={{ fontSize:14, fontWeight:800, color:"#fff", letterSpacing:-0.3 }}>Élite Marcial</span>
+        <span style={{ marginLeft:"auto", fontSize:11, color:"#555", fontWeight:600 }}>PERFIL DE COACH</span>
+      </div>
+      <div style={{ maxWidth:520, margin:"0 auto", padding:"40px 20px 24px" }}>
+        <div style={{ textAlign:"center", marginBottom:32 }}>
+          <div style={{ width:96, height:96, borderRadius:48, overflow:"hidden", border:`3px solid ${RED}`, margin:"0 auto 16px", background:RED+"20", display:"flex", alignItems:"center", justifyContent:"center" }}>
+            {coach.avatar_url
+              ? <img src={coach.avatar_url} alt={coach.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+              : <span style={{ fontSize:36, fontWeight:900, color:RED }}>{initials}</span>}
+          </div>
+          <h1 style={{ fontSize:28, fontWeight:900, margin:"0 0 6px", letterSpacing:-0.5 }}>{coach.nombre}</h1>
+          <div style={{ fontSize:12, fontWeight:700, color:RED, letterSpacing:2, textTransform:"uppercase" }}>Coach · Élite Marcial</div>
+        </div>
+        {coach.bio && (
+          <div style={{ background:"#1a1a1a", border:"1px solid #2a2a2a", borderRadius:16, padding:"18px 20px", marginBottom:16 }}>
+            <div style={{ fontSize:10, fontWeight:800, color:"#555", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>Sobre el coach</div>
+            <p style={{ fontSize:15, lineHeight:1.65, color:"#ccc", margin:0 }}>{coach.bio}</p>
+          </div>
+        )}
+        {coach.experiencia_anos && (
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:16 }}>
+            <div style={{ background:"#1a1a1a", border:"1px solid #2a2a2a", borderRadius:12, padding:"14px 16px", textAlign:"center" }}>
+              <div style={{ fontSize:28, fontWeight:900, color:RED, lineHeight:1 }}>{coach.experiencia_anos}</div>
+              <div style={{ fontSize:10, color:"#555", fontWeight:700, textTransform:"uppercase", letterSpacing:1, marginTop:4 }}>Años experiencia</div>
+            </div>
+            <div style={{ background:"#1a1a1a", border:"1px solid #2a2a2a", borderRadius:12, padding:"14px 16px", textAlign:"center" }}>
+              <div style={{ fontSize:28, fontWeight:900, color:"#10b981", lineHeight:1 }}>✓</div>
+              <div style={{ fontSize:10, color:"#555", fontWeight:700, textTransform:"uppercase", letterSpacing:1, marginTop:4 }}>Perfil verificado</div>
+            </div>
+          </div>
+        )}
+        {discs.length > 0 && (
+          <div style={{ background:"#1a1a1a", border:"1px solid #2a2a2a", borderRadius:16, padding:"16px 20px", marginBottom:24 }}>
+            <div style={{ fontSize:10, fontWeight:800, color:"#555", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12 }}>Disciplinas</div>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+              {discs.map(d => (
+                <span key={d} style={{ background:RED+"20", color:RED, border:`1px solid ${RED}40`, borderRadius:20, padding:"5px 14px", fontSize:13, fontWeight:700 }}>{d}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        <button
+          onClick={() => { window.location.href = `/?coach=${coachId}`; }}
+          style={{ width:"100%", padding:"16px", background:RED, color:"#fff", border:"none", borderRadius:14, fontSize:16, fontWeight:800, cursor:"pointer", letterSpacing:-0.3, boxShadow:`0 4px 24px ${RED}50`, marginBottom:12 }}>
+          Solicitar entrenamiento →
+        </button>
+        <p style={{ textAlign:"center", fontSize:12, color:"#444", margin:0 }}>
+          Inicia sesión o crea una cuenta para conectar con {coach.nombre.split(" ")[0]}.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ── Utilidad: compresión de imagen antes de subir avatar ──────────────────
 function compressImage(file, maxPx = 800, quality = 0.85) {
   return new Promise((resolve) => {
@@ -4939,9 +5042,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
   const coachRefLink = `https://elitemarcial.app/join?ref=${coachRefCode}`;
 
   const CHANGELOG = [
-    { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes. Coach header con badge COACH optimizado.", nuevo:true },
-    { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones individuales, botón Limpiar leídas. Notificación automática al desplegar nueva versión (version.json + build hook).", nuevo:false },
-    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:false },
+    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
     { version:"1.9", fecha:"Jun 2026", titulo:"Notificaciones en tiempo real + fixes QA", desc:"Toast en tiempo real via Supabase Realtime. Fix: sesión duplicada al crear desde técnica, atleta veía entrenador tras aceptar, selección de texto en formularios, sesión programada sin detalle." },
     { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
     { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
@@ -5103,8 +5204,6 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
             {cfTab === "changelog" && (() => {
               const isMb = window.innerWidth < 700;
               const clMap = {
-                "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" },
-                "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
                 "2.0":{ icon:"🚀", color:"#10b981", tag:"Fase 2 ✓" },
                 "1.9":{ icon:"🔔", color:"#C41A1A", tag:"Notificaciones" },
                 "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
@@ -10262,7 +10361,7 @@ function NotifToggle({ userId, lang }) {
   );
 }
 
-export default function App() {
+function MainApp() {
   const [view, setView] = useState("home");
   const [sessions, setSessions] = useState([]);  // starts empty; populated after Supabase sync
   const [form, setForm] = useState(EMPTY_SESSION);
@@ -10458,6 +10557,10 @@ export default function App() {
     try { const b = JSON.parse(localStorage.getItem(BODY_KEY(user.id))); if (b) setBodyEntries(b); } catch {}
     try { const inj = JSON.parse(localStorage.getItem(INJURIES_KEY(user.id))); if (inj) setInjuries(inj); } catch {}
     try { const r = JSON.parse(localStorage.getItem(RANGO_KEY(user.id))); if (r) setRango(prev => ({ ...prev, ...r })); } catch {}
+
+    // ── Pre-cargar sesiones cacheadas (render instantáneo) ──────────────────
+    const cached = loadSessions(user.id);
+    if (cached.length > 0) { setSessions(cached); setShowTutorial(false); }
 
     const sync = async () => {
       setSyncing(true);
@@ -11038,6 +11141,12 @@ export default function App() {
     const topDisc = Object.entries(discCount).sort((a, b) => b[1] - a[1])[0];
     return { totalMin, avgRpe, discCount, topDisc };
   }, [sessions]);
+
+  // ── Memos derivados de sessions ───────────────────────────────────────────
+  const streaks        = useMemo(() => computeStreaks(sessions),      [sessions]);
+  const weeklyVol      = useMemo(() => getWeeklyVolume(sessions, 8),  [sessions]);
+  const heatmapData    = useMemo(() => getHeatmapData(sessions, 16),  [sessions]);
+  const weekComparison = useMemo(() => getWeekComparison(sessions),   [sessions]);
   // getRpeColor defined at module level
 
   if (authLoading) return (
@@ -11187,7 +11296,7 @@ export default function App() {
           {[
             { key: "home",       label: "Inicio",             icon: "🏠", active: view === "home" },
             { key: "sesiones",    label: tr("nav_sessions"),   icon: "📋", active: view === "sesiones" || view === "detail" },
-            profile?.rol !== "coach" && { key: "entrenador", label: "Coach", icon: "🎓", active: view === "entrenador", badge: sesionesProgr.length || null },
+            profile?.rol !== "coach" && { key: "entrenador", label: "Coach", icon: "🎓", active: view === "entrenador", badge: (sesionesProgr.length + pendingInvitations.length) || null },
             { key: "cal",        label: tr("nav_calendar"),   icon: "📅", active: view === "cal" },
             { key: "tecnicas",   label: tr("nav_techniques"), icon: "🥋", active: view === "tecnicas" },
             { key: "stats",      label: tr("nav_stats"),      icon: "📊", active: view === "stats" },
@@ -12435,8 +12544,8 @@ export default function App() {
           );
         })()}
 
-        {/* BANNER INVITACIONES PENDIENTES (atletas) */}
-        {view === "sesiones" && pendingInvitations.length > 0 && (
+        {/* BANNER INVITACIONES PENDIENTES (atletas) — visible en vista Coach */}
+        {view === "entrenador" && pendingInvitations.length > 0 && (
           <div style={{ background: "linear-gradient(135deg, #1a1a2e, #16213e)", border: "1px solid #f6ad5540", borderRadius: 14, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <span style={{ fontSize: 22 }}>🏆</span>
             <div style={{ flex: 1, minWidth: 200 }}>
@@ -12456,6 +12565,12 @@ export default function App() {
                     titulo: `${profile?.nombre || "Tu atleta"} rechazó tu invitación`,
                     cuerpo: "Puedes volver a invitarle más adelante."
                   });
+                  sendPushToUser(
+                    inv.coach_id,
+                    `${profile?.nombre || "Tu atleta"} rechazó tu invitación`,
+                    "Puedes volver a invitarle más adelante.",
+                    "/", "invite_rejected"
+                  );
                   setPendingInvitations(p => p.slice(1));
                 }}
                 style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid #f6ad5560", background: "transparent", color: "#f6ad55", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
@@ -12471,6 +12586,12 @@ export default function App() {
                     titulo: `${profile?.nombre || "Tu atleta"} aceptó tu invitación`,
                     cuerpo: "Ya puedes ver sus sesiones y estadísticas en el panel."
                   });
+                  sendPushToUser(
+                    inv.coach_id,
+                    `🎉 ${profile?.nombre || "Tu atleta"} aceptó tu invitación`,
+                    "Ya puedes ver sus sesiones y estadísticas en el panel.",
+                    "/", "invite_accepted"
+                  );
                   setPendingInvitations(p => p.slice(1));
                   // Actualizar myCoachId y coachProfile inmediatamente
                   setMyCoachId(inv.coach_id);
@@ -12758,8 +12879,7 @@ export default function App() {
 
         {/* RESUMEN SEMANAL — futuristic KPI cards */}
         {view === "sesiones" && sessions.length > 0 && (() => {
-          const comp = getWeekComparison(sessions);
-          const streaks = computeStreaks(sessions);
+          const comp = weekComparison;
           const fmtMin = v => v >= 60 ? `${Math.round(v/60*10)/10}h` : `${v}m`;
           const delta = (cur, prev) => {
             if (!prev) return null;
@@ -13419,7 +13539,6 @@ export default function App() {
 
         {/* PROGRESO */}
         {view === "progreso" && (() => {
-          const streaks = computeStreaks(sessions);
           const totalMin = sessions.reduce((a, s) => a + (parseFloat(s.duracionMin) || 0), 0);
           const allWeeks = getWeeklyVolume(sessions, 52);
           const bestWeek = allWeeks.reduce((best, w) => w.min > best.min ? w : best, { week: "—", min: 0 });
@@ -13852,7 +13971,6 @@ export default function App() {
         {/* FORMULARIO */}
         {/* STATS */}
         {view === "stats" && (() => {
-          const streaks = computeStreaks(sessions);
           const thisMonth = sessions.filter(s =>
             s.fecha.slice(0, 7) === new Date().toISOString().slice(0, 7)
           ).length;
@@ -13908,7 +14026,7 @@ export default function App() {
 
               {/* Semana vs anterior */}
               {(() => {
-                const comp = getWeekComparison(sessions);
+                const comp = weekComparison;
                 if (comp.tw.n === 0 && comp.lw.n === 0) return null;
                 const fmtMin = v => v >= 60 ? `${Math.round(v/60*10)/10}h` : `${v}m`;
                 const metrics = [
@@ -14794,4 +14912,34 @@ export default function App() {
             !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
             coachDiaryMode && { key:"stats", icon:"📊", label:"Stats" },
             coachDiaryMode && { key:"notas", icon:"📝", label:"Notas" },
-          ].filter(Boolean).map(({ key, 
+          ].filter(Boolean).map(({ key, icon, label, badge }) => {
+            const active = view === key || (key === "sesiones" && view === "detail");
+            return (
+              <button key={key} className={`em-bottom-nav__item${active ? " active" : ""}`} onClick={() => setView(key)}>
+                <div style={{ position:"relative", display:"inline-block" }}>
+                  <span className="em-bottom-nav__icon">{icon}</span>
+                  {badge > 0 && <span style={{ position:"absolute", top:-4, right:-6, width:14, height:14, borderRadius:"50%", background:"#3b82f6", color:"#fff", fontSize:8, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", border:"1.5px solid var(--bg)" }}>{badge > 9 ? "9+" : badge}</span>}
+                </div>
+                <span className="em-bottom-nav__label">{label}</span>
+              </button>
+            );
+          })}
+          {/* FAB nueva sesión */}
+          <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
+          {/* Más */}
+          <button className={`em-bottom-nav__item${showMoreNav ? " active" : ""}`} onClick={() => setShowMoreNav(v => !v)}>
+            <span className="em-bottom-nav__icon">⋯</span>
+            <span className="em-bottom-nav__label">Más</span>
+          </button>
+      </nav>
+
+    </div>
+  );
+}
+
+// ── Router raíz ─────────────────────────────────────────────────────────────
+export default function App() {
+  const m = window.location.pathname.match(/^\/coach\/([0-9a-f-]{36})$/i);
+  if (m) return <CoachPublicProfile coachId={m[1]} />;
+  return <MainApp />;
+}

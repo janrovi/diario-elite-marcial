@@ -4921,7 +4921,9 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
   const coachRefLink = `https://elitemarcial.app/join?ref=${coachRefCode}`;
 
   const CHANGELOG = [
-    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
+    { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes. Coach header con badge COACH optimizado.", nuevo:true },
+    { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones individuales, botón Limpiar leídas. Notificación automática al desplegar nueva versión (version.json + build hook).", nuevo:false },
+    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:false },
     { version:"1.9", fecha:"Jun 2026", titulo:"Notificaciones en tiempo real + fixes QA", desc:"Toast en tiempo real via Supabase Realtime. Fix: sesión duplicada al crear desde técnica, atleta veía entrenador tras aceptar, selección de texto en formularios, sesión programada sin detalle." },
     { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
     { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
@@ -5083,6 +5085,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
             {cfTab === "changelog" && (() => {
               const isMb = window.innerWidth < 700;
               const clMap = {
+                "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" },
+                "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
                 "2.0":{ icon:"🚀", color:"#10b981", tag:"Fase 2 ✓" },
                 "1.9":{ icon:"🔔", color:"#C41A1A", tag:"Notificaciones" },
                 "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },

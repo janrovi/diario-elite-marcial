@@ -11850,7 +11850,9 @@ export default function App() {
           };
 
           const CHANGELOG = [
-      { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:true },
+      { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño completo iOS", desc:"Header rediseñado con nombre de app + safe area iOS. Bottom nav con 5 items + drawer 'Más'. Dropdowns de notificaciones y perfil como paneles flotantes. Inputs del login adaptados a dark/light mode. Coach header optimizado con badge COACH.", nuevo:true },
+      { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"Campanita con X para eliminar notificaciones individuales y 'Limpiar leídas'. Notificación automática al desplegar nueva versión (version.json). Panel de notificaciones fijo arriba en mobile.", nuevo:false },
+      { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 completada — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push API + VAPID + Edge Function). Nav inferior con panel 'Más'. Corrección iOS zoom en todos los inputs. Heatmap responsive. Módulo de lesiones con 35 zonas y 22 tipos específicos de artes marciales.", nuevo:false },
       { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal más amplio (580px), hero header rojo con decoración, feature cards con iconos grandes, inputs más prominentes. Experiencia de invitación premium." },
       { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero más impactante (nombre 42px), stats en 3 columnas, racha con caja propia, tarjetas biometría con fill animado, barras de actividad proporcionales y acciones con hover elegante." },
       { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding — rediseño", desc:"Tarjeta tutorial ampliada a 560px, icono 72px, título 26px, cuerpo 15px, botón CTA más grande. Todos los pasos con feature chips. Posicionamiento inteligente sin recortes." },
@@ -11864,14 +11866,17 @@ export default function App() {
     ];
 
           const ROADMAP = [
-      { estado:"✅ Completado", titulo:"Notificaciones por email (Resend)", desc:"Sugerencias de Fundadores enviadas automáticamente vía Supabase Edge Functions + Resend. Función desplegada." },
-      { estado:"✅ Completado", titulo:"Notificaciones push nativas", desc:"Web Push API + VAPID + Edge Function desplegada. Alertas para sesiones programadas, mensajes y objetivos." },
-      { estado:"✅ Completado", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización mobile. Tutorial y panel de entrenador optimizados." },
-      { estado:"📋 Planificado", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico." },
-      { estado:"📋 Planificado", titulo:"Suscripciones recurrentes (Stripe)", desc:"Gestión de pagos para coaches: planes mensuales y anuales para sus atletas." },
-      { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial y biometría." },
-      { estado:"💡 Evaluando", titulo:"Torneos y competiciones", desc:"Registro de resultados, historial de competición y ranking interno." },
-      { estado:"💡 Evaluando", titulo:"Vídeos técnicos & comunidad", desc:"Biblioteca multimedia y red social entre atletas y coaches." },
+      { estado:"✅ Completado", titulo:"Notificaciones push nativas (Web Push + VAPID)", desc:"Alertas para sesiones programadas, mensajes del coach y objetivos. Edge Function en Supabase.", cat:"Retención" },
+      { estado:"✅ Completado", titulo:"Notificaciones in-app con Realtime", desc:"Campanita con badge, marcar leídas, eliminar individual y limpiar leídas. Panel flotante mobile.", cat:"UX" },
+      { estado:"✅ Completado", titulo:"Notificación automática de nuevas versiones", desc:"Detecta deploy nuevo y notifica al usuario con version.json en cada build.", cat:"Retención" },
+      { estado:"✅ Completado", titulo:"Mobile UX — iOS optimizado", desc:"Header con safe area, bottom nav inteligente con drawer 'Más', dropdowns como paneles flotantes.", cat:"Mobile" },
+      { estado:"✅ Completado", titulo:"Despliegue en Vercel (auto-deploy)", desc:"CI/CD automático desde GitHub main. Cada commit se despliega en producción.", cat:"Infra" },
+      { estado:"🔨 En desarrollo", titulo:"Marketing & Go-to-Market", desc:"Estrategia multicanal: Instagram/TikTok, coaches como canal de distribución, gimnasios y comunidades.", cat:"Crecimiento" },
+      { estado:"📋 Próximo", titulo:"Suscripciones recurrentes (Stripe)", desc:"Pagos mensuales y anuales para Coach Pro y Academia. Gestión de suscripciones desde el panel.", cat:"Monetización" },
+      { estado:"📋 Próximo", titulo:"Perfil público de coach", desc:"Página pública con especialidades, ubicación y reseñas. SEO para captación orgánica.", cat:"Adquisición" },
+      { estado:"💡 Evaluando", titulo:"IA de análisis de rendimiento (Claude API)", desc:"Análisis del historial, recomendaciones de carga y predicción de fatiga basadas en datos reales.", cat:"Diferenciación" },
+      { estado:"💡 Evaluando", titulo:"Feed de actividad & Comunidad", desc:"Actividad entre atletas del mismo equipo, challenges semanales y torneos internos.", cat:"Comunidad" },
+      { estado:"🔭 Futuro", titulo:"App nativa iOS/Android", desc:"Versión nativa post-validación de mercado con acceso biométrico y modo offline avanzado.", cat:"F4" },
     ];
 
           const activeTab = athFundTab; const setActiveTab = setAthFundTab;
@@ -11911,7 +11916,9 @@ export default function App() {
               {activeTab === "changelog" && (() => {
                 const isMb = window.innerWidth < 700;
                 const clMap = {
-                  "2.0":{ icon:"🔔", color:"#C41A1A", tag:"Fase 2" },
+                  "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" },
+                  "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
+                  "2.0":{ icon:"🚀", color:"#C41A1A", tag:"Fase 2" },
                   "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
                   "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
                   "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },
@@ -11981,22 +11988,15 @@ export default function App() {
                 const fases = [
                   { n:1, nombre:"Atleta Individual", icon:"🥋", color:"#10b981", desc:"Diario, cinturón, estadísticas, técnicas, biometría y progreso.", fecha:"Jun 2026", progreso:100, done:true },
                   { n:2, nombre:"Coach + Plataforma", icon:"🎯", color:GOLD, desc:"Panel coach, periodización, chat, biometría avanzada, Fundadores.", fecha:"Jun 2026", progreso:100, done:true },
-                  { n:3, nombre:"Comunidad + IA", icon:"🚀", color:"#8b5cf6", desc:"Red social, vídeos técnicos e IA de análisis personalizado.", fecha:"2026", progreso:0, done:false },
+                  { n:3, nombre:"Marketing & Comunidad", icon:"🚀", color:"#8b5cf6", desc:"Go-to-market, Stripe, perfil público coach, IA de rendimiento.", fecha:"2026", progreso:30, done:false },
                   { n:4, nombre:"App Nativa", icon:"📱", color:"#3b82f6", desc:"iOS/Android con push, offline completo y wearables.", fecha:"2027", progreso:0, done:false },
                 ];
-                const items = [
-                  { estado:"dev",  icon:"🔔", titulo:"Notificaciones push", desc:"Alertas nativas para sesiones programadas y objetivos. El service worker PWA ya está listo.", color:"#10b981" },
-                  { estado:"dev",  icon:"🔍", titulo:"QA & polish pre-lanzamiento", desc:"Revisión completa de flujos, corrección de bugs y optimización de rendimiento.", color:"#10b981" },
-                  { estado:"plan", icon:"📱", titulo:"App nativa iOS/Android", desc:"Versión nativa post-PWA con experiencia óptima en móvil y acceso biométrico.", color:"#3b82f6" },
-                  { estado:"plan", icon:"💳", titulo:"Suscripciones recurrentes", desc:"Gestión de pagos Stripe para coaches: planes mensuales/anuales para atletas.", color:"#3b82f6" },
-                  { estado:"eval", icon:"🤖", titulo:"IA de análisis de rendimiento", desc:"Recomendaciones personalizadas basadas en historial de entrenamiento y biometría.", color:"#8b5cf6" },
-                  { estado:"eval", icon:"🏆", titulo:"Torneos y competiciones", desc:"Registro de resultados, historial de competición y ranking.", color:"#8b5cf6" },
-                  { estado:"eval", icon:"🎥", titulo:"Vídeos técnicos & comunidad", desc:"Biblioteca multimedia y red social entre atletas y coaches.", color:"#8b5cf6" },
-                ];
                 const estadoMeta = {
-                  dev:  { label:"En desarrollo", color:"#10b981", dot:true },
-                  plan: { label:"Planificado",   color:"#3b82f6", dot:false },
+                  done: { label:"Completado",    color:"#10b981", dot:false },
+                  dev:  { label:"En desarrollo", color:"#f59e0b", dot:true  },
+                  next: { label:"Próximo",       color:"#3b82f6", dot:false },
                   eval: { label:"Evaluando",     color:"#8b5cf6", dot:false },
+                  fut:  { label:"Futuro",        color:"#6b7280", dot:false },
                 };
                 return (
                   <div>
@@ -12031,21 +12031,26 @@ export default function App() {
                       </div>
                     </div>
                     {/* Items */}
-                    <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>{t("club_improvements",lang)}</div>
+                    <div style={{ fontSize:10, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>// Funciones</div>
                     <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                      {items.map(item => {
-                        const meta = estadoMeta[item.estado];
+                      {ROADMAP.map(item => {
+                        const estadoKey = item.estado.includes("✅") ? "done" : item.estado.includes("🔨") ? "dev" : item.estado.includes("📋") ? "next" : item.estado.includes("🔭") ? "fut" : "eval";
+                        const meta = estadoMeta[estadoKey];
+                        const catColors = { "Retención":"#10b981","UX":"#06b6d4","Mobile":"#3b82f6","Infra":"#6b7280","Crecimiento":"#f59e0b","Monetización":"#C41A1A","Adquisición":"#8b5cf6","Diferenciación":"#ec4899","Comunidad":"#14b8a6","F4":"#6b7280" };
+                        const catColor = catColors[item.cat] || "#6b7280";
                         return (
-                          <div key={item.titulo} style={{ display:"flex", alignItems:"center", background:"var(--bg-card)", border:"1px solid var(--border)", borderLeft:`4px solid ${item.color}`, borderRadius:"0 13px 13px 0" }}>
+                          <div key={item.titulo} style={{ display:"flex", alignItems:"center", background:"var(--bg-card)", border:"1px solid var(--border)", borderLeft:`4px solid ${meta.color}`, borderRadius:"0 13px 13px 0", overflow:"hidden" }}>
                             <div style={{ padding:"12px 14px", display:"flex", alignItems:"center", gap:13, flex:1 }}>
-                              <div style={{ width:38, height:38, borderRadius:10, background:`${item.color}18`, border:`1px solid ${item.color}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:19, flexShrink:0 }}>{item.icon}</div>
                               <div style={{ flex:1, minWidth:0 }}>
-                                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:2 }}>{item.titulo}</div>
+                                <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:3 }}>
+                                  <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>{item.titulo}</div>
+                                  {item.cat && <span style={{ fontSize:8, fontWeight:900, color:catColor, background:`${catColor}18`, border:`1px solid ${catColor}30`, borderRadius:10, padding:"1px 6px", flexShrink:0 }}>{item.cat.toUpperCase()}</span>}
+                                </div>
                                 <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.4 }}>{item.desc}</div>
                               </div>
                               <div style={{ display:"flex", alignItems:"center", gap:5, flexShrink:0 }}>
-                                {meta.dot && <span style={{ width:6, height:6, borderRadius:"50%", background:meta.color, display:"inline-block", boxShadow:`0 0 6px ${meta.color}` }} />}
-                                <span style={{ fontSize:9, fontWeight:800, color:meta.color, background:`${meta.color}18`, border:`1px solid ${meta.color}30`, borderRadius:20, padding:"2px 9px", whiteSpace:"nowrap" }}>{meta.label}</span>
+                                {meta.dot && <span style={{ width:6, height:6, borderRadius:"50%", background:meta.color, display:"inline-block", boxShadow:`0 0 6px ${meta.color}`, flexShrink:0 }} />}
+                                <span style={{ fontSize:9, fontWeight:800, color:meta.color, background:`${meta.color}15`, border:`1px solid ${meta.color}30`, borderRadius:20, padding:"2px 8px", whiteSpace:"nowrap" }}>{meta.label}</span>
                               </div>
                             </div>
                           </div>

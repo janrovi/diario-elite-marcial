@@ -595,24 +595,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   }
 
   .em-bottom-nav {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: auto !important;
+    min-height: 62px;
     background: var(--bg-card);
     border-top: 1px solid var(--border);
     align-items: center;
     justify-content: space-around;
-    z-index: 100;
-    padding: 0 2px;
-    padding-bottom: env(safe-area-inset-bottom);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    z-index: 300 !important;
+    padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    overflow-x: hidden;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
   }
-  .em-bottom-nav::-webkit-scrollbar { display: none; }
 
   .em-bottom-nav__item {
     flex: 1;
@@ -621,39 +620,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: 3px;
     background: transparent;
     border: none;
     cursor: pointer;
-    padding: 6px 2px;
-    color: #555;
+    padding: 8px 4px;
+    color: var(--text-muted);
     transition: color 0.15s;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+    min-height: 62px;
   }
   .em-bottom-nav__item.active {
-    color: #e53e3e;
+    color: #C41A1A;
   }
   .em-bottom-nav__item.active::after {
     content: "";
     position: absolute;
-    bottom: 4px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 18px;
+    width: 28px;
     height: 3px;
-    background: #e53e3e;
-    border-radius: 2px;
-  }
-  .em-bottom-nav__item {
-    position: relative;
+    background: #C41A1A;
+    border-radius: 0 0 3px 3px;
   }
   .em-bottom-nav__icon {
-    font-size: 17px;
+    font-size: 22px;
     line-height: 1;
   }
   .em-bottom-nav__label {
-    font-size: 8px;
-    font-weight: 500;
+    font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0;
     white-space: nowrap;
     overflow: hidden;
@@ -1164,15 +1162,15 @@ input, textarea, select {
 
   /* -- Bottom nav: taller + bigger icons -- */
   .em-bottom-nav {
-    height: 70px !important;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 6px) !important;
+    min-height: 70px !important;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 6px) !important;
   }
   .em-bottom-nav__item {
     min-height: 70px !important;
-    padding: 8px 3px !important;
+    padding: 10px 4px !important;
   }
-  .em-bottom-nav__icon  { font-size: 22px !important; }
-  .em-bottom-nav__label { font-size: 9px  !important; letter-spacing: 0 !important; }
+  .em-bottom-nav__icon  { font-size: 24px !important; }
+  .em-bottom-nav__label { font-size: 10px !important; letter-spacing: 0 !important; }
   .em-bottom-nav__fab {
     width: 52px  !important;
     height: 52px !important;
@@ -2076,271 +2074,4 @@ input, textarea, select {
   }
 
   /* Notas KPI: 3 cols → 3 cols pero compactos */
-/* ── Coach diary mode: forzar bottom nav visible en mobile ── */
-@media (max-width: 600px) {
-  .em-bottom-nav {
-    display: flex !important;
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 300 !important;
-  }
-}
- Filtros fila: input + select en columna */
-  .em-tec-filters {
-    flex-direction: column;
-  }
-
-  /* Ranking row: valor más pequeño */
-  .em-tec-rank-row .em-rank-count {
-    font-size: 16px;
-  }
-
-  /* Notas compose: tags wrap bien */
-  .em-nota-tag-btn {
-    font-size: 11px;
-    padding: 4px 8px;
-  }
-
-  /* Calendario — esta semana dots más pequeños */
-  .em-cal-week-strip {
-    gap: 2px;
-  }
-
-  /* Cards calendario sesión: icono más pequeño */
-  .em-cal-session-card .em-disc-icon {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
-   MOBILE OPTIMISATION v2 — GLOBAL FIXES
-   ─────────────────────────────────────────────────────────── */
-
-/* Prevenir scroll horizontal accidental */
-html, body {
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
-}
-
-/* Reducir glow decorativo en mobile — ahorra GPU */
-@media (max-width: 600px) {
-  body::after {
-    width: 100vw;
-    height: 40vh;
-    opacity: 0.6;
-  }
-  body::before {
-    background-size: 32px 32px;
-  }
-}
-
-/* ── Safe area insets (notch / Dynamic Island / home indicator) ── */
-.em-header {
-  padding-top: max(0px, env(safe-area-inset-top));
-}
-.em-bottom-nav {
-  padding-bottom: max(6px, env(safe-area-inset-bottom));
-}
-.em-coach-bottom-nav {
-  padding-bottom: max(4px, env(safe-area-inset-bottom, 0px));
-}
-
-/* ── Focus overlay: teclado virtual + safe areas ── */
-.em-focus-overlay {
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: max(60px, calc(env(safe-area-inset-bottom) + 40px));
-}
-
-@media (max-width: 600px) {
-  /* Form ocupa todo el ancho sin padding lateral extra */
-  .em-focus-content {
-    padding: 16px 14px 48px !important;
-    max-width: 100% !important;
-  }
-
-  /* Botón cerrar: mínimo táctil 44px */
-  .em-focus-close {
-    width: 44px !important;
-    height: 44px !important;
-    top: max(10px, env(safe-area-inset-top)) !important;
-    right: 12px !important;
-  }
-
-  /* Scroll padding: que el teclado no tape el input activo */
-  .em-focus-overlay {
-    scroll-padding-bottom: 120px;
-  }
-  .em-focus-overlay input:focus,
-  .em-focus-overlay textarea:focus,
-  .em-focus-overlay select:focus {
-    scroll-margin-bottom: 120px;
-  }
-
-  /* Labels de formulario más legibles */
-  .em-focus-content label {
-    font-size: 13px !important;
-    margin-bottom: 6px !important;
-  }
-
-  /* Inputs del formulario — altura mínima cómoda */
-  .em-focus-content input,
-  .em-focus-content textarea,
-  .em-focus-content select {
-    min-height: 46px !important;
-    font-size: 16px !important;       /* evita zoom iOS */
-    padding: 12px 14px !important;
-    border-radius: 10px !important;
-  }
-
-  /* Textarea más corta en mobile — no ocupa pantalla entera */
-  .em-focus-content textarea {
-    min-height: 80px !important;
-    max-height: 160px !important;
-  }
-
-  /* Stepper de pasos: barra compacta */
-  .em-focus-content [style*="gap: 5px"][style*="height: 5px"],
-  .em-focus-content [style*="gap:5px"][style*="height:5px"] {
-    gap: 4px !important;
-  }
-}
-
-/* ── Overlays y modales: contener scroll ── */
-@media (max-width: 600px) {
-  /* Cualquier overlay fullscreen */
-  [style*="position: fixed"][style*="inset: 0"],
-  [style*="position:fixed"][style*="inset:0"] {
-    overscroll-behavior: contain;
-  }
-}
-
-/* ── Tap highlight global apagado ── */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── date input: área táctil completa ── */
-@media (max-width: 600px) {
-  input[type="date"],
-  input[type="time"] {
-    min-height: 46px !important;
-    padding: 12px 14px !important;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    width: 28px;
-    height: 28px;
-    padding: 4px;
-    cursor: pointer;
-    opacity: 0.7;
-  }
-}
-
-/* ── Botones de acción rápida (RPE, intensidad): mínimo 44px ── */
-@media (max-width: 600px) {
-  /* Chips RPE / intensidad genéricos */
-  [style*="border-radius: 8px"][style*="cursor: pointer"],
-  [style*="borderRadius: 8px"][style*="cursor: pointer"] {
-    min-height: 40px;
-  }
-
-  /* Stat cards del home: sin minWidth fijo que rompe layout */
-  .em-stat-card {
-    min-width: 0 !important;
-  }
-
-  /* Tabs de métricas en StatsView: scroll horizontal */
-  .em-stat-tabs {
-    overflow-x: auto !important;
-    flex-wrap: nowrap !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
-    padding-bottom: 2px;
-  }
-  .em-stat-tabs::-webkit-scrollbar { display: none; }
-  .em-stat-tabs button {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
-  }
-
-  /* Cards métricas del home: grilla más compacta */
-  .em-home-metric-row {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .em-home-metric-card {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 0;
-  }
-}
-
-/* ── Sesión detail / modal scroll ── */
-@media (max-width: 600px) {
-  /* Modal de sesión dentro del overlay — scroll interno */
-  .em-session-detail-inner {
-    max-height: calc(100dvh - 80px) !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-
-  /* Header fijo del overlay no corta contenido */
-  .em-focus-overlay > *:first-child {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--bg);
-  }
-}
-
-/* ── Tipografía: escala mínima en 360px ── */
-@media (max-width: 380px) {
-  .em-page-title     { font-size: 18px !important; }
-  .em-week-banner__val { font-size: 16px !important; }
-  .em-session-row    { padding: 12px 10px !important; }
-  .em-main           { padding: 10px 10px 96px !important; }
-
-  /* Bottom nav: labels en 360 — más pequeñas pero legibles */
-  .em-bottom-nav__label { font-size: 8px !important; }
-  .em-bottom-nav__icon  { font-size: 20px !important; }
-}
-
-/* ── Coach app: ajustes móvil finales ── */
-@media (max-width: 600px) {
-  .em-coach-main {
-    padding: 12px 10px 90px !important;
-  }
-  /* Stats grid coach: 2 cols bien distribuidas */
-  .em-coach-stats-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 8px !important;
-  }
-  /* Header logo coach: sin badge */
-  .em-coach-logo-sub, .em-coach-logo-badge {
-    display: none !important;
-  }
-}
-
-/* ── Heatmap: no overflow en mobile ── */
-@media (max-width: 600px) {
-  .em-heatmap-svg {
-    width: 100% !important;
-    height: auto !important;
-  }
-}
-
-/* ── Scroll más suave en toda la app ── */
-html {
-  scroll-behavior: smooth;
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
+/* ── Coach diary mode: forzar bott

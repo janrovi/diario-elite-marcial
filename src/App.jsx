@@ -14701,35 +14701,57 @@ export default function App() {
         );
       })()}
 
+      {/* ── "Más" drawer — items secundarios del bottom nav ── */}
+      {showMoreNav && (
+        <div style={{ position:"fixed", inset:0, zIndex:290 }} onClick={() => setShowMoreNav(false)}>
+          <div style={{ position:"absolute", bottom:"calc(env(safe-area-inset-bottom,0px) + 68px)", left:0, right:0, background:"var(--bg-card)", borderTop:"1px solid var(--border)", borderRadius:"20px 20px 0 0", padding:"8px 12px 12px", boxShadow:"0 -8px 32px rgba(0,0,0,0.3)" }}
+            onClick={e => e.stopPropagation()}>
+            <div style={{ width:36, height:4, borderRadius:2, background:"var(--border)", margin:"4px auto 14px" }} />
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+              {[
+                { key:"cal",      icon:"📅", label:"Cal"      },
+                { key:"tecnicas", icon:"🥋", label:"Técnicas" },
+                { key:"progreso", icon:"🏅", label:"Progreso" },
+                { key:"notas",    icon:"📝", label:"Notas"    },
+                { key:"cuerpo",   icon:"⚖️", label:"Bio"      },
+                { key:"stats",    icon:"📊", label:"Stats"    },
+                { key:"perfil",   icon:"👤", label:"Perfil"   },
+              ].map(({ key, icon, label }) => {
+                const active = view === key;
+                return (
+                  <button key={key}
+                    onClick={() => { setView(key); setShowMoreNav(false); }}
+                    style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 4px", borderRadius:14, border:"none", cursor:"pointer", background: active ? "rgba(196,26,26,0.12)" : "var(--bg-input)", color: active ? "#C41A1A" : "var(--text-muted)", transition:"all 0.15s" }}>
+                    <span style={{ fontSize:22 }}>{icon}</span>
+                    <span style={{ fontSize:10, fontWeight:600, letterSpacing:0.2 }}>{label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom nav — visible en mobile siempre, CSS lo oculta en desktop */}
       <nav className="em-bottom-nav" aria-label="Navegación principal">
           {/* Botón volver al panel coach — solo en coachDiaryMode */}
           {coachDiaryMode && (
-            <button
-              className="em-bottom-nav__item"
-              onClick={() => setCoachDiaryMode(false)}
-              style={{ color:"#C41A1A" }}>
+            <button className="em-bottom-nav__item" onClick={() => setCoachDiaryMode(false)} style={{ color:"#C41A1A" }}>
               <span className="em-bottom-nav__icon">🏆</span>
               <span className="em-bottom-nav__label">Panel</span>
             </button>
           )}
+          {/* Items principales (5 max) */}
           {[
-            { key:"home",      icon:"🏠", label:"Inicio"    },
-            { key:"sesiones",  icon:"📋", label:"Sesiones"  },
-            { key:"cal",       icon:"📅", label:"Cal"        },
-            { key:"tecnicas",  icon:"🥋", label:"Técnicas"  },
-            { key:"stats",     icon:"📊", label:"Stats"      },
-            { key:"progreso",  icon:"🏅", label:"Progreso"  },
-            { key:"notas",     icon:"📝", label:"Notas"      },
-            { key:"cuerpo",    icon:"⚖️", label:"Bio"        },
+            { key:"home",      icon:"🏠", label:"Inicio" },
+            { key:"sesiones",  icon:"📋", label:"Sesiones" },
             !coachDiaryMode && profile?.rol !== "coach" && { key:"entrenador", icon:"🎓", label:"Coach", badge: sesionesProgr.length || null },
-            { key:"perfil",    icon:"👤", label:"Perfil"    },
+            coachDiaryMode && { key:"stats", icon:"📊", label:"Stats" },
+            coachDiaryMode && { key:"notas", icon:"📝", label:"Notas" },
           ].filter(Boolean).map(({ key, icon, label, badge }) => {
             const active = view === key || (key === "sesiones" && view === "detail");
             return (
-              <button key={key}
-                className={`em-bottom-nav__item${active ? " active" : ""}`}
-                onClick={() => setView(key)}>
+              <button key={key} className={`em-bottom-nav__item${active ? " active" : ""}`} onClick={() => setView(key)}>
                 <div style={{ position:"relative", display:"inline-block" }}>
                   <span className="em-bottom-nav__icon">{icon}</span>
                   {badge > 0 && <span style={{ position:"absolute", top:-4, right:-6, width:14, height:14, borderRadius:"50%", background:"#3b82f6", color:"#fff", fontSize:8, fontWeight:900, display:"flex", alignItems:"center", justifyContent:"center", border:"1.5px solid var(--bg)" }}>{badge > 9 ? "9+" : badge}</span>}
@@ -14738,7 +14760,13 @@ export default function App() {
               </button>
             );
           })}
+          {/* FAB nueva sesión */}
           <button className="em-bottom-nav__fab" onClick={() => setView("form")} aria-label="Nueva sesión">+</button>
+          {/* Más */}
+          <button className={`em-bottom-nav__item${showMoreNav ? " active" : ""}`} onClick={() => setShowMoreNav(v => !v)}>
+            <span className="em-bottom-nav__icon">⋯</span>
+            <span className="em-bottom-nav__label">Más</span>
+          </button>
       </nav>
 
     </div>

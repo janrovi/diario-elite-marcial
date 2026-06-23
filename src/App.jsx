@@ -4514,8 +4514,8 @@ function NotificationBell({ userId, onNewNotif }) {
       {open && (
         <div style={{
           position: window.innerWidth < 600 ? "fixed" : "absolute",
-          top: window.innerWidth < 600 ? "auto" : "calc(100% + 8px)",
-          bottom: window.innerWidth < 600 ? "calc(env(safe-area-inset-bottom, 0px) + 72px)" : "auto",
+          top: window.innerWidth < 600 ? "calc(env(safe-area-inset-top, 0px) + 60px)" : "calc(100% + 8px)",
+          bottom: "auto",
           left: window.innerWidth < 600 ? 8 : "auto",
           right: window.innerWidth < 600 ? 8 : 0,
           width: window.innerWidth < 600 ? "auto" : 320,

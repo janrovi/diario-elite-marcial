@@ -6,8 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      selfDestroying: true,
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       devOptions: { enabled: true },
       strategies: 'injectManifest',
       srcDir: 'src',

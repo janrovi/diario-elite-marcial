@@ -6221,7 +6221,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             { key: "stats",     icon: "📊", label: "Estadísticas" },
             { key: "periodo",   icon: "📆", label: "Período" },
             { key: "perfil",    icon: "👤", label: "Mi perfil" },
-            isFundador && { key: "club",  icon: "🏅", label: "Club" },
+            isCoachFundador && { key: "club",  icon: "🏅", label: "Club" },
           ].filter(Boolean).map(({ key, icon, label }) => {
             const active = coachView === key;
             return (
@@ -9165,7 +9165,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           { key: "stats",   icon: "📊", label: "Stats" },
           { key: "periodo", icon: "📆", label: "Período" },
           { key: "perfil",  icon: "👤", label: "Perfil" },
-          ...(isFundador ? [{ key: "club", icon: "🏅", label: "Club" }] : []),
+          ...(isCoachFundador ? [{ key: "club", icon: "🏅", label: "Club" }] : []),
         ].map(({ key, icon, label }) => {
           const active = coachView === key;
           return (

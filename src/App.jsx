@@ -12037,7 +12037,9 @@ function MainApp() {
           };
 
           const CHANGELOG = [
-            { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes.", nuevo:true },
+            { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio. Emails con diseño de marca.", nuevo:true },
+            { version:"2.3", fecha:"Jun 2026", titulo:"Ecosistema Fundador completo", desc:"@Username único por usuario. Roadmap con votación real (Supabase). Muro de Fundadores con grid de avatares. Canal Directo a Jan sin filtros.", nuevo:false },
+            { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes.", nuevo:false },
             { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones individuales, botón Limpiar leídas. Notificación automática al desplegar nueva versión.", nuevo:false },
             { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push + VAPID + Edge Function). Módulo de lesiones con 35 zonas.", nuevo:false },
             { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal premium: hero rojo, feature cards, inputs prominentes." },
@@ -12052,6 +12054,8 @@ function MainApp() {
             { version:"1.0", fecha:"Abr 2026", titulo:"Lanzamiento", desc:"Primera versión pública. Diario de sesiones, cinturón y estadísticas." },
           ];
           const clMap = {
+            "2.4":{ icon:"✉️", color:"#10b981", tag:"Seguridad" },
+            "2.3":{ icon:"🏅", color:"#f59e0b", tag:"Fundador" },
             "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" }, "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
             "2.0":{ icon:"🚀", color:"#C41A1A", tag:"Fase 2" }, "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
             "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" }, "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },

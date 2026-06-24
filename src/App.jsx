@@ -7677,7 +7677,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               </button>
 
               {/* Gestión de suscripción */}
-              {coachPlan !== "free" && (
+              {coachPlan === "coach" && (
                 <div style={{ marginTop:16, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, padding:"20px 24px" }}>
                   <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:4, display:"flex", alignItems:"center", gap:8 }}>
                     <span style={{ fontSize:18 }}>💳</span> Tu suscripción

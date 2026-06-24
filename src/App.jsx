@@ -7219,35 +7219,40 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               />
             </div>
           );
-        })() : coachView === "club" ? (() => {
-          // Club Fundador accesible desde el panel coach
-          // Cambiamos temporalmente a la vista fundador del diario
-          return (
-            <div style={{ padding:"16px 0" }}>
-              {/* Reutilizamos el componente completo cambiando view a "fundador" */}
-              <div ref={el => { if (el && view !== "fundador") {} }}>
-                {(() => { const prevView = view; return null; })()}
-              </div>
-              <div style={{ padding:"0 16px" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:20 }}>
-                  <div style={{ width:44, height:44, borderRadius:14, background:"#f59e0b22", border:"2px solid #f59e0b", display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>🏅</div>
-                  <div>
-                    <div style={{ fontSize:10, fontWeight:900, color:"#f59e0b", textTransform:"uppercase", letterSpacing:1.5 }}>ACCESO RÁPIDO</div>
-                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)" }}>Club Fundador</div>
-                  </div>
-                </div>
-                <button onClick={() => { setView("fundador"); }}
-                  style={{ width:"100%", padding:"16px", borderRadius:14, background:"linear-gradient(135deg,#f59e0b22,#f59e0b08)", border:"1.5px solid #f59e0b40", color:"#f59e0b", fontSize:14, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
-                  <span style={{ fontSize:20 }}>🏅</span>
-                  Abrir Club Fundador completo →
-                </button>
-                <div style={{ marginTop:16, fontSize:12, color:"var(--text-faint)", textAlign:"center" }}>
-                  Changelog · Roadmap · Muro de Fundadores · Canal Directo a Jan
-                </div>
+        })() : coachView === "club" ? (
+          <div style={{ padding:"24px 16px" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
+              <div style={{ width:48, height:48, borderRadius:14, background:"#f59e0b22", border:"2px solid #f59e0b", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>🏅</div>
+              <div>
+                <div style={{ fontSize:10, fontWeight:900, color:"#f59e0b", textTransform:"uppercase", letterSpacing:1.5 }}>EXCLUSIVO</div>
+                <div style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>Club Fundador</div>
               </div>
             </div>
-          );
-        })() : coachView === "periodo" ? (() => {
+            <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:24 }}>
+              {[
+                { icon:"🗒", label:"Changelog", desc:"Historial completo de versiones" },
+                { icon:"🗺", label:"Roadmap", desc:"Vota qué se construye primero" },
+                { icon:"🏅", label:"Fundadores", desc:"Muro de los primeros creyentes" },
+                { icon:"💬", label:"Canal Directo", desc:"Línea directa con Jan" },
+              ].map(f => (
+                <div key={f.label} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", background:"var(--bg-card)", borderRadius:12, border:"1px solid #f59e0b20" }}>
+                  <span style={{ fontSize:20 }}>{f.icon}</span>
+                  <div>
+                    <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>{f.label}</div>
+                    <div style={{ fontSize:11, color:"var(--text-faint)" }}>{f.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button onClick={onMyDiary}
+              style={{ width:"100%", padding:"16px", borderRadius:14, background:"linear-gradient(135deg,#f59e0b,#f97316)", color:"#000", fontSize:14, fontWeight:900, border:"none", cursor:"pointer" }}>
+              Ir al Club Fundador completo →
+            </button>
+            <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>
+              Se abrirá en Mi Diario → Club Fundador
+            </div>
+          </div>
+        ) : coachView === "periodo" ? (() => {
           // ══ PERIODIZACIÓN ══════════════════════════════════════════
           const FASE_INFO = {
             base:     { label: "Base Aeróbica", color: "#3b82f6" },

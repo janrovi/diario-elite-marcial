@@ -10207,9 +10207,9 @@ function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) 
   );
 }
 
-function AuthScreen({ onAuth, darkMode, onToggleDark }) {
+function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onResetDone }) {
   const lang = localStorage.getItem("em_lang") || "es";
-  const [mode, setMode] = React.useState("login"); // "login" | "register" | "forgot" | "reset"
+  const [mode, setMode] = React.useState(initialMode); // "login" | "register" | "forgot" | "reset"
   const [form, setForm] = React.useState({ email: "", password: "", newPassword: "", nombre: "", rol: "atleta" });
   const [error, setError] = React.useState("");
   const [success, setSuccess] = React.useState("");
@@ -10228,6 +10228,14 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
     supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") setMode("reset");
     });
+  }, []);
+
+  // PASSWORD_RECOVERY detection at MainApp level (for users already logged in)
+  React.useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") setForcePasswordReset(true);
+    });
+    return () => subscription.unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -10341,7 +10349,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
           }
         }
       } else if (mode === "forgot") {
-        await supabase.auth.resetPasswordForEmail(form.email, { redirectTo: window.location.origin });
+        await supabase.auth.resetPasswordForEmail(form.email, { redirectTo: "https://diario-elite-marcial.vercel.app" });
         // Siempre mostramos el mismo mensaje para no revelar si el email existe
         setSuccess("Si este email está registrado, recibirás un enlace de recuperación en breve. Revisa también el spam.");
       } else if (mode === "reset") {
@@ -10349,7 +10357,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
         const { error } = await supabase.auth.updateUser({ password: form.newPassword });
         if (error) throw error;
         setSuccess("¡Contraseña actualizada!");
-        setTimeout(() => setMode("login"), 2000);
+        setTimeout(() => { setMode("login"); if (onResetDone) onResetDone(); }, 2000);
       }
     } catch (err) {
       setError(err.message || "Error al conectar");
@@ -11040,6 +11048,7 @@ function MainApp() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [expandedDisc, setExpandedDisc] = useState(null);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("em_theme_v2") === "dark");
+  const [forcePasswordReset, setForcePasswordReset] = useState(() => window.location.hash.includes("type=recovery"));
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   // ── Update disponible (Service Worker) ──────────────────────────────────────
@@ -11850,6 +11859,13 @@ function MainApp() {
       onActivate={() => { setShowTutorial(true); setUser(user); }}
     />
   );
+  if (forcePasswordReset) return <AuthScreen
+    onAuth={(u) => { setUser(u); setForcePasswordReset(false); }}
+    darkMode={darkMode}
+    onToggleDark={() => setDarkMode(d => !d)}
+    initialMode="reset"
+    onResetDone={() => setForcePasswordReset(false)}
+  />;
   if (!user) return <AuthScreen onAuth={(u, isNew) => { setUser(u); if (isNew) setShowTutorial(true); }} darkMode={darkMode} onToggleDark={() => setDarkMode(d => !d)} />;
 
   // Coach → su propio dashboard (a menos que haya pedido ver su diario)

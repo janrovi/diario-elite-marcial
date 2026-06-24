@@ -5511,6 +5511,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [cfSuggSent, setCfSuggSent] = React.useState(false);
   const [cfSuggList, setCfSuggList] = React.useState(() => { try { return JSON.parse(localStorage.getItem("em_sugerencias")||"[]"); } catch { return []; } });
   const [cfShowPlanes, setCfShowPlanes] = React.useState(false);
+  // Plan del coach (usa override si ya cargó, si no el perfil prop)
+  const coachPlan = coachPlanOverride || profile?.plan || "free";
+  const isCoachFundador = coachPlan === "fundador";
   const [obStep, setObStep] = React.useState(1); // 1..4
   const [obNombre, setObNombre] = React.useState(() => profileProp?.nombre || "");
   const [obAvatarUrl, setObAvatarUrl] = React.useState(() => profileProp?.avatar_url || "");

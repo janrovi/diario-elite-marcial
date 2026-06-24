@@ -1,0 +1,36 @@
+🎙 ELEVENLABS — REEL 3 | 25 segundos exactos
+"3 señales de que tu gimnasio no es bueno"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5 bloques · 5 segundos cada uno
+Ajustes: Stability 40 | Similarity 80 | Style 30 | Velocidad 1.05x
+(Tono: directo, seco, informativo — más rápido que el Reel 2)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TEXTO PARA PEGAR EN ELEVENLABS:
+──────────────────────────────
+
+Tres señales de que tu gimnasio no es bueno.
+
+Uno. El instructor no tiene historial real. Sin competición, sin linaje verificable... no confíes en él.
+
+Dos. No te dejan hacer una clase de prueba. Un buen gimnasio no necesita atraparte.
+
+Tres. Hay ego en el tatami. Si los veteranos humillan a los nuevos... sal.
+
+¿Te ha pasado alguna? Guarda esto antes de apuntarte a tu próximo gimnasio.
+
+──────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SINCRONIZACIÓN EN CAPCUT
+
+Clip 1 → "Tres señales de que tu gimnasio no es bueno."
+Clip 2 → "Uno. El instructor no tiene historial real..."
+Clip 3 → "Dos. No te dejan hacer una clase de prueba..."
+Clip 4 → "Tres. Hay ego en el tatami..."
+Clip 5 → "¿Te ha pasado alguna?..."
+
+Este reel es informativo — la voz puede ir más rápida que el Reel 2, es natural.
+Si la voz sale más larga que 25s → sube velocidad a 1.10x en CapCut
+Si sale más corta → baja velocidad a 0.95x en CapCut
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

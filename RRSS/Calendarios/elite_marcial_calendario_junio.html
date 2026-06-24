@@ -1,0 +1,127 @@
+
+<h2 class="sr-only">Calendario de contenido Élite Marcial — Junio 2025, del 5 al 30</h2>
+
+<style>
+.cal-wrap { padding: 1rem 0 2rem; }
+.cal-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
+.cal-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); }
+.cal-sub { font-size: 13px; color: var(--color-text-secondary); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
+.leg { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-secondary); }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+.day { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px; cursor: pointer; transition: border-color 0.15s; }
+.day:hover { border-color: var(--color-border-secondary); }
+.day-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.day-num { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); }
+.format-badge { font-size: 10px; font-weight: 500; letter-spacing: 0.04em; padding: 2px 7px; border-radius: 20px; }
+.day-hook { font-size: 13px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; margin-bottom: 6px; }
+.day-type { font-size: 11px; color: var(--color-text-secondary); }
+.detail-panel { display: none; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-top: 1rem; }
+.detail-panel.open { display: block; }
+.detail-date { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 6px; }
+.detail-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 12px; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.detail-item label { font-size: 11px; color: var(--color-text-secondary); display: block; margin-bottom: 3px; }
+.detail-item p { font-size: 13px; color: var(--color-text-primary); margin: 0; line-height: 1.4; }
+.detail-hook-box { background: var(--color-background-primary); border-left: 3px solid #C41A1A; padding: 10px 14px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; margin-bottom: 12px; }
+.detail-hook-label { font-size: 10px; color: var(--color-text-secondary); letter-spacing: 0.06em; margin-bottom: 4px; }
+.detail-hook-text { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.4; }
+.detail-close { font-size: 12px; color: var(--color-text-secondary); cursor: pointer; text-decoration: underline; }
+.ask-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-text-secondary); background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 6px 12px; cursor: pointer; margin-top: 8px; }
+</style>
+
+<div class="cal-wrap">
+  <div class="cal-header">
+    <div class="cal-title">Calendario Élite Marcial — Junio</div>
+    <div class="cal-sub">26 días · 5 al 30</div>
+  </div>
+
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#C41A1A"></div>Carrusel educativo</div>
+    <div class="leg"><div class="leg-dot" style="background:#1A6CC4"></div>Post estático</div>
+    <div class="leg"><div class="leg-dot" style="background:#1A9E5C"></div>Reel / vídeo</div>
+    <div class="leg"><div class="leg-dot" style="background:#9E6C1A"></div>Promo / producto</div>
+    <div class="leg"><div class="leg-dot" style="background:#6C1A9E"></div>Testimonio / UGC</div>
+  </div>
+
+  <div class="grid" id="calGrid"></div>
+  <div class="detail-panel" id="detailPanel"></div>
+</div>
+
+<script>
+const days = [
+  { d:5, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"5 errores del principiante en el gimnasio", copy:"Carrusel 5 slides. Foto acción. Tono directo de Jan.", cta:"Guarda esto para el día 1" },
+  { d:6, fmt:"reel", color:"#1A9E5C", tipo:"Motivación", hook:"Lo que cambia cuando empiezas a entrenar artes marciales", copy:"Reel corto 15-30s. Antes/después mental. Voz de Jan en off.", cta:"Comenta si ya lo estás viviendo" },
+  { d:7, fmt:"estatico", color:"#1A6CC4", tipo:"Frase", hook:"El ego es tu peor rival. No el de enfrente.", copy:"Fondo oscuro. Tipografía grande. Firma Élite Marcial.", cta:"¿Estás de acuerdo? Comenta." },
+  { d:8, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"BJJ vs Muay Thai: ¿por cuál empezar?", copy:"5 slides. Comparativa honesta. Fotos de cada disciplina.", cta:"Enlace en bio — guía completa" },
+  { d:9, fmt:"promo", color:"#9E6C1A", tipo:"Producto", hook:"Llevas meses entrenando y no ves resultados. Registra.", copy:"Diario de Entrenamiento. 8€. Acceso inmediato. Foto producto.", cta:"Enlace en bio" },
+  { d:10, fmt:"reel", color:"#1A9E5C", tipo:"Educativo", hook:"3 señales de que tu gimnasio no es bueno", copy:"Reel educativo. Lista rápida. Tono sin rodeos.", cta:"Guarda si te ha pasado" },
+  { d:11, fmt:"estatico", color:"#1A6CC4", tipo:"Cita", hook:"Primero el cuerpo. Luego la mente. Después el espíritu.", copy:"Cita de la guía. Fondo negro. Rojo para la palabra clave.", cta:"" },
+  { d:12, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"Cómo elegir un buen gimnasio de artes marciales", copy:"5 slides. Check list visual. Señales de alarma al final.", cta:"Guárdalo antes de apuntarte" },
+  { d:13, fmt:"reel", color:"#1A9E5C", tipo:"Motivación", hook:"El día que quieres dejarlo es el más importante", copy:"Reel reflexivo. 20-30s. Música atmosférica. Voz Jan.", cta:"¿Has pensado en dejarlo? Comenta." },
+  { d:14, fmt:"estatico", color:"#6C1A9E", tipo:"Testimonio", hook:"'Llevo 3 meses en BJJ y ya no reconozco al de antes'", copy:"Screenshot de testimonio real o cita de alumno. Fondo oscuro.", cta:"¿Te identificas? Etiqueta a alguien" },
+  { d:15, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"La disciplina sobre la motivación — cómo entrenar cuando no quieres", copy:"5 slides. Mentalidad del guerrero. Bushido aplicado.", cta:"Guía completa en bio" },
+  { d:16, fmt:"promo", color:"#9E6C1A", tipo:"Producto", hook:"Sin relleno. Sin excusas. La guía honesta para empezar.", copy:"Post promocional guía. 50% off hoy. Urgencia real.", cta:"Solo hoy — enlace en bio" },
+  { d:17, fmt:"reel", color:"#1A9E5C", tipo:"Educativo", hook:"Por qué el BJJ iguala las fuerzas como ningún otro arte marcial", copy:"Reel explicativo 30s. Dato de Royce Gracie. Visual impactante.", cta:"¿Entrenas BJJ? Comenta" },
+  { d:18, fmt:"estatico", color:"#1A6CC4", tipo:"Frase", hook:"La mejor pelea es la que nunca llega a ocurrir.", copy:"Frase manifiesto. Tipografía Archivo. Firma Élite Marcial.", cta:"" },
+  { d:19, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"Lo que el MMA demostró que funciona de verdad en combate", copy:"5 slides. Historia del UFC. Contexto técnico. Jan como narrador.", cta:"Sigue para más contenido así" },
+  { d:20, fmt:"reel", color:"#1A9E5C", tipo:"Motivación", hook:"El progreso es invisible al principio. Pero está ahí.", copy:"Reel reflexivo. Imágenes de entrenamiento. Música lenta.", cta:"Guarda si lo estás viviendo" },
+  { d:21, fmt:"estatico", color:"#6C1A9E", tipo:"Testimonio", hook:"'El Diario de Entrenamiento me hizo ver lo que realmente mejoraba'", copy:"Testimonio sobre el diario. Incluir valoración ⭐⭐⭐⭐⭐.", cta:"Enlace en bio — 8€" },
+  { d:22, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"Rutina de 30 minutos en casa para artes marciales", copy:"5 slides. La rutina de la guía. Visual por bloques de tiempo.", cta:"Guarda esto y hazla hoy" },
+  { d:23, fmt:"promo", color:"#9E6C1A", tipo:"Producto", hook:"¿Entrenas pero no registras? Así es como el Diario cambia eso.", copy:"Post diario de entrenamiento. Mostrar ficha de sesión y RPE.", cta:"Enlace en bio — 8€" },
+  { d:24, fmt:"reel", color:"#1A9E5C", tipo:"Educativo", hook:"Cómo respirar bien en combate y por qué nadie te lo enseña", copy:"Reel técnico 30s. Demostración práctica. Tono Jan.", cta:"Guarda si entrenas" },
+  { d:25, fmt:"estatico", color:"#1A6CC4", tipo:"Frase", hook:"No entrenas porque tienes ganas. Entrenas porque es parte de quién eres.", copy:"Frase disciplina. Fondo negro. Impacto visual.", cta:"Etiqueta a alguien que necesita esto" },
+  { d:26, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"Muay Thai: las 8 armas y cómo usarlas siendo principiante", copy:"5 slides. Las 8 armas explicadas. Foto de cada técnica.", cta:"Enlace en bio — guía completa" },
+  { d:27, fmt:"reel", color:"#1A9E5C", tipo:"Motivación", hook:"6 meses en artes marciales: qué cambia en ti", copy:"Reel transformación. Basado en el plan de 6 meses de la guía.", cta:"Comenta en qué mes estás tú" },
+  { d:28, fmt:"estatico", color:"#6C1A9E", tipo:"Testimonio", hook:"'Entré sin saber nada. Ahora no me imagino sin entrenar.'", copy:"Testimonio de alumno o lector de la guía. Foto si es posible.", cta:"¿Tu historia? Comenta" },
+  { d:29, fmt:"carrusel", color:"#C41A1A", tipo:"Educativo", hook:"5 verdades sobre el cinturón negro que nadie te dice", copy:"5 slides. Desmitificar el cinturón. Tono honesto de Jan.", cta:"Guarda para cuando dudes" },
+  { d:30, fmt:"promo", color:"#9E6C1A", tipo:"Cierre mes", hook:"Junio se acaba. ¿Has empezado ya?", copy:"Post resumen del mes. CTA a los dos productos. Mirada al julio.", cta:"Enlace en bio — empieza hoy" },
+];
+
+const fmtLabel = { carrusel:"Carrusel", estatico:"Post", reel:"Reel", promo:"Promo", testimonio:"Testimonio" };
+const grid = document.getElementById('calGrid');
+const panel = document.getElementById('detailPanel');
+let openDay = null;
+
+days.forEach(day => {
+  const el = document.createElement('div');
+  el.className = 'day';
+  el.innerHTML = `
+    <div class="day-head">
+      <span class="day-num">Jun ${day.d}</span>
+      <span class="format-badge" style="background:${day.color}18; color:${day.color};">${fmtLabel[day.fmt]}</span>
+    </div>
+    <div class="day-hook">${day.hook}</div>
+    <div class="day-type">${day.tipo}</div>
+  `;
+  el.addEventListener('click', () => {
+    if (openDay === day.d) {
+      panel.classList.remove('open');
+      panel.innerHTML = '';
+      openDay = null;
+      return;
+    }
+    openDay = day.d;
+    panel.innerHTML = `
+      <div class="detail-date">Jueves ${day.d} de junio</div>
+      <div class="detail-title">${day.hook}</div>
+      <div class="detail-hook-box">
+        <div class="detail-hook-label">HOOK / TÍTULO</div>
+        <div class="detail-hook-text">${day.hook}</div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item"><label>Formato</label><p>${fmtLabel[day.fmt]}</p></div>
+        <div class="detail-item"><label>Tipo</label><p>${day.tipo}</p></div>
+        <div class="detail-item"><label>Copy / dirección</label><p>${day.copy}</p></div>
+        <div class="detail-item"><label>CTA</label><p>${day.cta || '—'}</p></div>
+      </div>
+      <button class="ask-btn" onclick="sendPrompt('Crea el contenido para el post del ${day.d} de junio: ${day.hook}')">Crear este post ↗</button>
+      <span class="detail-close" onclick="document.getElementById('detailPanel').classList.remove('open'); document.getElementById('detailPanel').innerHTML=''; " style="margin-left:12px;">Cerrar</span>
+    `;
+    panel.classList.add('open');
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+  grid.appendChild(el);
+});
+</script>

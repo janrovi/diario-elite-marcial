@@ -1,0 +1,20 @@
+/* ÉLITE MARCIAL — CSS personalizado */
+.product__tax{display:none!important}
+.cart__footer .cart-note,.totals__tax-note,[class*="tax-note"]{display:none!important}
+
+/* Verde — botones de compra principales */
+.product-form__submit,
+.cart-notification__button--checkout,
+.cart__checkout-button,
+button[name="checkout"]{background:#1a8a1a!important;color:#fff!important;border-color:#1a8a1a!important}
+
+/* Blanco — enlaces y secundarios */
+.share-button__button,.share-button,
+.product__view-details,
+.cart__continue-btn,
+.cart-notification__continue-shopping,
+.cart-notification a,
+.totals a,[class*="more-payment"]{color:#fff!important;background:transparent!important;border-color:#fff!important;outline:none!important}
+
+/* Rojo — Ver carrito */
+.cart-notification__button--cart{background:#C41A1A!important;color:#fff!important;border-color:#C41A1A!important}

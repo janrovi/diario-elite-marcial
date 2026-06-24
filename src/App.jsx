@@ -4374,6 +4374,11 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
   const [deleteInput, setDeleteInput] = React.useState("");
   const [deleting, setDeleting] = React.useState(false);
+  const [showPassChange, setShowPassChange] = React.useState(false);
+  const [newPass, setNewPass] = React.useState("");
+  const [confirmPass, setConfirmPass] = React.useState("");
+  const [passSaving, setPassSaving] = React.useState(false);
+  const [passMsg, setPassMsg] = React.useState("");
   const ref = React.useRef(null);
   const fileInputRef = React.useRef(null);
 
@@ -4445,6 +4450,19 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
       alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
     }
     setDeleting(false);
+  };
+
+  const handleChangePassword = async () => {
+    if (newPass.length < 8) { setPassMsg("❌ Mínimo 8 caracteres"); return; }
+    if (newPass !== confirmPass) { setPassMsg("❌ Las contraseñas no coinciden"); return; }
+    setPassSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: newPass });
+    if (error) { setPassMsg("❌ " + error.message); }
+    else {
+      setPassMsg("✅ Contraseña actualizada");
+      setTimeout(() => { setShowPassChange(false); setNewPass(""); setConfirmPass(""); setPassMsg(""); }, 1800);
+    }
+    setPassSaving(false);
   };
 
   const initials = (profile?.nombre || user?.email || "?").slice(0, 2).toUpperCase();
@@ -4563,6 +4581,37 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                     </button>
                   ))}
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* Cambiar contraseña */}
+          <div style={{ padding: "8px 10px", borderBottom: "1px solid var(--border)" }}>
+            <button onClick={() => { setShowPassChange(e => !e); setPassMsg(""); }}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: "var(--text)", fontSize: 13, fontWeight: 500 }}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
+              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+              <span style={{ fontSize: 16 }}>🔑</span>
+              <span style={{ flex: 1, textAlign: "left" }}>Cambiar contraseña</span>
+              <span style={{ fontSize: 10, color: "var(--text-faint)" }}>{showPassChange ? "▲" : "▼"}</span>
+            </button>
+            {showPassChange && (
+              <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
+                <input
+                  type="password" value={newPass} onChange={e => setNewPass(e.target.value)}
+                  placeholder="Nueva contraseña" maxLength={128}
+                  style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }}
+                />
+                <input
+                  type="password" value={confirmPass} onChange={e => setConfirmPass(e.target.value)}
+                  placeholder="Confirmar contraseña" maxLength={128}
+                  style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: `1px solid ${confirmPass && confirmPass !== newPass ? "#ef4444" : "var(--border)"}`, background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }}
+                />
+                {passMsg && <div style={{ fontSize: 12, color: passMsg.startsWith("✅") ? "#15803d" : "#ef4444", fontWeight: 600 }}>{passMsg}</div>}
+                <button onClick={handleChangePassword} disabled={passSaving || !newPass || !confirmPass}
+                  style={{ padding: "8px", borderRadius: 8, border: "none", background: "#C41A1A", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", opacity: passSaving || !newPass || !confirmPass ? 0.5 : 1 }}>
+                  {passSaving ? "Guardando..." : "Actualizar contraseña"}
+                </button>
               </div>
             )}
           </div>

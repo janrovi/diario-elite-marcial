@@ -1,0 +1,84 @@
+🎬 MONTAJE CAPCUT — REEL 10 DE JUNIO
+"3 señales de que tu gimnasio no es bueno"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Duración total: 30–35 segundos | 5 clips
+Formato destino: 1080x1920 (9:16) | 30fps
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1 — IMPORTAR Y ORDENAR
+· Importa los 5 clips en CapCut en orden narrativo
+· Verifica que todos estén en 9:16 — si alguno es horizontal, recórtalo en CapCut (Formato → Recortar → 9:16)
+
+PASO 2 — TIMELINE Y DURACIÓN
+
+00:00–00:03  →  Clip 1 — Jan a cámara: "3 señales de que tu gimnasio no es bueno"
+00:03–00:10  →  Clip 2 — B-roll señal #1 (tatami / instructor) + voz
+00:10–00:18  →  Clip 3 — B-roll señal #2 (entrada / recepción) + voz
+00:18–00:26  →  Clip 4 — B-roll señal #3 (entrenamiento en pareja) + voz
+00:26–00:33  →  Clip 5 — Jan a cámara: CTA "¿Te ha pasado alguna? Guarda esto."
+
+Ajusta los cortes para que la voz en off cuadre con cada clip.
+
+PASO 3 — TEXTO EN PANTALLA (OBLIGATORIO para este reel)
+Este reel es educativo y de lista — el texto en pantalla aumenta la retención.
+
+· Clip 1 → Texto grande en pantalla: "3 SEÑALES DE QUE TU GIMNASIO NO ES BUENO 🚩"
+  Fuente: Bold / Blanca / Centro / aparece en 00:00 durante 2s
+
+· Clip 2 → Texto: "SEÑAL #1" → aparece al inicio del clip, permanece 2s
+  Subtexto pequeño opcional: "Instructor sin historial real"
+
+· Clip 3 → Texto: "SEÑAL #2" → aparece al inicio del clip, permanece 2s
+  Subtexto pequeño opcional: "No permiten clase de prueba"
+
+· Clip 4 → Texto: "SEÑAL #3" → aparece al inicio del clip, permanece 2s
+  Subtexto pequeño opcional: "Ego tóxico en el tatami"
+
+· Clip 5 → Sin texto superpuesto — Jan habla directo, dejar limpio
+
+Estilo de texto: Sans-serif bold, blanco con sombra negra o recuadro semitransparente.
+Posición: tercio superior (para no tapar la boca de Jan si aparece).
+
+PASO 4 — VOZ EN OFF / AUDIO DE JAN
+· Si grabaste voz en off separada: importar como pista de audio y sincronizar con clips
+· Si grabaste Jan a cámara con audio directo: el audio del Clip 1 y Clip 5 es el principal; baja el volumen de los clips 2, 3, 4 a 0% y usa la voz de Jan por encima como narración
+
+Timeline de voz:
+00:00 → "3 señales de que tu gimnasio no es bueno."
+00:03 → "Uno. El instructor no tiene historial real. [...]"
+00:10 → "Dos. No te dejan hacer una clase de prueba. [...]"
+00:18 → "Tres. Hay ego en el tatami. [...]"
+00:26 → "¿Te ha pasado alguna? Guarda esto antes de apuntarte."
+
+PASO 5 — SUBTÍTULOS
+· CapCut → Texto → Subtítulos automáticos → Español
+· Fuente Bold · Blanco con sombra negra · Tercio inferior
+· Revisar errores antes de exportar — especialmente "tatami", "linaje", "historial"
+
+PASO 6 — MÚSICA
+· Estilo: beat seco, urbano, instrumental — transmite información, no emoción
+· CapCut → Añadir audio → buscar "focus beat" o "lo-fi trap"
+· Volumen música: 20% | Voz de Jan: 100%
+· Fade out últimos 2 segundos
+
+PASO 7 — TRANSICIONES
+· Entre clips 1→2, 2→3, 3→4: corte limpio (sin transición) — ritmo directo
+· Entre clip 4→5: "Fade negro" 0.2s — pequeña pausa antes del CTA
+· NO usar transiciones de movimiento — este reel es información, no espectáculo
+
+PASO 8 — COLOR (ajuste rápido global)
+· Selecciona todos los clips → Ajustes
+· Contraste: +10 | Saturación: -15 | Nitidez: +5
+· Unifica el look si los clips de B-roll tienen colores distintos
+
+PASO 9 — MINIATURA (COVER)
+· CapCut → al exportar, elige el frame de Jan mirando a cámara del Clip 1 como cover
+· O añade un frame estático de 0.5s al inicio con el texto "3 SEÑALES 🚩" en grande
+
+PASO 10 — EXPORTAR
+· Resolución: 1080x1920 | 30fps | Calidad máxima
+· Guardar en: RRSS/Videos/Reels/Reel 3 - 3 señales de que tu gimnasio no es bueno/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CAPTION Y GUIÓN → ver guion-jun10.txt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

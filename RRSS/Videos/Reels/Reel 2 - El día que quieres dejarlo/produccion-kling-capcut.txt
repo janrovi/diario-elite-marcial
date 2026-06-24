@@ -1,0 +1,133 @@
+🎬 PRODUCCIÓN — REEL 13 DE JUNIO
+"El día que quieres dejarlo es el más importante"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Duración total: 25–30 segundos | 5 clips de 5–6s cada uno
+Herramientas: Kling AI (clips) + CapCut (montaje)
+
+ESCENA GLOBAL (leer antes de generar)
+Los 5 clips representan a la misma persona: hombre adulto de 28-35 años,
+complexión atlética pero realista (no musculado en exceso), piel morena,
+cabello corto oscuro. Viste camiseta negra ajustada sin manga y pantalón
+corto de entrenamiento oscuro. Está en un gimnasio de MMA/BJJ de aspecto
+industrial: suelo de tatami rojo y negro, sacos de boxeo colgando al fondo,
+paredes de cemento gris con espejos en uno de los lados, iluminación
+fluorescente industrial tenue que deja zonas en penumbra. Es de noche —
+las ventanas altas muestran oscuridad exterior. El gimnasio está casi vacío.
+El estado emocional evoluciona del agotamiento resignado → la duda →
+el esfuerzo → la determinación → la calma resuelta.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROMPTS KLING AI
+(Modo: Pro · Duración: 5s · Ratio: 9:16 · sin audio)
+
+──────────────────────────────
+CLIP 1 — Pies entrando al gimnasio (0:00–0:05)
+Guión: "El día que más ganas tienes de dejarlo..."
+──────────────────────────────
+Prompt:
+"Extreme low angle close-up shot, slow motion, looking up slightly from ground level. A man's bare feet and lower legs walk slowly onto a red and black tatami mat inside an MMA gym at night. The feet move with no urgency — heavy, reluctant steps, the kind of someone who almost didn't show up. The tatami texture is clearly visible: firm foam panels with a slight sheen from the overhead industrial light. In the blurred background at floor level: the base of two heavy punching bags hanging still, the far wall of the gym in deep shadow, a faint fluorescent strip light reflecting off the tatami surface. The gym is empty and silent. The camera stays completely static and low, letting the feet fill the lower half of the frame as they slowly enter from the bottom edge. Cinematic, desaturated color grade, deep shadows, warm skin tones, vertical 9:16, subtle film grain."
+
+Negative prompt: "bright gym, other people's feet, shoes or socks, sunlight, crowded, text, watermark, fast movement, cartoon"
+
+──────────────────────────────
+CLIP 2 — De pie ante el tatami, dudando (0:05–0:10)
+Guión: "Porque cualquiera entrena cuando se siente bien..."
+──────────────────────────────
+Prompt:
+"Medium shot from behind, slow motion. The same man — dark hair, dark sleeveless shirt, training shorts — stands motionless at the edge of the tatami mat, looking out at the empty gym floor. His shoulders are slightly hunched, head slightly bowed, hands already wrapped. The gym stretches ahead of him: red and black tatami mats filling the floor, a large mirror on the far wall reflecting a dim version of himself, two heavy bags visible in the left background, industrial ceiling with exposed beams and faint fluorescent lighting. No other people in the gym. The camera slowly pushes in toward his back. The mood is hesitant, introspective, like a man deciding whether to stay or leave. Cinematic, dark, desaturated color grade, vertical 9:16, subtle camera shake."
+
+Negative prompt: "other people training, bright lighting, smiling, front-facing, text, watermark, crowded"
+
+──────────────────────────────
+CLIP 3 — Entrenamiento en sombra, agotado (0:10–0:16)
+Guión: "Las artes marciales no te enseñan a golpear. Te enseñan a no rendirte."
+──────────────────────────────
+Prompt:
+"Medium shot, slow motion. The same man is shadowboxing alone in the center of the tatami mat. His movements are controlled but visibly tired — arms heavy, breathing visible through the rise and fall of his chest. Sweat glistens on his forehead and arms under the industrial overhead light. Behind him: the gym mirror reflects his silhouette, the two hanging heavy bags sway slightly in the background, exposed concrete wall to the right. He throws a slow jab-cross combination and resets his stance. The camera orbits slowly around him from right to left. The mood is grit and exhaustion overcoming the desire to quit. Dark cinematic grade, desaturated, high contrast shadows, vertical 9:16."
+
+Negative prompt: "other people, bright light, cheering, smiling, text, watermark, fast movement"
+
+──────────────────────────────
+CLIP 4 — Primer plano del rostro (0:16–0:22)
+Guión: "Se aprende el día que quieres irte... y te quedas."
+──────────────────────────────
+Prompt:
+"Extreme close-up, slow motion. The man's face fills the frame — mid-30s, short dark hair, sweat on his forehead and cheeks, jaw slightly clenched. His eyes are focused and intense, staring slightly downward, not at the camera. A single thin bead of sweat runs from his temple down his cheek. The lighting is dramatic: one side of his face lit by a dim fluorescent light from above, the other side in deep shadow. In the extreme soft background: blurred tatami floor and the outline of a hanging heavy bag. The mood is pure determination, fatigue pushed aside by will. Vertical 9:16, cinematic, shallow depth of field, film grain, dark desaturated grade."
+
+Negative prompt: "smiling, happy, bright, front-lit flat lighting, crowd background, text, watermark"
+
+──────────────────────────────
+CLIP 5 — Mirada directa a cámara (0:22–0:28)
+Guión: "¿Has tenido ese día? Comenta."
+──────────────────────────────
+Prompt:
+"Medium close-up, slow motion. The same man stands still, facing directly into the camera. His chest rises and falls slowly, catching his breath after training. His wrapped hands rest at his sides. He is calm now — the internal battle is over, he stayed. His expression is quiet, resolved, not proud, just present. The gym is behind him: tatami floor, two heavy bags barely visible, industrial lighting from above creating a halo effect on his shoulders, deep shadows on either side of him. The camera slowly and subtly zooms in on his face over 5 seconds. The mood is stillness after effort — the feeling of having won the internal battle. Vertical 9:16, cinematic portrait, dark moody grade, slight lens flare from overhead light."
+
+Negative prompt: "smiling, bright background, other people, text, watermark, nervous expression"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MONTAJE EN CAPCUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1 — IMPORTAR Y ORDENAR
+· Importa los 5 clips de Kling en orden narrativo
+· Formato destino: 1080x1920 (9:16) — verificar que coincide con los clips
+
+PASO 2 — TIMELINE
+00:00–00:05  →  Clip 1 (manos vendándose)
+00:05–00:10  →  Clip 2 (de pie ante el tatami)
+00:10–00:16  →  Clip 3 (shadowboxing agotado)
+00:16–00:22  →  Clip 4 (primer plano cara)
+00:22–00:28  →  Clip 5 (mirada a cámara)
+
+PASO 3 — TRANSICIONES
+· Entre todos los clips: "Fade negro" 0.3s
+· Transmite peso y calma — sin transiciones dinámicas
+
+PASO 4 — VOZ EN OFF DE JAN
+Graba con iPhone en un sitio silencioso. Lee despacio, con pausas:
+
+00:00 → "El día que más ganas tienes de dejarlo..."
+         [pausa 1s]
+         "...es el día más importante de tu entrenamiento."
+
+00:07 → "Porque cualquiera entrena cuando se siente bien."
+         "Cuando tiene energía. Cuando tiene ganas."
+         "Pero el que aparece cuando no quiere..."
+         "...ese es el que mejora de verdad."
+
+00:14 → "Las artes marciales no te enseñan a golpear."
+         "Te enseñan a no rendirte."
+         "Y esa lección no se aprende en el tatami fácil."
+         "Se aprende el día que quieres irte..."
+         [pausa]
+         "...y te quedas."
+
+00:24 → "¿Has tenido ese día?"
+         "Comenta con el número de veces que has querido dejarlo."
+
+PASO 5 — MÚSICA
+· CapCut → Añadir audio → Música → Cinematográfico
+· Buscar: "Eternal" / "Elevation" / "The Weight"
+· Volumen música: 25% | Voz: 100%
+· Fade out en los últimos 2 segundos del clip 5
+
+PASO 6 — SUBTÍTULOS
+· CapCut → Texto → Subtítulos automáticos → Español
+· Fuente: Bold · Color: Blanco · Sombra negra
+· Posición: tercio inferior
+· Revisar errores del auto-transcribe
+
+PASO 7 — COLOR (AJUSTE GLOBAL)
+· Selecciona todos los clips → Ajustes
+· Brillo: -10 | Contraste: +15 | Saturación: -25 | Temperatura: -5
+· Unifica el look oscuro si Kling generó clips con tonos distintos
+
+PASO 8 — EXPORTAR
+· 1080x1920 | 30fps | Calidad máxima
+· Guardar en: RRSS/Videos/Reels/Reel 2 - El día que quieres dejarlo/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CAPTION → ver guion-jun13.txt
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -4379,6 +4379,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
   const [confirmPass, setConfirmPass] = React.useState("");
   const [passSaving, setPassSaving] = React.useState(false);
   const [passMsg, setPassMsg] = React.useState("");
+  const [showNovedadesHistory, setShowNovedadesHistory] = React.useState(false);
   const ref = React.useRef(null);
   const fileInputRef = React.useRef(null);
 
@@ -4585,6 +4586,19 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             )}
           </div>
 
+          {/* Novedades — solo atletas y coaches no fundadores */}
+          {profile?.plan !== "fundador" && (
+            <div style={{ padding: "4px 10px", borderBottom: "1px solid var(--border)" }}>
+              <button onClick={() => { setShowNovedadesHistory(true); setOpen(false); }}
+                style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: "var(--text)", fontSize: 13, fontWeight: 500 }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
+                onMouseLeave={e => e.currentTarget.style.background = "none"}>
+                <span style={{ fontSize: 16 }}>📋</span>
+                <span style={{ flex: 1, textAlign: "left" }}>Novedades</span>
+              </button>
+            </div>
+          )}
+
           {/* Cambiar contraseña */}
           <div style={{ padding: "8px 10px", borderBottom: "1px solid var(--border)" }}>
             <button onClick={() => { setShowPassChange(e => !e); setPassMsg(""); }}
@@ -4672,6 +4686,42 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ── Modal historial de novedades ── */}
+      {showNovedadesHistory && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)", zIndex: 9999, display: "flex", alignItems: "flex-end", justifyContent: "center", padding: 16 }}
+          onClick={() => setShowNovedadesHistory(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 20, padding: "20px 20px 28px", maxWidth: 420, width: "100%", maxHeight: "80vh", overflowY: "auto", boxShadow: "0 -8px 40px rgba(0,0,0,0.4)", marginBottom: "env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+              <div style={{ fontSize: 15, fontWeight: 900, color: "var(--text)" }}>📋 Historial de novedades</div>
+              <button onClick={() => setShowNovedadesHistory(false)} style={{ background: "none", border: "none", color: "var(--text-faint)", fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {[
+                { fecha:"25 Jun 2026", icon:"⚡", titulo:"v2.6 — Portal, contraseña y Club", items:["🔑 Cambio de contraseña desde el perfil","💳 Portal de gestión de suscripción Stripe","🏅 Club Fundador en su propia pestaña","🔒 Cancelación de suscripción automática"] },
+                { fecha:"24 Jun 2026", icon:"🔒", titulo:"v2.0 — Seguridad y RGPD", items:["🛡 Headers de seguridad HTTP (CSP, HSTS)","⏱ Rate limiting en el login","🗑 Borrado de cuenta y datos (RGPD)","✉️ Prevención de enumeración de emails"] },
+                { fecha:"Jun 2026", icon:"📲", titulo:"v2.0 — Push nativas y módulo lesiones", items:["🔔 Notificaciones push nativas (Web Push)","🩹 Módulo de lesiones con 35 zonas","📱 Corrección zoom iOS en inputs"] },
+                { fecha:"Jun 2026", icon:"🏅", titulo:"v2.3-2.5 — Ecosistema Fundador", items:["@Username único por usuario","🗺 Roadmap con votación real","💬 Canal directo con Jan","🔖 Confirmación de email al registrarse"] },
+              ].map((n, i) => (
+                <div key={i} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 16px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                    <span style={{ fontSize: 20 }}>{n.icon}</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>{n.titulo}</div>
+                      <div style={{ fontSize: 10, color: "var(--text-faint)" }}>{n.fecha}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                    {n.items.map((item, j) => (
+                      <div key={j} style={{ fontSize: 12, color: "var(--text-muted)", paddingLeft: 4 }}>{item}</div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

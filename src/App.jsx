@@ -10307,6 +10307,12 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
           throw error;
         }
         if (data.user) {
+          // Si identities está vacío, el email ya existía (Supabase anti-enumeración)
+          if ((data.user.identities?.length ?? 1) === 0) {
+            setSuccess("Si este email no está registrado, recibirás un enlace de confirmación. Si ya tienes cuenta, inicia sesión o recupera tu contraseña.");
+            setLoading(false);
+            return;
+          }
           const rolMap = { free:"atleta", coach:"coach", fundador:"atleta" };
           const needsPayment = authPlan === "coach" || authPlan === "fundador";
           await supabase.from("profiles").upsert({

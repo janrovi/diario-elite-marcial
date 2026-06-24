@@ -9990,6 +9990,9 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [authPlan, setAuthPlan] = React.useState("free");
   const [authBilling, setAuthBilling] = React.useState("mensual");
+  const [loginAttempts, setLoginAttempts] = React.useState(0);
+  const [lockUntil, setLockUntil] = React.useState(0);
+  const [lockCountdown, setLockCountdown] = React.useState(0);
   const RED = "#C41A1A";
   const GOLD = "#f59e0b";
   const BLUE = "#3b82f6";
@@ -10000,11 +10003,48 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
     });
   }, []);
 
+  React.useEffect(() => {
+    const stored = localStorage.getItem("em_login_fail_global");
+    if (stored) {
+      try {
+        const { attempts, until } = JSON.parse(stored);
+        if (until > Date.now()) { setLoginAttempts(attempts); setLockUntil(until); }
+        else localStorage.removeItem("em_login_fail_global");
+      } catch { localStorage.removeItem("em_login_fail_global"); }
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (!lockUntil || lockUntil <= Date.now()) { setLockCountdown(0); return; }
+    const tick = () => {
+      const secs = Math.max(0, Math.ceil((lockUntil - Date.now()) / 1000));
+      setLockCountdown(secs);
+      if (secs <= 0) { setLockUntil(0); setLoginAttempts(0); localStorage.removeItem("em_login_fail_global"); }
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [lockUntil]);
+
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const getLockDuration = (attempts) => {
+    if (attempts >= 15) return 30 * 60 * 1000;
+    if (attempts >= 10) return  5 * 60 * 1000;
+    if (attempts >=  5) return      30 * 1000;
+    return 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(""); setSuccess("");
+    if (mode === "login" && lockUntil > Date.now()) {
+      const secs = Math.ceil((lockUntil - Date.now()) / 1000);
+      setError(secs > 60
+        ? `Demasiados intentos. Espera ${Math.ceil(secs/60)} minuto${Math.ceil(secs/60)>1?"s":""}.`
+        : `Demasiados intentos. Espera ${secs} segundo${secs>1?"s":""}.`);
+      return;
+    }
     setLoading(true);
     try {
       if (mode === "login") {
@@ -10013,8 +10053,20 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
           if (error.message?.toLowerCase().includes("email not confirmed")) {
             throw new Error("Debes confirmar tu email antes de acceder. Revisa tu bandeja de entrada.");
           }
+          const next = loginAttempts + 1;
+          setLoginAttempts(next);
+          const ms = getLockDuration(next);
+          if (ms > 0) {
+            const until = Date.now() + ms;
+            setLockUntil(until);
+            localStorage.setItem("em_login_fail_global", JSON.stringify({ attempts: next, until }));
+          } else {
+            localStorage.setItem("em_login_fail_global", JSON.stringify({ attempts: next, until: 0 }));
+          }
           throw error;
         }
+        setLoginAttempts(0); setLockUntil(0);
+        localStorage.removeItem("em_login_fail_global");
         onAuth(data.user, false);
       } else if (mode === "register") {
         const { data, error } = await supabase.auth.signUp({ email: form.email, password: form.password });
@@ -10308,7 +10360,18 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
 
             {error && <div style={{ fontSize:12, color:RED, marginBottom:14, padding:"9px 12px", background:RED+"12", borderRadius:8, border:`1px solid ${RED}30` }}>{error}</div>}
 
-            <button type="submit" disabled={loading || (mode==="register" && !termsAccepted)}
+            {mode === "login" && loginAttempts > 0 && lockCountdown === 0 && (
+              <div style={{ fontSize:11, color:"#f59e0b", marginBottom:10, textAlign:"center" }}>
+                {loginAttempts} intento{loginAttempts>1?"s":""} fallido{loginAttempts>1?"s":""} · {5-(loginAttempts%5)||5} más antes del bloqueo
+              </div>
+            )}
+            {mode === "login" && lockCountdown > 0 && (
+              <div style={{ fontSize:12, color:RED, marginBottom:10, padding:"10px 14px", background:RED+"12", borderRadius:8, border:`1px solid ${RED}30`, textAlign:"center", fontWeight:700 }}>
+                🔒 Bloqueado · {lockCountdown>60?`${Math.ceil(lockCountdown/60)} min`:`${lockCountdown} seg`}
+              </div>
+            )}
+
+            <button type="submit" disabled={loading || (mode==="register" && !termsAccepted) || (mode==="login" && lockCountdown>0)}
               style={{ width:"100%", padding:14, borderRadius:12, border:"none",
                 background: mode==="register"
                   ? authPlan==="fundador" ? `linear-gradient(135deg,${GOLD},#f97316)`
@@ -10317,8 +10380,8 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
                   : `linear-gradient(135deg,${RED},#8B0000)`,
                 color: authPlan==="fundador" && mode==="register" ? "#000" : "#fff",
                 fontSize:13, fontWeight:900,
-                cursor:(loading||(mode==="register"&&!termsAccepted))?"not-allowed":"pointer",
-                opacity:(loading||(mode==="register"&&!termsAccepted))?0.4:1,
+                cursor:(loading||(mode==="register"&&!termsAccepted)||(mode==="login"&&lockCountdown>0))?"not-allowed":"pointer",
+                opacity:(loading||(mode==="register"&&!termsAccepted)||(mode==="login"&&lockCountdown>0))?0.4:1,
                 letterSpacing:1.5, textTransform:"uppercase",
                 boxShadow: mode==="register"
                   ? authPlan==="fundador" ? `0 4px 20px ${GOLD}40`
@@ -10327,6 +10390,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
                   : `0 4px 20px ${RED}40`,
                 transition:"all 0.2s" }}>
               {loading ? "..." :
+                mode==="login" && lockCountdown>0 ? `🔒 ${lockCountdown>60?Math.ceil(lockCountdown/60)+"min":lockCountdown+"s"}` :
                 mode==="login" ? "ACCEDER →" :
                 authPlan==="fundador" ? "CREAR CUENTA · IR A PAGAR →" :
                 authPlan==="coach" ? "CREAR CUENTA · IR A STRIPE →" :

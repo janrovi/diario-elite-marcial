@@ -4524,7 +4524,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                 <div>
                   <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>{t("lbl_nombre",lang)}</label>
                   <input value={nombre} onChange={e => setNombre(e.target.value)}
-                    placeholder="Tu nombre"
+                    placeholder="Tu nombre" maxLength={100}
                     style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }} />
                 </div>
                 <div>
@@ -7517,14 +7517,14 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 {/* Nombre */}
                 <div style={{ marginBottom:16 }}>
                   <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("lbl_nombre",lang)}</label>
-                  <input value={profileNombre} onChange={e => setProfileNombre(e.target.value)}
+                  <input value={profileNombre} onChange={e => setProfileNombre(e.target.value)} maxLength={100}
                     placeholder="Tu nombre como coach"
                     style={{ width:"100%", padding:"11px 14px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, fontWeight:600, boxSizing:"border-box" }} />
                 </div>
                 {/* Bio */}
                 <div style={{ marginBottom:16 }}>
                   <label style={{ fontSize:12, fontWeight:700, color:"var(--text-muted)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:0.5 }}>{t("coach_bio_lbl",lang)}</label>
-                  <textarea value={coachBio} onChange={e => setCoachBio(e.target.value)}
+                  <textarea value={coachBio} onChange={e => setCoachBio(e.target.value)} maxLength={500}
                     placeholder="Cuéntanos algo sobre ti como coach..."
                     rows={3}
                     style={{ width:"100%", padding:"11px 14px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, resize:"vertical", fontFamily:"inherit", boxSizing:"border-box" }} />
@@ -8510,7 +8510,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         {/* Input */}
                         <div style={{ padding:"12px 16px", borderTop:"1px solid var(--border)", display:"flex", gap:8, background:"var(--bg-card)" }}>
                           <input
-                            value={chatInput}
+                            value={chatInput} maxLength={1000}
                             onChange={e => setChatInput(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(atletaId); } }}
                             placeholder={`Mensaje para ${atletaNombre}...`}
@@ -10285,7 +10285,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
               {mode === "forgot" ? (
                 <div style={{ marginBottom:20 }}>
                   <label style={{ fontSize:11, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1, textTransform:"uppercase" }}>Email</label>
-                  <input type="email" value={form.email} onChange={e => setF("email", e.target.value)} placeholder="tu@email.com" required style={inputStyle} />
+                  <input type="email" value={form.email} onChange={e => setF("email", e.target.value)} placeholder="tu@email.com" required maxLength={254} style={inputStyle} />
                 </div>
               ) : (
                 <div style={{ marginBottom:20 }}>
@@ -10331,7 +10331,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
             {mode === "register" && (
               <div style={{ marginBottom:14 }}>
                 <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>{t("lbl_nombre",lang)}</label>
-                <input value={form.nombre} onChange={e => setF("nombre", e.target.value)} placeholder="¿Cómo te llamamos?"
+                <input value={form.nombre} onChange={e => setF("nombre", e.target.value)} placeholder="¿Cómo te llamamos?" maxLength={100}
                   style={inputStyle} />
               </div>
             )}
@@ -10343,7 +10343,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
 
             <div style={{ marginBottom: mode==="register" ? 20 : 24 }}>
               <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, letterSpacing:1.5, textTransform:"uppercase" }}>{t("auth_password",lang)}</label>
-              <input type="password" value={form.password} onChange={e => setF("password", e.target.value)} placeholder="Mínimo 6 caracteres" required style={inputStyle} />
+              <input type="password" value={form.password} onChange={e => setF("password", e.target.value)} placeholder="Mínimo 6 caracteres" required maxLength={128} style={inputStyle} />
             </div>
 
             {/* Selección de plan */}
@@ -10907,6 +10907,9 @@ function MainApp() {
   const [profile, setProfile] = useState(null);
   // ── Update disponible (Service Worker) ──────────────────────────────────────
   const [swUpdateReady, setSwUpdateReady] = useState(false);
+  const [showNovedades, setShowNovedades] = useState(() =>
+    !localStorage.getItem("em_novedades_jun2026")
+  );
   const swRegistrationRef = useRef(null);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -15275,6 +15278,29 @@ function MainApp() {
       {showTutorial && <TutorialOverlay onDone={doneTutorial} />}
 
       {/* ── SUCCESS overlay post-guardado ── */}
+      {showNovedades && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4000, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+          onClick={() => { localStorage.setItem("em_novedades_jun2026","1"); setShowNovedades(false); }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:400, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.4)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
+              <span style={{ fontSize:22 }}>🔒</span>
+              <div>
+                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Actualización de seguridad</div>
+                <div style={{ fontSize:11, color:"var(--text-muted)" }}>Junio 2026</div>
+              </div>
+            </div>
+            <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6, marginBottom:16 }}>
+              Hemos reforzado la seguridad de tu cuenta: protección de datos mejorada, pagos verificados directamente con Stripe, y ahora puedes <strong style={{ color:"var(--text)" }}>eliminar tu cuenta</strong> y todos tus datos desde el menú de perfil (RGPD).
+            </div>
+            <button
+              onClick={() => { localStorage.setItem("em_novedades_jun2026","1"); setShowNovedades(false); }}
+              style={{ width:"100%", padding:"12px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
+
       {showSaveSuccess && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(12px)", WebkitBackdropFilter:"blur(12px)", zIndex:3000, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
           <div style={{ background:"var(--bg-elevated)", border:"1px solid #10b98140", borderRadius:24, padding:"36px 32px", maxWidth:340, width:"100%", textAlign:"center", boxShadow:"0 0 60px rgba(16,185,129,0.15), 0 24px 80px rgba(0,0,0,0.6)", animation:"fadeIn 0.3s ease" }}>

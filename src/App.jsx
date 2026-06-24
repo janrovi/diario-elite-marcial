@@ -5580,7 +5580,8 @@ function ClubFundadorContent({ user, profile }) {
   };
 
   const CHANGELOG = [
-    { version:"2.5", fecha:"Jun 2026", titulo:"Club Fundador en Panel Coach", desc:"El Club Fundador ahora vive directamente en el panel de entrenador: changelog, roadmap, muro de fundadores y canal directo.", nuevo:true },
+    { version:"2.6", fecha:"Jun 2026", titulo:"Mejoras 23-25 Jun — Portal, seguridad & Club", desc:"Portal de gestión de suscripción Stripe. Cambio de contraseña desde el perfil. Cancelación automática de suscripción. Club Fundador en su propia pestaña. Borrado de cuenta RGPD.", nuevo:true },
+    { version:"2.5", fecha:"Jun 2026", titulo:"Club Fundador en Panel Coach", desc:"El Club Fundador ahora vive directamente en el panel de entrenador: changelog, roadmap, muro de fundadores y canal directo.", nuevo:false },
     { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio.", nuevo:false },
     { version:"2.3", fecha:"Jun 2026", titulo:"Ecosistema Fundador completo", desc:"@Username único. Roadmap con votación real. Muro de Fundadores. Canal Directo a Jan.", nuevo:false },
     { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area. Bottom nav 5 items. Dropdowns como paneles flotantes.", nuevo:false },
@@ -10987,7 +10988,7 @@ function MainApp() {
   // ── Update disponible (Service Worker) ──────────────────────────────────────
   const [swUpdateReady, setSwUpdateReady] = useState(false);
   const [showNovedades, setShowNovedades] = useState(() =>
-    !localStorage.getItem("em_novedades_jun2026")
+    !localStorage.getItem("em_novedades_jun2026_v2")
   );
   const swRegistrationRef = useRef(null);
   useEffect(() => {
@@ -12627,7 +12628,8 @@ function MainApp() {
           };
 
           const CHANGELOG = [
-            { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio. Emails con diseño de marca.", nuevo:true },
+            { version:"2.6", fecha:"Jun 2026", titulo:"Mejoras 23-25 Jun — Portal, seguridad & Club", desc:"Portal de gestión de suscripción para coaches. Cambio de contraseña desde el perfil. Club Fundador reorganizado. Seguimos en fase de consolidación en Vercel antes de lanzar la app nativa.", nuevo:true },
+            { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio. Emails con diseño de marca.", nuevo:false },
             { version:"2.3", fecha:"Jun 2026", titulo:"Ecosistema Fundador completo", desc:"@Username único por usuario. Roadmap con votación real (Supabase). Muro de Fundadores con grid de avatares. Canal Directo a Jan sin filtros.", nuevo:false },
             { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area + nombre de app visible. Bottom nav 5 items + drawer Más. Dropdowns de notificaciones y perfil como paneles flotantes.", nuevo:false },
             { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones individuales, botón Limpiar leídas. Notificación automática al desplegar nueva versión.", nuevo:false },
@@ -15359,20 +15361,24 @@ function MainApp() {
       {/* ── SUCCESS overlay post-guardado ── */}
       {showNovedades && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4000, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
-          onClick={() => { localStorage.setItem("em_novedades_jun2026","1"); setShowNovedades(false); }}>
+          onClick={() => { localStorage.setItem("em_novedades_jun2026_v2","1"); setShowNovedades(false); }}>
           <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:400, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.4)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
-              <span style={{ fontSize:22 }}>🔒</span>
+              <span style={{ fontSize:22 }}>⚡</span>
               <div>
-                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Actualización de seguridad</div>
-                <div style={{ fontSize:11, color:"var(--text-muted)" }}>Junio 2026</div>
+                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Novedades — 25 Jun 2026</div>
+                <div style={{ fontSize:11, color:"var(--text-muted)" }}>Élite Marcial v2.6</div>
               </div>
             </div>
-            <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6, marginBottom:16 }}>
-              Hemos reforzado la seguridad de tu cuenta: protección de datos mejorada, pagos verificados directamente con Stripe, y ahora puedes <strong style={{ color:"var(--text)" }}>eliminar tu cuenta</strong> y todos tus datos desde el menú de perfil (RGPD).
+            <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.9, marginBottom:16 }}>
+              🔑 <strong style={{ color:"var(--text)" }}>Cambio de contraseña</strong> desde tu perfil<br/>
+              💳 <strong style={{ color:"var(--text)" }}>Gestión de suscripción</strong> directo con Stripe<br/>
+              🔒 Seguridad reforzada + borrado de cuenta RGPD<br/>
+              🏅 Club Fundador reorganizado y más limpio<br/>
+              <span style={{ fontSize:11, color:"var(--text-faint)", marginTop:8, display:"block" }}>Estamos en fase de consolidación en Vercel. Cada semana mejoras reales — hasta tener todo atado para la app nativa. 🚀</span>
             </div>
             <button
-              onClick={() => { localStorage.setItem("em_novedades_jun2026","1"); setShowNovedades(false); }}
+              onClick={() => { localStorage.setItem("em_novedades_jun2026_v2","1"); setShowNovedades(false); }}
               style={{ width:"100%", padding:"12px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
               Entendido
             </button>

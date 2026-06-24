@@ -4371,6 +4371,9 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
   const [avatarUrl, setAvatarUrl] = React.useState(profile?.avatar_url || "");
   const [avatarLoading, setAvatarLoading] = React.useState(false);
   const [avatarHover, setAvatarHover] = React.useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+  const [deleteInput, setDeleteInput] = React.useState("");
+  const [deleting, setDeleting] = React.useState(false);
   const ref = React.useRef(null);
   const fileInputRef = React.useRef(null);
 
@@ -4417,6 +4420,31 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
     }
     setAvatarLoading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteInput.trim().toUpperCase() !== "ELIMINAR") return;
+    setDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        "https://jhudfgnfpgzjobskuhcr.supabase.co/functions/v1/delete-account",
+        {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${session.access_token}` },
+        }
+      );
+      if (res.ok) {
+        await supabase.auth.signOut();
+        onSignOut();
+      } else {
+        alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
+      }
+    } catch (err) {
+      console.error("Error eliminando cuenta:", err);
+      alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
+    }
+    setDeleting(false);
   };
 
   const initials = (profile?.nombre || user?.email || "?").slice(0, 2).toUpperCase();
@@ -4540,7 +4568,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
           </div>
 
           {/* Cerrar sesión */}
-          <div style={{ padding: "8px 10px" }}>
+          <div style={{ padding: "8px 10px 4px" }}>
             <button onClick={() => { setOpen(false); onSignOut(); }}
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: RED, fontSize: 13, fontWeight: 600 }}
               onMouseEnter={e => e.currentTarget.style.background = RED + "15"}
@@ -4548,7 +4576,53 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               Cerrar sesión
             </button>
+            {/* Eliminar cuenta */}
+            <button onClick={() => { setShowDeleteConfirm(true); setDeleteInput(""); }}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: "var(--text-faint)", fontSize: 12, fontWeight: 500 }}
+              onMouseEnter={e => e.currentTarget.style.color = RED}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--text-faint)"}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Eliminar cuenta
+            </button>
           </div>
+
+          {/* Modal confirmación eliminar cuenta */}
+          {showDeleteConfirm && (
+            <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}
+              onClick={e => { if (e.target === e.currentTarget) setShowDeleteConfirm(false); }}>
+              <div style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 16, padding: 24, maxWidth: 340, width: "100%", boxShadow: "0 16px 48px rgba(0,0,0,0.5)" }}>
+                <div style={{ fontSize: 20, marginBottom: 8, textAlign: "center" }}>⚠️</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", textAlign: "center", marginBottom: 8 }}>Eliminar cuenta</div>
+                <div style={{ fontSize: 13, color: "var(--text-muted)", textAlign: "center", marginBottom: 16, lineHeight: 1.5 }}>
+                  Esta acción es <strong style={{ color: RED }}>irreversible</strong>. Se borrarán todos tus datos, sesiones, mensajes y suscripciones.
+                </div>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ fontSize: 11, color: "var(--text-muted)", display: "block", marginBottom: 6 }}>
+                    Escribe <strong>ELIMINAR</strong> para confirmar:
+                  </label>
+                  <input
+                    value={deleteInput}
+                    onChange={e => setDeleteInput(e.target.value)}
+                    placeholder="ELIMINAR"
+                    autoFocus
+                    style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: `1.5px solid ${deleteInput.toUpperCase() === "ELIMINAR" ? RED : "var(--border)"}`, background: "var(--bg-input)", color: "var(--text)", fontSize: 14, boxSizing: "border-box" }}
+                  />
+                </div>
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button onClick={() => setShowDeleteConfirm(false)}
+                    style={{ flex: 1, padding: "10px", borderRadius: 8, border: "1px solid var(--border)", background: "none", color: "var(--text)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleteInput.trim().toUpperCase() !== "ELIMINAR" || deleting}
+                    style={{ flex: 1, padding: "10px", borderRadius: 8, border: "none", background: deleteInput.trim().toUpperCase() === "ELIMINAR" ? RED : RED + "40", color: "#fff", fontSize: 13, fontWeight: 700, cursor: deleteInput.trim().toUpperCase() === "ELIMINAR" ? "pointer" : "not-allowed" }}>
+                    {deleting ? "Eliminando..." : "Eliminar todo"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -10341,9 +10341,9 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
           }
         }
       } else if (mode === "forgot") {
-        const { error } = await supabase.auth.resetPasswordForEmail(form.email, { redirectTo: window.location.origin });
-        if (error) throw error;
-        setSuccess("Enlace enviado. Revisa tu bandeja de entrada.");
+        await supabase.auth.resetPasswordForEmail(form.email, { redirectTo: window.location.origin });
+        // Siempre mostramos el mismo mensaje para no revelar si el email existe
+        setSuccess("Si este email está registrado, recibirás un enlace de recuperación en breve. Revisa también el spam.");
       } else if (mode === "reset") {
         if (form.newPassword.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
         const { error } = await supabase.auth.updateUser({ password: form.newPassword });

@@ -5383,6 +5383,338 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
 }
 
 // ── App del Coach (dashboard completo) ────────────────────────────────────
+
+// ── ClubFundadorContent — componente standalone ─────────────────────────────
+function ClubFundadorContent({ user, profile }) {
+  const GOLD = "#f59e0b";
+  const [fundTab, setFundTab] = React.useState("changelog");
+  const [username, setUsername] = React.useState(profile?.username || "");
+  const [usernameSaving, setUsernameSaving] = React.useState(false);
+  const [usernameError, setUsernameError] = React.useState("");
+  const [roadmapVotes, setRoadmapVotes] = React.useState([]);
+  const [roadmapCounts, setRoadmapCounts] = React.useState({});
+  const [fundadores, setFundadores] = React.useState([]);
+  const [fundadoresLoaded, setFundadoresLoaded] = React.useState(false);
+  const [mensajeFund, setMensajeFund] = React.useState("");
+  const [mensajeSent, setMensajeSent] = React.useState(false);
+
+  React.useEffect(() => {
+    if (fundTab !== "roadmap" || !user?.id) return;
+    supabase.from("roadmap_votes").select("item_id").eq("user_id", user.id)
+      .then(({ data }) => { if (data) setRoadmapVotes(data.map(v => v.item_id)); });
+    supabase.from("roadmap_votes").select("item_id")
+      .then(({ data }) => {
+        if (!data) return;
+        const counts = {};
+        data.forEach(v => { counts[v.item_id] = (counts[v.item_id]||0)+1; });
+        setRoadmapCounts(counts);
+      });
+  }, [fundTab, user?.id]);
+
+  React.useEffect(() => {
+    if (fundTab !== "comunidad" || fundadoresLoaded) return;
+    supabase.from("profiles")
+      .select("id, nombre, avatar_url, username, created_at")
+      .eq("plan", "fundador")
+      .order("created_at", { ascending: true })
+      .then(({ data }) => { setFundadores(data || []); setFundadoresLoaded(true); });
+  }, [fundTab, fundadoresLoaded]);
+
+  const toggleVote = async (itemId) => {
+    const voted = roadmapVotes.includes(itemId);
+    if (voted) {
+      await supabase.from("roadmap_votes").delete().eq("user_id", user.id).eq("item_id", itemId);
+      setRoadmapVotes(v => v.filter(x => x !== itemId));
+      setRoadmapCounts(c => ({ ...c, [itemId]: Math.max(0,(c[itemId]||1)-1) }));
+    } else {
+      await supabase.from("roadmap_votes").insert({ user_id: user.id, item_id: itemId });
+      setRoadmapVotes(v => [...v, itemId]);
+      setRoadmapCounts(c => ({ ...c, [itemId]: (c[itemId]||0)+1 }));
+    }
+  };
+
+  const saveUsername = async () => {
+    const val = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+    if (!val || val.length < 3) { setUsernameError("Mínimo 3 caracteres (a-z, 0-9, _)"); return; }
+    setUsernameSaving(true); setUsernameError("");
+    const { error } = await supabase.from("profiles").update({ username: val }).eq("id", user.id);
+    if (error?.code === "23505") setUsernameError("Ese @username ya está en uso");
+    else if (error) setUsernameError("Error al guardar");
+    else { if (profile) profile.username = val; }
+    setUsernameSaving(false);
+  };
+
+  const sendMensaje = async () => {
+    if (!mensajeFund.trim()) return;
+    await supabase.from("notificaciones").insert({
+      user_id: "fc8270f1-0be8-4248-90f8-a6517e845a0a",
+      tipo: "mensaje_fundador",
+      titulo: `\u{1F4AC} ${profile?.nombre || user?.email} te escribe`,
+      cuerpo: mensajeFund.trim(),
+    });
+    setMensajeFund(""); setMensajeSent(true);
+    setTimeout(() => setMensajeSent(false), 3500);
+  };
+
+  const CHANGELOG = [
+    { version:"2.5", fecha:"Jun 2026", titulo:"Club Fundador en Panel Coach", desc:"El Club Fundador ahora vive directamente en el panel de entrenador: changelog, roadmap, muro de fundadores y canal directo.", nuevo:true },
+    { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio.", nuevo:false },
+    { version:"2.3", fecha:"Jun 2026", titulo:"Ecosistema Fundador completo", desc:"@Username único. Roadmap con votación real. Muro de Fundadores. Canal Directo a Jan.", nuevo:false },
+    { version:"2.2", fecha:"Jun 2026", titulo:"Mobile UX — rediseño iOS completo", desc:"Header con safe area. Bottom nav 5 items. Dropdowns como paneles flotantes.", nuevo:false },
+    { version:"2.1", fecha:"Jun 2026", titulo:"Notificaciones & versión automática", desc:"X para eliminar notificaciones. Notificación automática al desplegar.", nuevo:false },
+    { version:"2.0", fecha:"Jun 2026", titulo:"Fase 2 — Push nativas & QA móvil", desc:"Notificaciones push nativas (Web Push + VAPID). Módulo de lesiones con 35 zonas.", nuevo:false },
+    { version:"1.9", fecha:"Jun 2026", titulo:"Modal Invitar atleta — rediseño", desc:"Modal premium: hero rojo, feature cards, inputs prominentes." },
+    { version:"1.8", fecha:"Jun 2026", titulo:"Home Dashboard — repaso general", desc:"Hero 42px, stats 3 columnas, racha con caja propia." },
+    { version:"1.7", fecha:"Jun 2026", titulo:"Tutorial & onboarding", desc:"Tarjeta 560px, icono 72px, posicionamiento sin recortes." },
+    { version:"1.6", fecha:"Jun 2026", titulo:"Técnicas, Notas, Calendario — futurista", desc:"KPI headers animados, cards con glow, filtros por tag." },
+    { version:"1.5", fecha:"Jun 2026", titulo:"BIOMETRÍA — módulo unificado", desc:"5 tabs: Peso, Agua, Nutrición, Lesiones y Recuperación." },
+    { version:"1.4", fecha:"Jun 2026", titulo:"Hidratación & Recorte de peso", desc:"Tracking de agua, protocolo multi-día con alertas." },
+    { version:"1.3", fecha:"Jun 2026", titulo:"Panel Coach — Periodización", desc:"Macrociclos, mesociclos y microciclos con fases de color." },
+    { version:"1.2", fecha:"May 2026", titulo:"Perfil del atleta", desc:"Avatar, bio, categoría de peso, club y años de experiencia." },
+    { version:"1.1", fecha:"May 2026", titulo:"Coach Pro + Chat", desc:"Panel de entrenador con agenda drag-and-drop y chat." },
+    { version:"1.0", fecha:"Abr 2026", titulo:"Lanzamiento", desc:"Primera versión pública. Diario, cinturón y estadísticas." },
+  ];
+  const clMap = {
+    "2.5":{ icon:"🏅", color:"#f59e0b", tag:"Coach" },
+    "2.4":{ icon:"✉️", color:"#10b981", tag:"Seguridad" },
+    "2.3":{ icon:"🏅", color:"#f59e0b", tag:"Fundador" },
+    "2.2":{ icon:"📱", color:"#C41A1A", tag:"Mobile" },
+    "2.1":{ icon:"🔔", color:"#f59e0b", tag:"Notif" },
+    "2.0":{ icon:"🚀", color:"#C41A1A", tag:"Fase 2" },
+    "1.9":{ icon:"📨", color:"#C41A1A", tag:"UX" },
+    "1.8":{ icon:"🏠", color:"#3b82f6", tag:"Dashboard" },
+    "1.7":{ icon:"🎓", color:"#8b5cf6", tag:"Onboarding" },
+    "1.6":{ icon:"⚡", color:"#10b981", tag:"Vistas" },
+    "1.5":{ icon:"💪", color:"#06b6d4", tag:"Biometría" },
+    "1.4":{ icon:"💧", color:"#0ea5e9", tag:"Hidratación" },
+    "1.3":{ icon:"📅", color:"#f59e0b", tag:"Coach" },
+    "1.2":{ icon:"👤", color:"#8b5cf6", tag:"Perfil" },
+    "1.1":{ icon:"🎯", color:"#C41A1A", tag:"Coach" },
+    "1.0":{ icon:"🚀", color:"#6b7280", tag:"Launch" },
+  };
+  const ROADMAP_ITEMS = [
+    { id:"stripe",       done:true,  estado:"✅", titulo:"Pagos & Suscripciones (Stripe)", desc:"3 planes con links directos." },
+    { id:"push",         done:true,  estado:"✅", titulo:"Notificaciones push nativas", desc:"Web Push API + VAPID + Edge Function." },
+    { id:"mobile",       done:true,  estado:"✅", titulo:"Mobile UX — iOS optimizado", desc:"Header safe area, bottom nav, paneles flotantes." },
+    { id:"username",     done:false, estado:"🔨", titulo:"@Username + identidad", desc:"Handle único visible en la comunidad." },
+    { id:"perfil-coach", done:false, estado:"🔨", titulo:"Perfil público del coach", desc:"Página SEO en /coach/@username." },
+    { id:"videos",       done:false, estado:"📋", titulo:"Videos de técnicas", desc:"Embed YouTube/Vimeo en sesiones." },
+    { id:"ia",           done:false, estado:"💡", titulo:"IA de rendimiento (Claude API)", desc:"Análisis del historial y predicción de fatiga." },
+    { id:"comunidad",    done:false, estado:"💡", titulo:"Feed de actividad & Comunidad", desc:"Retos semanales entre atletas." },
+    { id:"nativa",       done:false, estado:"💡", titulo:"App nativa iOS/Android", desc:"Versión nativa post-validación." },
+  ];
+
+  const [featured, ...rest] = CHANGELOG;
+  const fc = clMap[featured.version] || { icon:"📦", color:GOLD, tag:"" };
+  const isMb = window.innerWidth < 700;
+
+  return (
+    <div style={{ padding:"16px", paddingBottom:80 }}>
+      {/* Hero */}
+      <div style={{ background:`linear-gradient(135deg,${GOLD}22,${GOLD}08)`, border:`1.5px solid ${GOLD}40`, borderRadius:20, padding:"20px 22px", marginBottom:16 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:14, marginBottom:14 }}>
+          <div style={{ width:52, height:52, borderRadius:16, background:`${GOLD}22`, border:`2px solid ${GOLD}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>🏅</div>
+          <div style={{ flex:1 }}>
+            <div style={{ fontSize:10, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5, marginBottom:2 }}>CLUB FUNDADOR</div>
+            <div style={{ fontSize:18, fontWeight:900, color:"var(--text)", lineHeight:1.2 }}>{profile?.nombre || "Fundador"}</div>
+            <div style={{ fontSize:11, color:"var(--text-faint)" }}>
+              {profile?.username ? <span style={{ color:GOLD, fontWeight:700 }}>@{profile.username}</span> : <span>sin @username</span>} · Acceso vitalicio
+            </div>
+          </div>
+          <div style={{ textAlign:"right" }}>
+            <div style={{ fontSize:22 }}>🏅</div>
+            <div style={{ fontSize:9, color:"var(--text-faint)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.5, marginTop:2 }}>Fundador</div>
+          </div>
+        </div>
+        <div style={{ background:"rgba(0,0,0,0.2)", borderRadius:12, padding:"12px 14px" }}>
+          <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Tu @username</div>
+          <div style={{ display:"flex", gap:8 }}>
+            <div style={{ flex:1, position:"relative" }}>
+              <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", fontSize:13, color:"var(--text-faint)", fontWeight:700 }}>@</span>
+              <input value={username}
+                onChange={e => { setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g,"")); setUsernameError(""); }}
+                placeholder="tuhandle" maxLength={20}
+                style={{ width:"100%", paddingLeft:26, paddingRight:8, paddingTop:8, paddingBottom:8, borderRadius:8,
+                  border:`1px solid ${usernameError?"#ef4444":GOLD+"40"}`, background:"var(--bg-card)", color:"var(--text)", fontSize:13, fontWeight:700, boxSizing:"border-box" }} />
+            </div>
+            <button onClick={saveUsername} disabled={usernameSaving}
+              style={{ padding:"8px 16px", borderRadius:8, background:GOLD, color:"#000", border:"none", fontSize:12, fontWeight:800, cursor:"pointer", whiteSpace:"nowrap", opacity:usernameSaving?0.7:1 }}>
+              {usernameSaving ? "..." : "Guardar"}
+            </button>
+          </div>
+          {usernameError && <div style={{ fontSize:11, color:"#ef4444", marginTop:6 }}>{usernameError}</div>}
+          {!usernameError && <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6 }}>Solo letras minúsculas, números y _ · Mínimo 3 caracteres</div>}
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display:"flex", borderBottom:"1px solid var(--border)", marginBottom:16, overflowX:"auto", scrollbarWidth:"none" }}>
+        {[
+          { key:"changelog", label:"🗒 Changelog" },
+          { key:"roadmap",   label:"🗺 Roadmap" },
+          { key:"comunidad", label:"🏅 Fundadores" },
+          { key:"directo",   label:"💬 Directo" },
+        ].map(tb => (
+          <button key={tb.key} onClick={() => setFundTab(tb.key)}
+            style={{ flexShrink:0, padding:"12px 14px", border:"none",
+              borderBottom: fundTab===tb.key ? `2px solid ${GOLD}` : "2px solid transparent",
+              background:"transparent", color: fundTab===tb.key ? GOLD : "var(--text-faint)",
+              fontSize:12, fontWeight:800, cursor:"pointer", whiteSpace:"nowrap" }}>
+            {tb.label}
+          </button>
+        ))}
+      </div>
+
+      {/* CHANGELOG */}
+      {fundTab === "changelog" && (
+        <div>
+          <div style={{ position:"relative", borderRadius:20, overflow:"hidden", marginBottom:16, background:`linear-gradient(135deg,${fc.color},${fc.color}bb)` }}>
+            <div style={{ position:"absolute", right:-10, bottom:-20, fontSize:110, fontWeight:900, color:"#ffffff0d", lineHeight:1, userSelect:"none", pointerEvents:"none" }}>v{featured.version}</div>
+            <div style={{ position:"relative", padding:"22px 22px 18px" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+                  <div style={{ width:48, height:48, borderRadius:14, background:"rgba(255,255,255,0.15)", border:"1.5px solid rgba(255,255,255,0.3)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>{fc.icon}</div>
+                  <div>
+                    <div style={{ fontSize:10, fontWeight:800, color:"rgba(255,255,255,0.7)", textTransform:"uppercase", letterSpacing:1.5 }}>{fc.tag}</div>
+                    <div style={{ fontSize:30, fontWeight:900, color:"#fff", lineHeight:1, letterSpacing:-1 }}>v{featured.version}</div>
+                  </div>
+                </div>
+                <span style={{ fontSize:10, fontWeight:900, color:"#fff", background:"rgba(255,255,255,0.2)", border:"1px solid rgba(255,255,255,0.35)", borderRadius:20, padding:"4px 12px" }}>✦ NUEVO</span>
+              </div>
+              <div style={{ fontSize:15, fontWeight:900, color:"#fff", marginBottom:6, lineHeight:1.3 }}>{featured.titulo}</div>
+              <div style={{ fontSize:12, color:"rgba(255,255,255,0.8)", lineHeight:1.6 }}>{featured.desc}</div>
+              <div style={{ fontSize:10, color:"rgba(255,255,255,0.5)", marginTop:10 }}>{featured.fecha}</div>
+            </div>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:isMb?"1fr":"1fr 1fr", gap:10 }}>
+            {rest.map(c => {
+              const m = clMap[c.version] || { icon:"📦", color:"#6b7280", tag:"" };
+              return (
+                <div key={c.version} style={{ position:"relative", background:"var(--bg-card)", border:`1px solid ${m.color}30`, borderRadius:14, padding:"14px 15px 13px", overflow:"hidden" }}>
+                  <div style={{ position:"absolute", right:8, bottom:4, fontSize:48, fontWeight:900, color:m.color, opacity:0.06, lineHeight:1, userSelect:"none", pointerEvents:"none" }}>{c.version}</div>
+                  <div style={{ position:"relative" }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:8 }}>
+                      <div style={{ width:32, height:32, borderRadius:9, background:`${m.color}18`, border:`1.5px solid ${m.color}35`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:16 }}>{m.icon}</div>
+                      <div>
+                        <div style={{ fontSize:9, fontWeight:800, color:m.color, textTransform:"uppercase", letterSpacing:1 }}>{m.tag}</div>
+                        <div style={{ fontSize:11, fontWeight:900, color:m.color }}>v{c.version}</div>
+                      </div>
+                    </div>
+                    <div style={{ fontSize:12, fontWeight:800, color:"var(--text)", marginBottom:4, lineHeight:1.3 }}>{c.titulo}</div>
+                    <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.5 }}>{c.desc}</div>
+                    <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6, opacity:0.6 }}>{c.fecha}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ROADMAP */}
+      {fundTab === "roadmap" && (
+        <div>
+          <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:16, lineHeight:1.6, padding:"10px 14px", background:"var(--bg-card)", borderRadius:10, border:`1px solid ${GOLD}30` }}>
+            Como fundador puedes <strong style={{ color:GOLD }}>votar qué se construye primero</strong>. Tus votos definen el roadmap.
+          </div>
+          <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+            {ROADMAP_ITEMS.map(item => {
+              const voted = roadmapVotes.includes(item.id);
+              const count = roadmapCounts[item.id] || 0;
+              return (
+                <div key={item.id} style={{ background:"var(--bg-card)", border:`1.5px solid ${voted&&!item.done?GOLD+"60":"var(--border)"}`,
+                  borderRadius:14, padding:"14px 16px", display:"flex", alignItems:"center", gap:12, opacity:item.done?0.75:1 }}>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4, flexWrap:"wrap" }}>
+                      <span style={{ fontSize:14, flexShrink:0 }}>{item.estado}</span>
+                      <span style={{ fontSize:13, fontWeight:800, color:"var(--text)", lineHeight:1.3 }}>{item.titulo}</span>
+                    </div>
+                    <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.5 }}>{item.desc}</div>
+                  </div>
+                  {item.done ? (
+                    <div style={{ flexShrink:0, padding:"6px 10px", borderRadius:8, background:"#10b98120", color:"#10b981", fontSize:10, fontWeight:800 }}>✓ HECHO</div>
+                  ) : (
+                    <button onClick={() => toggleVote(item.id)}
+                      style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:1,
+                        padding:"8px 12px", borderRadius:10, minWidth:48,
+                        border:`1.5px solid ${voted?GOLD:"var(--border)"}`,
+                        background:voted?`${GOLD}20`:"transparent",
+                        color:voted?GOLD:"var(--text-faint)", cursor:"pointer" }}>
+                      <span style={{ fontSize:14 }}>{voted?"▲":"△"}</span>
+                      <span style={{ fontSize:12, fontWeight:800 }}>{count}</span>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* FUNDADORES */}
+      {fundTab === "comunidad" && (
+        <div>
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1.5, marginBottom:4 }}>CLUB EXCLUSIVO</div>
+            <div style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>Los primeros en creer</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:4 }}>Estos son los fundadores que hicieron posible Élite Marcial.</div>
+          </div>
+          {!fundadoresLoaded ? (
+            <div style={{ textAlign:"center", padding:40, color:"var(--text-faint)", fontSize:13 }}>Cargando fundadores...</div>
+          ) : fundadores.length === 0 ? (
+            <div style={{ textAlign:"center", padding:40 }}>
+              <div style={{ fontSize:48, marginBottom:12 }}>🏅</div>
+              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>¡Sé el primero!</div>
+            </div>
+          ) : (
+            <>
+              <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:14 }}>{fundadores.length} fundador{fundadores.length!==1?"es":""} · Por orden de adhesión</div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(130px, 1fr))", gap:12 }}>
+                {fundadores.map((f, i) => {
+                  const initials = (f.nombre || "?").slice(0,2).toUpperCase();
+                  return (
+                    <div key={f.id} style={{ background:"var(--bg-card)", border:`1px solid ${GOLD}30`, borderRadius:16, padding:"16px 10px", textAlign:"center", position:"relative" }}>
+                      <div style={{ position:"absolute", top:8, right:10, fontSize:9, fontWeight:800, color:GOLD, opacity:0.5 }}>#{i+1}</div>
+                      <div style={{ width:50, height:50, borderRadius:25, overflow:"hidden", margin:"0 auto 10px", border:`2px solid ${GOLD}50`, background:`${GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                        {f.avatar_url ? <img src={f.avatar_url} alt={f.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : <span style={{ fontSize:18, fontWeight:900, color:GOLD }}>{initials}</span>}
+                      </div>
+                      <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", marginBottom:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", paddingInline:4 }}>{f.nombre || "Fundador"}</div>
+                      {f.username && <div style={{ fontSize:10, color:GOLD, fontWeight:700 }}>@{f.username}</div>}
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* CANAL DIRECTO */}
+      {fundTab === "directo" && (
+        <div>
+          <div style={{ background:"linear-gradient(135deg,#C41A1A18,#C41A1A08)", border:"1px solid #C41A1A30", borderRadius:16, padding:"18px 20px", marginBottom:16 }}>
+            <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.5, marginBottom:6 }}>ACCESO DIRECTO</div>
+            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:6 }}>Habla directamente con Jan</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", lineHeight:1.6 }}>Como fundador tienes línea directa. Tu mensaje llega sin filtros. Respuesta habitual en menos de 24h.</div>
+          </div>
+          <textarea value={mensajeFund} onChange={e => setMensajeFund(e.target.value)}
+            placeholder="¿Qué quieres que sepa? Ideas, bugs críticos, peticiones de features, lo que sea..."
+            rows={5}
+            style={{ width:"100%", padding:"14px", borderRadius:12, border:"1px solid var(--border)", background:"var(--bg-card)",
+              color:"var(--text)", fontSize:14, lineHeight:1.6, resize:"vertical", boxSizing:"border-box", marginBottom:12 }} />
+          <button onClick={sendMensaje} disabled={!mensajeFund.trim() || mensajeSent}
+            style={{ width:"100%", padding:"14px", borderRadius:12,
+              background:mensajeSent?"#10b981":"#C41A1A",
+              color:"#fff", border:"none", fontSize:14, fontWeight:800, cursor:mensajeSent?"default":"pointer", transition:"background 0.3s" }}>
+            {mensajeSent ? "✓ Enviado — Jan lo verá pronto" : "Enviar mensaje a Jan →"}
+          </button>
+          <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>Tiempo de respuesta habitual: menos de 24h</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const lang = localStorage.getItem("em_lang") || "es";
   const RED = "#C41A1A";
@@ -7223,38 +7555,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             </div>
           );
         })() : coachView === "club" ? (
-          <div style={{ padding:"24px 16px" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
-              <div style={{ width:48, height:48, borderRadius:14, background:"#f59e0b22", border:"2px solid #f59e0b", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24 }}>🏅</div>
-              <div>
-                <div style={{ fontSize:10, fontWeight:900, color:"#f59e0b", textTransform:"uppercase", letterSpacing:1.5 }}>EXCLUSIVO</div>
-                <div style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>Club Fundador</div>
-              </div>
-            </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:24 }}>
-              {[
-                { icon:"🗒", label:"Changelog", desc:"Historial completo de versiones" },
-                { icon:"🗺", label:"Roadmap", desc:"Vota qué se construye primero" },
-                { icon:"🏅", label:"Fundadores", desc:"Muro de los primeros creyentes" },
-                { icon:"💬", label:"Canal Directo", desc:"Línea directa con Jan" },
-              ].map(f => (
-                <div key={f.label} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", background:"var(--bg-card)", borderRadius:12, border:"1px solid #f59e0b20" }}>
-                  <span style={{ fontSize:20 }}>{f.icon}</span>
-                  <div>
-                    <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>{f.label}</div>
-                    <div style={{ fontSize:11, color:"var(--text-faint)" }}>{f.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button onClick={onMyDiary}
-              style={{ width:"100%", padding:"16px", borderRadius:14, background:"linear-gradient(135deg,#f59e0b,#f97316)", color:"#000", fontSize:14, fontWeight:900, border:"none", cursor:"pointer" }}>
-              Ir al Club Fundador completo →
-            </button>
-            <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>
-              Se abrirá en Mi Diario → Club Fundador
-            </div>
-          </div>
+          <ClubFundadorContent user={user} profile={profile} />
         ) : coachView === "periodo" ? (() => {
           // ══ PERIODIZACIÓN ══════════════════════════════════════════
           const FASE_INFO = {

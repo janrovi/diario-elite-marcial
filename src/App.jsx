@@ -9899,22 +9899,45 @@ function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) 
 
   const handleActivate = async () => {
     setLoading(true);
-    setMsg("");
+    setMsg("Verificando pago con Stripe...");
     try {
-      // Check if webhook already updated the plan
-      const { data: prof } = await supabase.from("profiles").select("plan").eq("id", user.id).single();
-      if (prof?.plan === pending.plan) {
-        // Webhook ya actualizó — entrar directamente
-        localStorage.removeItem("em_pending");
-        onActivate(true);
-        return;
+      // Poll hasta 20 veces cada 4s (= 80s max) esperando que el webhook actualice el plan
+      const MAX_ATTEMPTS = 20;
+      const INTERVAL_MS  = 4000;
+
+      for (let i = 0; i < MAX_ATTEMPTS; i++) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("plan")
+          .eq("id", user.id)
+          .single();
+
+        if (prof?.plan === pending.plan) {
+          // Webhook confirmó el pago — entrar
+          localStorage.removeItem("em_pending");
+          onActivate(true);
+          return;
+        }
+
+        // Feedback visual durante la espera
+        const secsLeft = Math.round(((MAX_ATTEMPTS - i - 1) * INTERVAL_MS) / 1000);
+        setMsg(i === 0
+          ? "Confirmando pago con Stripe..."
+          : `Esperando confirmación... (${secsLeft}s)`
+        );
+
+        if (i < MAX_ATTEMPTS - 1) {
+          await new Promise(res => setTimeout(res, INTERVAL_MS));
+        }
       }
-      // Actualizar manualmente (confianza en el usuario hasta tener webhook)
-      await supabase.from("profiles").update({ plan: pending.plan }).eq("id", user.id);
-      localStorage.removeItem("em_pending");
-      onActivate(true);
+
+      // Timeout — el webhook no llegó en 80 segundos
+      setMsg(
+        "El pago está siendo procesado. Puede tardar unos minutos. " +
+        "Vuelve a intentarlo en breve o escríbenos a jan@elitemarcial.com"
+      );
     } catch (err) {
-      setMsg("Error al activar. Inténtalo de nuevo.");
+      setMsg("Error al verificar. Inténtalo de nuevo.");
     }
     setLoading(false);
   };
@@ -9952,7 +9975,7 @@ function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) 
           marginBottom: 12, boxShadow: `0 6px 24px ${info.color}40`, fontFamily: "inherit",
           transition: "all 0.2s",
         }}>
-          {loading ? "Activando..." : "✓ Sí, ya pagué — Activar mi cuenta"}
+          {loading ? "Verificando pago..." : "✓ Sí, ya pagué — Activar mi cuenta"}
         </button>
 
         {/* Volver a pagar */}

@@ -10594,6 +10594,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
             )}
 
             {error && <div style={{ fontSize:12, color:RED, marginBottom:14, padding:"9px 12px", background:RED+"12", borderRadius:8, border:`1px solid ${RED}30` }}>{error}</div>}
+            {success && <div style={{ fontSize:13, color:"#4ade80", marginBottom:14, padding:"12px 14px", background:"#4ade8015", borderRadius:8, border:"1px solid #4ade8030", lineHeight:1.5, textAlign:"center" }}>{success}</div>}
 
             {mode === "login" && loginAttempts > 0 && lockCountdown === 0 && (
               <div style={{ fontSize:11, color:"#f59e0b", marginBottom:10, textAlign:"center" }}>

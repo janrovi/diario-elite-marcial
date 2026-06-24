@@ -4875,8 +4875,8 @@ function CoachTutorialOverlay({ onDone }) {
       label: "// PANEL DE COACH",
       title: "Tu Panel de Entrenador",
       subtitle: "Gestión profesional de atletas y periodización",
-      body: "Todo lo que necesitas para dirigir tu equipo: seguimiento individual, programación y análisis de rendimiento.",
-      features: ["👥 Gestión de equipo", "📅 Agenda & sesiones", "📊 Estadísticas atletas", "📋 Periodización"],
+      body: "Todo lo que necesitas para dirigir tu equipo. Plataforma en fase de consolidación — actualizaciones constantes cada semana rumbo a la app nativa.",
+      features: ["👥 Gestión de equipo", "📅 Agenda & sesiones", "💳 Portal de suscripción", "🏅 Club Fundador"],
       cta: "Comenzar tour →",
     },
     {
@@ -4925,8 +4925,8 @@ function CoachTutorialOverlay({ onDone }) {
       target: null, icon: "🚀", accent: "#C41A1A",
       label: "// ¡LISTO!",
       title: "Panel activado",
-      body: "Invita atletas, programa sus sesiones y supervisa su evolución. Tu panel crece a medida que crece tu equipo.",
-      features: ["✅ Invita atletas por email", "✅ Programa desde Agenda", "✅ Analiza con Estadísticas", "✅ Planifica con Periodización"],
+      body: "Invita atletas, programa sus sesiones y supervisa su evolución. En Mi Perfil tienes el portal de suscripción Stripe y cambio de contraseña. En Club, el changelog completo y el roadmap.",
+      features: ["✅ Invita atletas por email", "✅ Programa desde Agenda", "✅ Club Fundador & roadmap", "✅ Portal de suscripción Stripe"],
       cta: "¡Entrar al panel! 🏆",
     },
   ];
@@ -10669,9 +10669,9 @@ function TutorialOverlay({ onDone }) {
       target: null, pos: null, icon: "🥋", accent: "#C41A1A",
       label: "// BIENVENIDO",
       title: "Élite Marcial",
-      subtitle: "El diario de alto rendimiento para atletas de combate",
-      body: "Tour rápido de las secciones clave. Puedes saltarlo y empezar cuando quieras.",
-      features: ["📋 Sesiones & calendario", "⚖️ Biometría completa", "📊 Stats & progreso", "🥋 Técnicas & notas"],
+      subtitle: "El diario de alto rendimiento para atletas de artes marciales",
+      body: "Tour rápido de las secciones clave. Actualizaciones constantes cada semana — siempre encontrarás algo nuevo. Puedes saltarlo y empezar cuando quieras.",
+      features: ["📋 Sesiones & calendario", "⚖️ Biometría completa", "🥋 Técnicas & notas", "🔒 Cuenta segura RGPD"],
       cta: "Empezar →",
     },
     {
@@ -10713,8 +10713,8 @@ function TutorialOverlay({ onDone }) {
       label: "// ¡A ENTRENAR!",
       title: "Primera sesión",
       body: isMobile
-        ? "Pulsa el botón rojo ＋ para registrar tu primer entrenamiento. Listo en menos de un minuto."
-        : "Pulsa el botón rojo para anotar tu primer entrenamiento. Disciplina, duración, RPE y técnicas en un minuto.",
+        ? "Pulsa el botón rojo ＋ para registrar tu primer entrenamiento. En el menú de perfil (avatar arriba) tienes ajustes, cambio de contraseña y el historial de novedades."
+        : "Pulsa el botón rojo para anotar tu primer entrenamiento. Desde el avatar tienes ajustes, contraseña y el historial 📋 Novedades.",
       cta: "¡Empezar! 🥋",
       interactive: true,
       hint: isMobile ? "👆 Toca el botón rojo ＋" : "👆 Pulsa el botón para abrir el formulario",

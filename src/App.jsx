@@ -5851,6 +5851,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   }, [user?.id]);
   // Fetch plan directly as a safety net (in case select("*") misses it)
   const [coachPlanOverride, setCoachPlanOverride] = React.useState(null);
+  const [portalLoading, setPortalLoading] = React.useState(false);
   React.useEffect(() => {
     if (!user?.id) return;
     supabase.from("profiles").select("plan").eq("id", user.id).single()
@@ -5969,6 +5970,33 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   // Plan del coach (usa override si ya cargó, si no el perfil prop)
   const coachPlan = coachPlanOverride || profile?.plan || "free";
   const isCoachFundador = coachPlan === "fundador";
+
+  const handleManageSubscription = async () => {
+    setPortalLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch(
+        "https://jhudfgnfpgzjobskuhcr.supabase.co/functions/v1/create-portal-session",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ return_url: window.location.href }),
+        }
+      );
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || "No se pudo abrir el portal. Inténtalo de nuevo.");
+      }
+    } catch (err) {
+      alert("Error al conectar con el portal de suscripción.");
+    }
+    setPortalLoading(false);
+  };
   const [obStep, setObStep] = React.useState(1); // 1..4
   const [obNombre, setObNombre] = React.useState(() => profileProp?.nombre || "");
   const [obAvatarUrl, setObAvatarUrl] = React.useState(() => profileProp?.avatar_url || "");
@@ -7647,6 +7675,22 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   boxShadow: profileSaved ? "0 4px 16px #16a34a40" : `0 4px 16px ${RED}40` }}>
                 {profileSaving ? "Guardando..." : profileSaved ? "✅ Guardado" : "Guardar cambios"}
               </button>
+
+              {/* Gestión de suscripción */}
+              {coachPlan !== "free" && (
+                <div style={{ marginTop:16, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, padding:"20px 24px" }}>
+                  <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:4, display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:18 }}>💳</span> Tu suscripción
+                  </div>
+                  <div style={{ fontSize:12, color:"var(--text-muted)", marginBottom:14 }}>
+                    Plan <strong style={{ color: coachPlan === "fundador" ? "#f59e0b" : "#3b82f6" }}>{coachPlan === "fundador" ? "Fundador" : "Coach Pro"}</strong> · Gestiona tu facturación, cambia de plan o cancela desde el portal de Stripe.
+                  </div>
+                  <button onClick={handleManageSubscription} disabled={portalLoading}
+                    style={{ width:"100%", padding:"11px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-elevated)", color:"var(--text)", fontSize:13, fontWeight:700, cursor:"pointer", opacity: portalLoading ? 0.6 : 1, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
+                    {portalLoading ? "⏳ Abriendo portal..." : "⚙️ Gestionar suscripción"}
+                  </button>
+                </div>
+              )}
 
               {/* Acciones secundarias */}
               <div style={{ marginTop:16, display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>

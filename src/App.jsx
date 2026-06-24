@@ -10167,7 +10167,15 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
         onAuth(data.user, false);
       } else if (mode === "register") {
         const { data, error } = await supabase.auth.signUp({ email: form.email, password: form.password });
-        if (error) throw error;
+        if (error) {
+          // No revelar si el email ya existe (email enumeration)
+          if (error.message?.toLowerCase().includes("already registered") ||
+              error.message?.toLowerCase().includes("already been registered") ||
+              error.message?.toLowerCase().includes("user already")) {
+            throw new Error("Si este email no está registrado, recibirás un correo de confirmación.");
+          }
+          throw error;
+        }
         if (data.user) {
           const rolMap = { free:"atleta", coach:"coach", fundador:"atleta" };
           const needsPayment = authPlan === "coach" || authPlan === "fundador";

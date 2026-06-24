@@ -6221,7 +6221,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             { key: "stats",     icon: "📊", label: "Estadísticas" },
             { key: "periodo",   icon: "📆", label: "Período" },
             { key: "perfil",    icon: "👤", label: "Mi perfil" },
-          ].map(({ key, icon, label }) => {
+            isFundador && { key: "club",  icon: "🏅", label: "Club" },
+          ].filter(Boolean).map(({ key, icon, label }) => {
             const active = coachView === key;
             return (
               <button key={key} data-nav-coach={key} onClick={() => { setCoachView(key); if (key !== "equipo") setSelectedAthlete(null); }}
@@ -7216,6 +7217,34 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 cfShowPlanes={cfShowPlanes}
                 setCfShowPlanes={setCfShowPlanes}
               />
+            </div>
+          );
+        })() : coachView === "club" ? (() => {
+          // Club Fundador accesible desde el panel coach
+          // Cambiamos temporalmente a la vista fundador del diario
+          return (
+            <div style={{ padding:"16px 0" }}>
+              {/* Reutilizamos el componente completo cambiando view a "fundador" */}
+              <div ref={el => { if (el && view !== "fundador") {} }}>
+                {(() => { const prevView = view; return null; })()}
+              </div>
+              <div style={{ padding:"0 16px" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:20 }}>
+                  <div style={{ width:44, height:44, borderRadius:14, background:"#f59e0b22", border:"2px solid #f59e0b", display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>🏅</div>
+                  <div>
+                    <div style={{ fontSize:10, fontWeight:900, color:"#f59e0b", textTransform:"uppercase", letterSpacing:1.5 }}>ACCESO RÁPIDO</div>
+                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)" }}>Club Fundador</div>
+                  </div>
+                </div>
+                <button onClick={() => { setView("fundador"); }}
+                  style={{ width:"100%", padding:"16px", borderRadius:14, background:"linear-gradient(135deg,#f59e0b22,#f59e0b08)", border:"1.5px solid #f59e0b40", color:"#f59e0b", fontSize:14, fontWeight:800, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
+                  <span style={{ fontSize:20 }}>🏅</span>
+                  Abrir Club Fundador completo →
+                </button>
+                <div style={{ marginTop:16, fontSize:12, color:"var(--text-faint)", textAlign:"center" }}>
+                  Changelog · Roadmap · Muro de Fundadores · Canal Directo a Jan
+                </div>
+              </div>
             </div>
           );
         })() : coachView === "periodo" ? (() => {
@@ -9131,6 +9160,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           { key: "stats",   icon: "📊", label: "Stats" },
           { key: "periodo", icon: "📆", label: "Período" },
           { key: "perfil",  icon: "👤", label: "Perfil" },
+          ...(isFundador ? [{ key: "club", icon: "🏅", label: "Club" }] : []),
         ].map(({ key, icon, label }) => {
           const active = coachView === key;
           return (
@@ -11342,7 +11372,7 @@ function MainApp() {
             { key: "notas",      label: tr("nav_notes"),      icon: "📝", active: view === "notas" },
             { key: "cuerpo",     label: "Biometría",           icon: "⚖️", active: view === "cuerpo" },
             profile?.rol !== "coach" && { key: "perfil", label: "Perfil", icon: "👤", active: view === "perfil" },
-            isFundador && { key: "fundador", label: "Club", icon: "🏅", active: view === "fundador" },
+
           ].filter(Boolean).map(({ key, label, icon, active, badge }) => (
             <button key={key} data-nav={key} onClick={() => setView(key)}
               style={{

@@ -9670,7 +9670,12 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
     try {
       if (mode === "login") {
         const { data, error } = await supabase.auth.signInWithPassword({ email: form.email, password: form.password });
-        if (error) throw error;
+        if (error) {
+          if (error.message?.toLowerCase().includes("email not confirmed")) {
+            throw new Error("Debes confirmar tu email antes de acceder. Revisa tu bandeja de entrada.");
+          }
+          throw error;
+        }
         onAuth(data.user, false);
       } else if (mode === "register") {
         const { data, error } = await supabase.auth.signUp({ email: form.email, password: form.password });
@@ -9684,8 +9689,8 @@ function AuthScreen({ onAuth, darkMode, onToggleDark }) {
             plan: needsPayment ? "pending_payment" : "free",
           });
           if (!needsPayment) {
-            // Plan free → acceso directo
-            onAuth(data.user, true);
+            // Plan free → mostrar pantalla "confirma tu email"
+            setSuccess("¡Registro completado! Revisa tu email y haz clic en el enlace de confirmación para acceder.");
           } else {
             // Plan de pago → guardar en localStorage y redirigir a Stripe (misma pestaña)
             localStorage.setItem("em_pending", JSON.stringify({

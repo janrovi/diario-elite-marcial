@@ -7704,21 +7704,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </button>
               </div>
 
-              {/* ── PLAN / FUNDADOR ── */}
-              <CoachFundadorPanel
-                profile={profile ? { ...profile, plan: coachPlanOverride || profile.plan } : profile}
-                user={user}
-                cfTab={cfTab}
-                setCfTab={setCfTab}
-                cfSuggForm={cfSuggForm}
-                setCfSuggForm={setCfSuggForm}
-                cfSuggSent={cfSuggSent}
-                setCfSuggSent={setCfSuggSent}
-                cfSuggList={cfSuggList}
-                setCfSuggList={setCfSuggList}
-                cfShowPlanes={cfShowPlanes}
-                setCfShowPlanes={setCfShowPlanes}
-              />
+
             </div>
           );
         })() : coachView === "club" ? (

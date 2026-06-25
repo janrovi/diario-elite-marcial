@@ -281,7 +281,7 @@ function loadSessions(uid) {
 }
 
 function saveSessions(sessions, uid) {
-  try { localStorage.setItem(STORAGE_KEY(uid), JSON.stringify(sessions)); } catch {}
+  try { localStorage.setItem(STORAGE_KEY(uid), JSON.stringify(sessions)); } catch { /* ignore */ }
 }
 
 // ── Supabase ↔ local session mapping ──────────────────────
@@ -313,7 +313,7 @@ function sessionToSupabase(s, userId) {
 function supabaseToSession(row) {
   const extra = row.extra || {};
   let sensaciones = { cuerpo: "", mente: "", observaciones: "" };
-  try { if (row.sensaciones) sensaciones = JSON.parse(row.sensaciones); } catch {}
+  try { if (row.sensaciones) sensaciones = JSON.parse(row.sensaciones); } catch { /* ignore */ }
   return {
     id: row.id,
     nombre: row.nombre || "",
@@ -3080,7 +3080,7 @@ function NotasView({ lang = "es", userId = "anon" }) {
   const [expandCompose, setExpandCompose] = useState(false);
   const textareaRef = useRef(null);
 
-  useEffect(() => { try { localStorage.setItem(NOTAS_KEY(userId), JSON.stringify(notas)); } catch {} }, [notas]);
+  useEffect(() => { try { localStorage.setItem(NOTAS_KEY(userId), JSON.stringify(notas)); } catch { /* ignore */ } }, [notas]);
 
   const RED = "#C41A1A";
   const TAGS = [
@@ -3318,7 +3318,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const [editNutriGoal, setEditNutriGoal] = useState(false);
   const [goalTemp, setGoalTemp] = useState({ calorias:2000, proteina:150, carbos:200, grasa:65 });
 
-  const persistNutri = arr => { setNutriEntries(arr); try { localStorage.setItem(NUTRI_KEY, JSON.stringify(arr)); } catch {} };
+  const persistNutri = arr => { setNutriEntries(arr); try { localStorage.setItem(NUTRI_KEY, JSON.stringify(arr)); } catch { /* ignore */ } };
   const saveNutri = () => {
     if (!nutriForm.nombre || !nutriForm.calorias) return;
     persistNutri([{ ...nutriForm, id: Date.now() }, ...nutriEntries]);
@@ -3349,7 +3349,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   const [recupEntries, setRecupEntries] = useState(() => { try { return JSON.parse(localStorage.getItem("em_recuperacion")) || []; } catch { return []; } });
   const [showRecupForm, setShowRecupForm] = useState(false);
   const [recupForm, setRecupForm] = useState({ tipo:"fisio", fecha: new Date().toISOString().slice(0,10), zona:"", terapia:"", duracion:"", terapeuta:"", notas:"" });
-  const persistRecup = arr => { setRecupEntries(arr); try { localStorage.setItem("em_recuperacion", JSON.stringify(arr)); } catch {} };
+  const persistRecup = arr => { setRecupEntries(arr); try { localStorage.setItem("em_recuperacion", JSON.stringify(arr)); } catch { /* ignore */ } };
   const saveRecup = () => {
     if (!recupForm.zona && !recupForm.terapia) return;
     persistRecup([{ ...recupForm, id: Date.now() }, ...recupEntries]);
@@ -3363,7 +3363,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     return diff <= 7;
   });
 
-  const persistHidra = (arr) => { setHidraEntries(arr); try { localStorage.setItem(HIDRA_KEY(userId), JSON.stringify(arr)); } catch {} };
+  const persistHidra = (arr) => { setHidraEntries(arr); try { localStorage.setItem(HIDRA_KEY(userId), JSON.stringify(arr)); } catch { /* ignore */ } };
   const quickAdd = (ml) => {
     const existing = hidraEntries.find(e => e.fecha === todayH);
     if (existing) persistHidra(hidraEntries.map(e => e.id === existing.id ? { ...e, agua_ml: e.agua_ml + ml } : e));
@@ -3403,9 +3403,9 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
   const [injForm, setInjForm] = useState({ zona:"", tipo:"", fecha:new Date().toISOString().slice(0,10), estado:"activa", notas:"" });
   const setF = (k, v) => setForm(f => ({ ...f, [k]: v }));
-  useEffect(() => { try { localStorage.setItem(ALTURA_KEY(userId), altura); } catch {} }, [altura]);
-  useEffect(() => { try { localStorage.setItem(PESOOBJ_KEY(userId), JSON.stringify(pesoObj)); } catch {} }, [pesoObj]);
-  useEffect(() => { try { localStorage.setItem(NUTRI_GOAL_KEY, JSON.stringify(nutriGoal)); } catch {} }, [nutriGoal]);
+  useEffect(() => { try { localStorage.setItem(ALTURA_KEY(userId), altura); } catch { /* ignore */ } }, [altura]);
+  useEffect(() => { try { localStorage.setItem(PESOOBJ_KEY(userId), JSON.stringify(pesoObj)); } catch { /* ignore */ } }, [pesoObj]);
+  useEffect(() => { try { localStorage.setItem(NUTRI_GOAL_KEY, JSON.stringify(nutriGoal)); } catch { /* ignore */ } }, [nutriGoal]);
 
   const save = () => {
     if (!form.peso) return;
@@ -5246,7 +5246,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
     const entry = { id: Date.now(), ...cfSuggForm, fecha: new Date().toISOString().slice(0,10) };
     const next = [entry, ...cfSuggList];
     setCfSuggList(next);
-    try { localStorage.setItem("em_sugerencias", JSON.stringify(next)); } catch {}
+    try { localStorage.setItem("em_sugerencias", JSON.stringify(next)); } catch { /* ignore */ }
     // Enviar via Supabase Edge Function + Resend
     try {
       await supabase.functions.invoke("send-suggestion", {
@@ -6471,7 +6471,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
     let meta = {};
     if (sp.descripcion) {
       const parts = sp.descripcion.split("\n__smeta__");
-      if (parts.length >= 2) { try { meta = JSON.parse(parts[1]); } catch {} }
+      if (parts.length >= 2) { try { meta = JSON.parse(parts[1]); } catch { /* ignore */ } }
     }
     setScheduleForm({
       fecha: sp.fecha || new Date().toISOString().slice(0,10),
@@ -11150,14 +11150,14 @@ function MainApp() {
       try {
         const raw = localStorage.getItem(ATH_EXT_KEY(user.id));
         if (raw) setAthExt(prev => ({ ...prev, ...JSON.parse(raw) }));
-      } catch {}
+      } catch { /* ignore */ }
       setAthExtLoaded(true);
     }
   }, [user?.id]);
   const saveAthExt = async (fields) => {
     const next = { ...athExt, ...fields };
     setAthExt(next);
-    try { localStorage.setItem(ATH_EXT_KEY(user.id), JSON.stringify(next)); } catch {}
+    try { localStorage.setItem(ATH_EXT_KEY(user.id), JSON.stringify(next)); } catch { /* ignore */ }
     // Sync bio to Supabase profiles.bio if changed
     if (fields.bio !== undefined) {
       await supabase.from("profiles").update({ bio: fields.bio }).eq("id", user.id);
@@ -11219,11 +11219,11 @@ function MainApp() {
     }
 
     // ── Cargar datos de localStorage con clave de usuario ──────────────────
-    try { setWeekGoal(parseInt(localStorage.getItem(GOAL_KEY(user.id))) || 4); } catch {}
-    try { const g = JSON.parse(localStorage.getItem(GOALS_KEY(user.id))); if (g) setGoals(g); } catch {}
-    try { const b = JSON.parse(localStorage.getItem(BODY_KEY(user.id))); if (b) setBodyEntries(b); } catch {}
-    try { const inj = JSON.parse(localStorage.getItem(INJURIES_KEY(user.id))); if (inj) setInjuries(inj); } catch {}
-    try { const r = JSON.parse(localStorage.getItem(RANGO_KEY(user.id))); if (r) setRango(prev => ({ ...prev, ...r })); } catch {}
+    try { setWeekGoal(parseInt(localStorage.getItem(GOAL_KEY(user.id))) || 4); } catch { /* ignore */ }
+    try { const g = JSON.parse(localStorage.getItem(GOALS_KEY(user.id))); if (g) setGoals(g); } catch { /* ignore */ }
+    try { const b = JSON.parse(localStorage.getItem(BODY_KEY(user.id))); if (b) setBodyEntries(b); } catch { /* ignore */ }
+    try { const inj = JSON.parse(localStorage.getItem(INJURIES_KEY(user.id))); if (inj) setInjuries(inj); } catch { /* ignore */ }
+    try { const r = JSON.parse(localStorage.getItem(RANGO_KEY(user.id))); if (r) setRango(prev => ({ ...prev, ...r })); } catch { /* ignore */ }
 
     // ── Pre-cargar sesiones cacheadas (render instantáneo) ──────────────────
     const cached = loadSessions(user.id);
@@ -11325,11 +11325,11 @@ function MainApp() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [view]);
   useEffect(() => { localStorage.setItem("em_theme_v2", darkMode ? "dark" : "light"); }, [darkMode]);
   useEffect(() => { localStorage.setItem("em_lang", lang); }, [lang]);
-  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOAL_KEY(user.id), weekGoal); } catch {} }, [weekGoal, user?.id]);
-  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOALS_KEY(user.id), JSON.stringify(goals)); } catch {} }, [goals, user?.id]);
-  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(BODY_KEY(user.id), JSON.stringify(bodyEntries)); } catch {} }, [bodyEntries, user?.id]);
-  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(injuries)); } catch {} }, [injuries, user?.id]);
-  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(RANGO_KEY(user.id), JSON.stringify(rango)); } catch {} }, [rango, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOAL_KEY(user.id), weekGoal); } catch { /* ignore */ } }, [weekGoal, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(GOALS_KEY(user.id), JSON.stringify(goals)); } catch { /* ignore */ } }, [goals, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(BODY_KEY(user.id), JSON.stringify(bodyEntries)); } catch { /* ignore */ } }, [bodyEntries, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(injuries)); } catch { /* ignore */ } }, [injuries, user?.id]);
+  useEffect(() => { if (!user?.id) return; try { localStorage.setItem(RANGO_KEY(user.id), JSON.stringify(rango)); } catch { /* ignore */ } }, [rango, user?.id]);
 
   useEffect(() => {
     if (timerRunning) {
@@ -11370,12 +11370,12 @@ function MainApp() {
     if (view === "form" && !form.id) {
       const hasContent = form.nombre || form.disciplina || form.notas || form.entrenamiento;
       if (hasContent) {
-        try { localStorage.setItem(DRAFT_KEY(user?.id), JSON.stringify(form)); } catch {}
+        try { localStorage.setItem(DRAFT_KEY(user?.id), JSON.stringify(form)); } catch { /* ignore */ }
       }
     }
   }, [form, view]);
 
-  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY(user?.id)); } catch {} };
+  const clearDraft = () => { try { localStorage.removeItem(DRAFT_KEY(user?.id)); } catch { /* ignore */ } };
 
   const [linkedScheduledId, setLinkedScheduledId] = useState(null);
   const [confirmingScheduledId, setConfirmingScheduledId] = useState(null); // id de sesión en espera de confirmación
@@ -11745,7 +11745,7 @@ function MainApp() {
         setView("form");
         return;
       }
-    } catch {}
+    } catch { /* ignore */ }
     const lastDisc = sessions.length > 0 ? sessions[0].disciplina || "" : "";
     const nowTime = new Date().toLocaleTimeString("es", { hour:"2-digit", minute:"2-digit", hour12:false });
     setForm({ ...EMPTY_SESSION, id: null, fecha: new Date().toISOString().slice(0, 10), disciplina: lastDisc, hora: nowTime, duracionMin: elapsedMins });

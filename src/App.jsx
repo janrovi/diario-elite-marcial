@@ -5577,7 +5577,7 @@ function ClubFundadorContent({ user, profile }) {
     if (fundTab !== "roadmap" || !user?.id) return;
     supabase.from("roadmap_votes").select("item_id").eq("user_id", user.id)
       .then(({ data }) => { if (data) setRoadmapVotes(data.map(v => v.item_id)); });
-    supabase.from("roadmap_votes").select("item_id")
+    supabase.from("roadmap_votes").select("item_id").limit(1000)
       .then(({ data }) => {
         if (!data) return;
         const counts = {};
@@ -11648,7 +11648,7 @@ function MainApp() {
     if (view !== "fundador" || athFundTab !== "roadmap" || !user?.id) return;
     supabase.from("roadmap_votes").select("item_id").eq("user_id", user.id)
       .then(({ data }) => { if (data) setAthRoadmapVotes(data.map(v => v.item_id)); });
-    supabase.from("roadmap_votes").select("item_id")
+    supabase.from("roadmap_votes").select("item_id").limit(1000)
       .then(({ data }) => {
         if (!data) return;
         const counts = {};

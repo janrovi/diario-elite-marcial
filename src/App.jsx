@@ -15697,8 +15697,46 @@ function MainApp() {
 }
 
 // ── Router raíz ─────────────────────────────────────────────────────────────
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error("ErrorBoundary caught:", error, info);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", background:"#111", color:"#f1f1f1", fontFamily:"Arial,sans-serif", padding:24 }}>
+          <div style={{ fontSize:48, marginBottom:16 }}>⚠️</div>
+          <h2 style={{ margin:"0 0 8px", fontSize:20, fontWeight:800 }}>Algo salió mal</h2>
+          <p style={{ color:"#999", fontSize:14, margin:"0 0 24px", textAlign:"center", maxWidth:360 }}>
+            La aplicación ha encontrado un error inesperado. Recarga la página para continuar.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ background:"#C41A1A", color:"#fff", border:"none", borderRadius:8, padding:"12px 28px", fontSize:15, fontWeight:700, cursor:"pointer" }}>
+            Recargar app
+          </button>
+          {process.env.NODE_ENV === "development" && this.state.error && (
+            <pre style={{ marginTop:24, background:"#1a1a1a", color:"#f87171", padding:16, borderRadius:8, fontSize:11, maxWidth:560, overflow:"auto", textAlign:"left" }}>
+              {this.state.error.toString()}
+            </pre>
+          )}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const m = window.location.pathname.match(/^\/coach\/([0-9a-f-]{36})$/i);
-  if (m) return <CoachPublicProfile coachId={m[1]} />;
-  return <MainApp />;
+  if (m) return <ErrorBoundary><CoachPublicProfile coachId={m[1]} /></ErrorBoundary>;
+  return <ErrorBoundary><MainApp /></ErrorBoundary>;
 }

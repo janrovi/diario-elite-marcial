@@ -4292,7 +4292,7 @@ function CoachPublicProfile({ coachId }) {
         <div style={{ textAlign:"center", marginBottom:32 }}>
           <div style={{ width:96, height:96, borderRadius:48, overflow:"hidden", border:`3px solid ${RED}`, margin:"0 auto 16px", background:RED+"20", display:"flex", alignItems:"center", justifyContent:"center" }}>
             {coach.avatar_url
-              ? <img src={coach.avatar_url} alt={coach.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+              ? <img loading="lazy" src={coach.avatar_url} alt={coach.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
               : <span style={{ fontSize:36, fontWeight:900, color:RED }}>{initials}</span>}
           </div>
           <h1 style={{ fontSize:28, fontWeight:900, margin:"0 0 6px", letterSpacing:-0.5 }}>{coach.nombre}</h1>
@@ -4475,7 +4475,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
       <button onClick={() => setOpen(o => !o)}
         style={{ width: 36, height: 36, borderRadius: 18, overflow: "hidden", border: `2px solid ${open ? RED : RED + "50"}`, background: open ? RED + "25" : RED + "15", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", transition: "all 0.15s", padding: 0, flexShrink: 0 }}>
         {avatarUrl
-          ? <img src={avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ? <img loading="lazy" src={avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           : <span style={{ fontSize: 13, fontWeight: 800, color: RED }}>{initials}</span>
         }
       </button>
@@ -4507,7 +4507,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                 title="Cambiar foto de perfil"
                 style={{ width: 44, height: 44, borderRadius: 22, overflow: "hidden", border: `2px solid ${RED}50`, flexShrink: 0, position: "relative", cursor: "pointer" }}>
                 {avatarUrl
-                  ? <img src={avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  ? <img loading="lazy" src={avatarUrl} alt="avatar" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   : <div style={{ width: "100%", height: "100%", background: RED + "25", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 900, color: RED }}>
                       {avatarLoading ? "⏳" : initials}
                     </div>
@@ -5852,7 +5852,7 @@ function ClubFundadorContent({ user, profile }) {
                     <div key={f.id} style={{ background:"var(--bg-card)", border:`1px solid ${GOLD}30`, borderRadius:16, padding:"16px 10px", textAlign:"center", position:"relative" }}>
                       <div style={{ position:"absolute", top:8, right:10, fontSize:9, fontWeight:800, color:GOLD, opacity:0.5 }}>#{i+1}</div>
                       <div style={{ width:50, height:50, borderRadius:25, overflow:"hidden", margin:"0 auto 10px", border:`2px solid ${GOLD}50`, background:`${GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                        {f.avatar_url ? <img src={f.avatar_url} alt={f.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : <span style={{ fontSize:18, fontWeight:900, color:GOLD }}>{initials}</span>}
+                        {f.avatar_url ? <img loading="lazy" src={f.avatar_url} alt={f.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : <span style={{ fontSize:18, fontWeight:900, color:GOLD }}>{initials}</span>}
                       </div>
                       <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", marginBottom:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", paddingInline:4 }}>{f.nombre || "Fundador"}</div>
                       {f.username && <div style={{ fontSize:10, color:GOLD, fontWeight:700 }}>@{f.username}</div>}
@@ -6159,7 +6159,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
     return (
       <div style={{ width:size, height:size, borderRadius:r, display:"flex", alignItems:"center", justifyContent:"center", fontSize, fontWeight:800, flexShrink:0, overflow:"hidden", letterSpacing:-0.5, ...styles }}>
         {profile?.avatar_url
-          ? <img src={profile.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+          ? <img loading="lazy" src={profile.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
           : profile?.nombre?.[0]?.toUpperCase() || "?"}
       </div>
     );
@@ -6566,7 +6566,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               <div style={{ position:"relative", display:"inline-block", marginBottom:24 }}>
                 <div style={{ width:120, height:120, borderRadius:"50%", overflow:"hidden", border:`4px solid ${RED}`, background:`${RED}15`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:42, fontWeight:900, color:RED, margin:"0 auto" }}>
                   {obAvatarUrl
-                    ? <img src={obAvatarUrl} alt="avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                    ? <img loading="lazy" src={obAvatarUrl} alt="avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                     : (obNombre.slice(0,2).toUpperCase() || "👤")}
                 </div>
                 <button onClick={() => obFileRef.current?.click()}
@@ -6732,7 +6732,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         {/* Logo */}
         <div style={{ display: "flex", alignItems: "center", gap: 11, flexShrink: 0, marginRight: 20 }}>
           <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setCoachLogoZoomed(true)}>
-            <img src="/logo-512.png" alt="Élite Marcial"
+            <img loading="eager" src="/logo-512.png" alt="Élite Marcial"
               className="em-logo-img"
               style={{ width: window.innerWidth < 600 ? 36 : 62, height: window.innerWidth < 600 ? 36 : 62, borderRadius: window.innerWidth < 600 ? 9 : 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45),0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s,box-shadow 0.18s", display: "block" }}
               onError={e => { e.target.src = "/logo-192.png"; }}
@@ -6809,7 +6809,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       {coachLogoZoomed && (
         <div onClick={() => setCoachLogoZoomed(false)}
           style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.82)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)", zIndex: 9999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "zoom-out", gap: 20 }}>
-          <img src="/logo-512.png" alt="Élite Marcial"
+          <img loading="eager" src="/logo-512.png" alt="Élite Marcial"
             style={{ width: 300, height: 300, borderRadius: 56, boxShadow: "0 0 0 2px rgba(196,26,26,0.5),0 30px 100px rgba(196,26,26,0.55)", animation: "logoPopIn 0.25s cubic-bezier(0.34,1.56,0.64,1)" }}
             onError={e => { e.target.src = "/logo-192.png"; }} />
           <div style={{ textAlign: "center" }}>
@@ -7624,7 +7624,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 <div style={{ position:"relative", flexShrink:0 }}>
                   <div style={{ width:96, height:96, borderRadius:"50%", overflow:"hidden", border:`3px solid ${RED}`, background:`${RED}15`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:34, fontWeight:900, color:RED }}>
                     {profileAvatarUrl
-                      ? <img src={profileAvatarUrl} alt="avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                      ? <img loading="lazy" src={profileAvatarUrl} alt="avatar" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                       : initials}
                   </div>
                   <button onClick={() => profileFileRef.current?.click()}
@@ -8528,7 +8528,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       <div style={{ position: "relative", flexShrink: 0 }}>
                         <div style={{ width: 62, height: 62, borderRadius: 31, background: RED + "25", border: `2.5px solid ${RED}60`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 900, color: RED, overflow: "hidden" }}>
                           {selectedAthlete.profiles?.avatar_url
-                            ? <img src={selectedAthlete.profiles.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                            ? <img loading="lazy" src={selectedAthlete.profiles.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                             : selectedAthlete.profiles?.nombre?.[0]?.toUpperCase() || "?"}
                         </div>
                         {/* Dot de estado */}
@@ -9709,7 +9709,7 @@ function AthleteCard({ athlete, selected, onClick }) {
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ width: 38, height: 38, borderRadius: 19, background: isPending ? "#f6ad5520" : RED + "20", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, color: isPending ? "#f6ad55" : RED, flexShrink: 0, overflow: "hidden" }}>
           {profile?.avatar_url
-            ? <img src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ? <img loading="lazy" src={profile.avatar_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             : profile?.nombre?.[0]?.toUpperCase() || "?"}
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -10411,7 +10411,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
         <div style={{ textAlign:"center", marginBottom:28 }}>
           <div style={{ position:"relative", display:"inline-block", marginBottom:14 }}>
             <div style={{ position:"absolute", inset:-8, borderRadius:28, background:`radial-gradient(circle, ${RED}40 0%, transparent 70%)`, filter:"blur(10px)" }}/>
-            <img src="/logo-512.png" alt="Élite Marcial"
+            <img loading="eager" src="/logo-512.png" alt="Élite Marcial"
               style={{ width:72, height:72, borderRadius:18, position:"relative", boxShadow:`0 0 30px ${RED}60, 0 4px 20px rgba(0,0,0,0.5)` }}
               onError={e => { e.target.src = "/logo-192.png"; }} />
           </div>
@@ -11936,7 +11936,7 @@ function MainApp() {
       {!splashDone && (
         <div className="em-splash">
           <div className="em-splash__inner">
-            <img src="/logo-192.png" alt="Élite Marcial" className="em-splash__logo" />
+            <img loading="eager" src="/logo-192.png" alt="Élite Marcial" className="em-splash__logo" />
             <div className="em-splash__title">Élite Marcial</div>
             <div className="em-splash__sub">{tr("splash_title")}</div>
           </div>
@@ -11965,7 +11965,7 @@ function MainApp() {
         {/* ── Logo ── */}
         <div style={{ display: "flex", alignItems: "center", gap: window.innerWidth<600 ? 8 : 11, flexShrink: 0, marginRight: window.innerWidth<600 ? 0 : 20 }}>
           <div style={{ position: "relative", cursor: "pointer" }} onClick={() => setLogoZoomed(true)}>
-            <img src="/logo-512.png" alt="Élite Marcial"
+            <img loading="eager" src="/logo-512.png" alt="Élite Marcial"
               className="em-logo-img"
             style={{ width: window.innerWidth<600 ? 36 : 62, height: window.innerWidth<600 ? 36 : 62, borderRadius: window.innerWidth<600 ? 9 : 15, boxShadow: "0 0 0 1px rgba(196,26,26,0.45), 0 4px 16px rgba(196,26,26,0.4)", transition: "transform 0.18s, box-shadow 0.18s", display: "block" }}
               onError={e => { e.target.src = "/logo-192.png"; }}
@@ -11984,7 +11984,7 @@ function MainApp() {
         {logoZoomed && (
           <div onClick={() => setLogoZoomed(false)}
             style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.82)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)", zIndex: 9999, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", cursor: "zoom-out", gap: 20 }}>
-            <img src="/logo-512.png" alt="Élite Marcial"
+            <img loading="eager" src="/logo-512.png" alt="Élite Marcial"
               style={{ width: 300, height: 300, borderRadius: 56, boxShadow: "0 0 0 2px rgba(196,26,26,0.5), 0 30px 100px rgba(196,26,26,0.55)", animation: "logoPopIn 0.25s cubic-bezier(0.34,1.56,0.64,1)" }}
               onError={e => { e.target.src = "/logo-192.png"; }} />
             <div style={{ textAlign: "center" }}>
@@ -12196,7 +12196,7 @@ function MainApp() {
                 <div style={{ background:"linear-gradient(135deg,#1d4ed815,#3b82f610)", border:"1.5px solid #3b82f630", borderRadius:20, padding:"20px 22px", marginBottom:20, display:"flex", alignItems:"center", gap:16 }}>
                   <div style={{ width:60, height:60, borderRadius:"50%", border:"3px solid #3b82f6", overflow:"hidden", background:"#3b82f620", display:"flex", alignItems:"center", justifyContent:"center", fontSize:22, fontWeight:900, color:"#3b82f6", flexShrink:0 }}>
                     {coachProfile?.avatar_url
-                      ? <img src={coachProfile.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                      ? <img loading="lazy" src={coachProfile.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                       : coachInitials}
                   </div>
                   <div style={{ flex:1, minWidth:0 }}>
@@ -12927,7 +12927,7 @@ function MainApp() {
                               <div style={{ width:50, height:50, borderRadius:25, overflow:"hidden", margin:"0 auto 10px", border:`2px solid ${GOLD}50`,
                                 background:`${GOLD}20`, display:"flex", alignItems:"center", justifyContent:"center" }}>
                                 {f.avatar_url
-                                  ? <img src={f.avatar_url} alt={f.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                                  ? <img loading="lazy" src={f.avatar_url} alt={f.nombre} style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                                   : <span style={{ fontSize:18, fontWeight:900, color:GOLD }}>{initials}</span>}
                               </div>
                               <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", marginBottom:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", paddingInline:4 }}>
@@ -13045,7 +13045,7 @@ function MainApp() {
                         overflow:"hidden", background:"#C41A1A22", display:"flex", alignItems:"center", justifyContent:"center",
                         fontSize:32, fontWeight:900, color:"#C41A1A" }}>
                         {avatarUrl
-                          ? <img src={avatarUrl} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                          ? <img loading="lazy" src={avatarUrl} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
                           : initials}
                         {athAvatarLoading && (
                           <div style={{ position:"absolute", inset:0, background:"rgba(0,0,0,0.5)", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:18 }}>⏳</div>

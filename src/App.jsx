@@ -417,6 +417,18 @@ function getWeekComparison(sessions) {
   };
 }
 
+// ── Precios y links de pago ───────────────────────────────
+const PRICES = {
+  coach: {
+    mensual: { eur: "19€", label: "19€ / mes",  stripe: "https://buy.stripe.com/14AfZgeou2iD5God5F2Ji00" },
+    anual:   { eur: "190€", label: "190€ / año  ─2 meses gratis", stripe: "https://buy.stripe.com/cNieVcdkq5uP8SA1mX2Ji01" },
+  },
+  fundador: {
+    actual:  { eur: "499€", stripe: "https://buy.stripe.com/cNi4gy3JQ0av3yg7Ll2Ji02" },
+    futuro:  { eur: "999€" },
+  },
+};
+
 // ── i18n ─────────────────────────────────────────────────
 const TRANSLATIONS = {
   es: {
@@ -5307,8 +5319,8 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
 
             {/* Price hero */}
             <div style={{ display:"flex", alignItems:"baseline", gap:8, marginBottom:4 }}>
-              <span style={{ fontSize:28, fontWeight:900, color:GOLD }}>499€</span>
-              <span style={{ fontSize:14, color:"var(--text-faint)", textDecoration:"line-through" }}>999€</span>
+              <span style={{ fontSize:28, fontWeight:900, color:GOLD }}>{PRICES.fundador.actual.eur}</span>
+              <span style={{ fontSize:14, color:"var(--text-faint)", textDecoration:"line-through" }}>{PRICES.fundador.futuro.eur}</span>
               <span style={{ fontSize:10, fontWeight:800, color:"#10b981" }}>−50%</span>
             </div>
             <div style={{ fontSize:11, color:"var(--text-faint)", marginBottom:10 }}>Pago único · acceso vitalicio · sin cuotas mensuales jamás</div>
@@ -5317,7 +5329,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
             <div style={{ marginBottom:12 }}>
               <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:"var(--text-faint)", marginBottom:4 }}>
                 <span style={{ color:GOLD, fontWeight:800 }}>2 de 100 plazas ocupadas</span>
-                <span>Siguiente precio: 999€</span>
+                <span>{`Siguiente precio: ${PRICES.fundador.futuro.eur}`}</span>
               </div>
               <div style={{ height:6, borderRadius:6, background:"var(--bg-elevated)", overflow:"hidden" }}>
                 <div style={{ width:"2%", height:"100%", borderRadius:6, background:`linear-gradient(90deg,${GOLD},#f97316)` }}/>
@@ -5343,14 +5355,14 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
             ))}
 
             <div style={{ fontSize:10, color:"var(--text-faint)", fontStyle:"italic", marginBottom:10, marginTop:4 }}>
-              Cuando se llenen los 100, el precio sube a 999€. Cuando se llenen los 1.000, cierra para siempre.
+              {`Cuando se llenen los 100, el precio sube a ${PRICES.fundador.futuro.eur}. Cuando se llenen los 1.000, cierra para siempre.`}
             </div>
 
-            <button onClick={() => window.open("https://buy.stripe.com/cNi4gy3JQ0av3yg7Ll2Ji02", "_blank")}
+            <button onClick={() => window.open(PRICES.fundador.actual.stripe, "_blank")}
               style={{ marginTop:4, width:"100%", padding:13, borderRadius:10, border:"none", background:`linear-gradient(135deg,${GOLD},#f97316)`,
                 color:"#000", fontSize:14, fontWeight:900, cursor:"pointer",
                 boxShadow:"0 4px 20px #f59e0b50" }}>
-              🏅 Quiero ser Fundador — 499€
+              {`🏅 Quiero ser Fundador — ${PRICES.fundador.actual.eur}`}
             </button>
             <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", marginTop:6 }}>Pago seguro con Stripe · Garantía 30 días</div>
           </div>
@@ -10091,15 +10103,15 @@ function PendingPaymentScreen({ user, pending, onActivate, onRetry, darkMode }) 
   const [msg, setMsg] = React.useState("");
 
   const planLabels = {
-    coach: { name: "Entrenador", price: "19€/mes", color: "#3b82f6", icon: "🎯" },
-    fundador: { name: "Club Fundador", price: "499€ vitalicio", color: "#f59e0b", icon: "🏅" },
+    coach: { name: "Entrenador", price: PRICES.coach.mensual.eur + "/mes", color: "#3b82f6", icon: "🎯" },
+    fundador: { name: "Club Fundador", price: PRICES.fundador.actual.eur + " vitalicio", color: "#f59e0b", icon: "🏅" },
   };
   const info = planLabels[pending.plan] || { name: pending.plan, price: "", color: "#C41A1A", icon: "📋" };
 
   const stripeUrls = {
-    coach_mensual: "https://buy.stripe.com/14AfZgeou2iD5God5F2Ji00",
-    coach_anual:   "https://buy.stripe.com/cNieVcdkq5uP8SA1mX2Ji01",
-    fundador:      "https://buy.stripe.com/cNi4gy3JQ0av3yg7Ll2Ji02",
+    coach_mensual: PRICES.coach.mensual.stripe,
+    coach_anual:   PRICES.coach.anual.stripe,
+    fundador:      PRICES.fundador.actual.stripe,
   };
   const stripeUrl = pending.plan === "fundador"
     ? stripeUrls.fundador
@@ -10346,10 +10358,10 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
               nombre: form.nombre,
             }));
             const stripeUrl = authPlan === "fundador"
-              ? "https://buy.stripe.com/cNi4gy3JQ0av3yg7Ll2Ji02"
+              ? PRICES.fundador.actual.stripe
               : authBilling === "anual"
-                ? "https://buy.stripe.com/cNieVcdkq5uP8SA1mX2Ji01"
-                : "https://buy.stripe.com/14AfZgeou2iD5God5F2Ji00";
+                ? PRICES.coach.anual.stripe
+                : PRICES.coach.mensual.stripe;
             window.location.href = stripeUrl;
           }
         }
@@ -10538,13 +10550,13 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
                     </div>
                     <div style={{ textAlign:"right" }}>
                       <div style={{ fontSize:13, fontWeight:900, color: authPlan==="coach" ? BLUE : "var(--text-faint)" }}>
-                        {authPlan==="coach" ? "✓" : "19€/mes"}
+                        {authPlan==="coach" ? "✓" : PRICES.coach.mensual.eur + "/mes"}
                       </div>
                     </div>
                   </div>
                   {authPlan === "coach" && (
                     <div style={{ display:"flex", gap:6, marginTop:12 }}>
-                      {[["mensual","19€ / mes"],["anual","190€ / año  ─2 meses gratis"]].map(([k,l]) => (
+                      {[["mensual", PRICES.coach.mensual.label],["anual", PRICES.coach.anual.label]].map(([k,l]) => (
                         <button key={k} type="button" onClick={e => { e.stopPropagation(); setAuthBilling(k); }}
                           style={{ flex:1, padding:"8px 6px", borderRadius:8,
                             border: authBilling===k ? `1px solid ${BLUE}` : "1px solid rgba(255,255,255,0.08)",
@@ -10577,15 +10589,15 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
                       </div>
                     </div>
                     <div style={{ textAlign:"right" }}>
-                      <div style={{ fontSize:14, fontWeight:900, color: authPlan==="fundador" ? GOLD : "var(--text-faint)" }}>499€</div>
-                      <div style={{ fontSize:9, textDecoration:"line-through", color:"var(--text-faint)" }}>999€</div>
+                      <div style={{ fontSize:14, fontWeight:900, color: authPlan==="fundador" ? GOLD : "var(--text-faint)" }}>{PRICES.fundador.actual.eur}</div>
+                      <div style={{ fontSize:9, textDecoration:"line-through", color:"var(--text-faint)" }}>{PRICES.fundador.futuro.eur}</div>
                     </div>
                   </div>
                   {authPlan === "fundador" && (
                     <div style={{ marginTop:12 }}>
                       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
                         <span style={{ fontSize:10, color:GOLD, fontWeight:700 }}>2/100 plazas early bird ocupadas</span>
-                        <span style={{ fontSize:10, color:"var(--text-faint)" }}>Siguiente precio: 999€</span>
+                        <span style={{ fontSize:10, color:"var(--text-faint)" }}>{`Siguiente precio: ${PRICES.fundador.futuro.eur}`}</span>
                       </div>
                       <div style={{ height:3, borderRadius:3, background:"rgba(255,255,255,0.08)", overflow:"hidden" }}>
                         <div style={{ width:"2%", height:"100%", borderRadius:3, background:`linear-gradient(90deg,${GOLD},#f97316)`, boxShadow:`0 0 8px ${GOLD}` }}/>
@@ -12548,7 +12560,7 @@ function MainApp() {
                   </div>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ fontSize:20, fontWeight:900, color:"#3b82f6" }}>
-                      {billingPeriod==="anual" ? "190€" : "19€"}
+                      {billingPeriod==="anual" ? PRICES.coach.anual.eur : PRICES.coach.mensual.eur}
                     </div>
                     <div style={{ fontSize:10, color:"var(--text-faint)" }}>
                       {billingPeriod==="anual" ? "/ año · 15.80€/mes" : "/ mes"}
@@ -12564,8 +12576,8 @@ function MainApp() {
                   disabled={userPlan==="coach" || userPlan==="fundador"}
                   onClick={() => {
                     const url = billingPeriod==="anual"
-                      ? "https://buy.stripe.com/cNieVcdkq5uP8SA1mX2Ji01"
-                      : "https://buy.stripe.com/14AfZgeou2iD5God5F2Ji00";
+                      ? PRICES.coach.anual.stripe
+                      : PRICES.coach.mensual.stripe;
                     window.open(url, "_blank");
                   }}
                   style={{ width:"100%", marginTop:14, padding:11, borderRadius:12, border:"none", fontSize:13, fontWeight:700,
@@ -12598,8 +12610,8 @@ function MainApp() {
                   </div>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ display:"flex", alignItems:"baseline", gap:5, justifyContent:"flex-end" }}>
-                      <span style={{ fontSize:24, fontWeight:900, color:"#f59e0b" }}>499€</span>
-                      <span style={{ fontSize:13, textDecoration:"line-through", color:"var(--text-faint)" }}>999€</span>
+                      <span style={{ fontSize:24, fontWeight:900, color:"#f59e0b" }}>{PRICES.fundador.actual.eur}</span>
+                      <span style={{ fontSize:13, textDecoration:"line-through", color:"var(--text-faint)" }}>{PRICES.fundador.futuro.eur}</span>
                     </div>
                     <div style={{ fontSize:9, fontWeight:800, color:"#10b981" }}>−50% · solo primeros 100</div>
                     <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:1 }}>pago único · vitalicio</div>
@@ -12610,14 +12622,14 @@ function MainApp() {
                 <div style={{ marginBottom:14, padding:"10px 12px", background:"#00000020", borderRadius:10 }}>
                   <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, marginBottom:5 }}>
                     <span style={{ color:"#f59e0b", fontWeight:900 }}>⚡ 2 plazas ocupadas de 100</span>
-                    <span style={{ color:"var(--text-faint)" }}>Luego: 999€</span>
+                    <span style={{ color:"var(--text-faint)" }}>{`Luego: ${PRICES.fundador.futuro.eur}`}</span>
                   </div>
                   <div style={{ height:6, borderRadius:6, background:"rgba(255,255,255,0.1)", overflow:"hidden" }}>
                     <div style={{ width:"2%", height:"100%", borderRadius:6, background:"linear-gradient(90deg,#f59e0b,#f97316)",
                       boxShadow:"0 0 8px #f59e0b80" }}/>
                   </div>
                   <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:4 }}>
-                    Cuando se llenen los 100 el precio sube a 999€ · a los 1.000 cierra para siempre
+                    {`Cuando se llenen los 100 el precio sube a ${PRICES.fundador.futuro.eur} · a los 1.000 cierra para siempre`}
                   </div>
                 </div>
 
@@ -12639,14 +12651,14 @@ function MainApp() {
 
                 <button
                   disabled={userPlan==="fundador"}
-                  onClick={() => window.open("https://buy.stripe.com/cNi4gy3JQ0av3yg7Ll2Ji02", "_blank")}
+                  onClick={() => window.open(PRICES.fundador.actual.stripe, "_blank")}
                   style={{ width:"100%", marginTop:14, padding:14, borderRadius:12, border:"none", fontSize:15, fontWeight:900,
                     background: userPlan==="fundador" ? "var(--bg-elevated)" : "linear-gradient(135deg,#f59e0b,#f97316)",
                     color: userPlan==="fundador" ? "var(--text-faint)" : "#000",
                     cursor: userPlan==="fundador" ? "default" : "pointer",
                     boxShadow: userPlan!=="fundador" ? "0 6px 24px #f59e0b50" : "none",
                     letterSpacing: -0.3 }}>
-                  {userPlan==="fundador" ? "✅ Eres Fundador" : "🏅 Quiero ser Fundador — 499€"}
+                  {userPlan==="fundador" ? "✅ Eres Fundador" : `🏅 Quiero ser Fundador — ${PRICES.fundador.actual.eur}`}
                 </button>
                 {userPlan!=="fundador" && (
                   <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", marginTop:6 }}>

@@ -2936,6 +2936,108 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         )}
       </div>
 
+      {/* ── INSIGHTS AUTOMÁTICOS ── */}
+      {(() => {
+        if (sessions.length < 3) return null;
+        const today = new Date().toISOString().slice(0,10);
+        const insights = [];
+
+        // 1. RPE esta semana vs semana pasada
+        const weekAgo  = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+        const twoWkAgo = new Date(); twoWkAgo.setDate(twoWkAgo.getDate()-14);
+        const rpeThisWk = sessions.filter(s => s.fecha >= weekAgo.toISOString().slice(0,10) && parseFloat(s.rpe)).map(s=>parseFloat(s.rpe));
+        const rpeLastWk = sessions.filter(s => s.fecha >= twoWkAgo.toISOString().slice(0,10) && s.fecha < weekAgo.toISOString().slice(0,10) && parseFloat(s.rpe)).map(s=>parseFloat(s.rpe));
+        if (rpeThisWk.length >= 2 && rpeLastWk.length >= 2) {
+          const avgThis = rpeThisWk.reduce((a,b)=>a+b,0)/rpeThisWk.length;
+          const avgLast = rpeLastWk.reduce((a,b)=>a+b,0)/rpeLastWk.length;
+          const diff = avgThis - avgLast;
+          if (Math.abs(diff) >= 0.4) {
+            insights.push(diff > 0
+              ? { icon:"🔥", text:`Tu intensidad subió esta semana (RPE ${avgThis.toFixed(1)} vs ${avgLast.toFixed(1)} la semana pasada).` }
+              : { icon:"🧘", text:`Tu cuerpo descansa mejor: RPE bajó a ${avgThis.toFixed(1)} vs ${avgLast.toFixed(1)} la semana pasada.` }
+            );
+          }
+        }
+
+        // 2. Disciplina más entrenada y si lleva mucho sin practicarse
+        const discCount = {};
+        sessions.forEach(s => { if (s.disciplina) discCount[s.disciplina] = (discCount[s.disciplina]||0)+1; });
+        const topDiscs = Object.entries(discCount).sort((a,b)=>b[1]-a[1]);
+        if (topDiscs.length > 0) {
+          const [topDisc] = topDiscs[0];
+          const lastTopSes = [...sessions].filter(s=>s.disciplina===topDisc).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+          const daysSince = lastTopSes ? Math.floor((new Date(today)-new Date(lastTopSes.fecha+"T12:00:00"))/(86400000)) : 99;
+          if (daysSince >= 7) {
+            insights.push({ icon:"⚠️", text:`Llevas ${daysSince} días sin entrenar ${topDisc}, tu disciplina principal.` });
+          } else if (topDiscs.length > 1) {
+            insights.push({ icon:"🥋", text:`${topDisc} es tu disciplina estrella con ${topDiscs[0][1]} sesiones registradas.` });
+          }
+        }
+
+        // 3. Volumen semanal vs media
+        const weekStart = new Date(today+"T12:00:00"); weekStart.setDate(weekStart.getDate()-weekStart.getDay());
+        const minThisWk = sessions.filter(s=>new Date(s.fecha+"T12:00:00")>=weekStart).reduce((t,s)=>t+(parseInt(s.duracionMin)||0),0);
+        const weeksData = {};
+        sessions.forEach(s => {
+          const d = new Date(s.fecha+"T12:00:00");
+          d.setDate(d.getDate()-d.getDay());
+          const wk = d.toISOString().slice(0,10);
+          weeksData[wk] = (weeksData[wk]||0)+(parseInt(s.duracionMin)||0);
+        });
+        const wkVals = Object.values(weeksData).filter(v=>v>0);
+        if (wkVals.length >= 3 && minThisWk > 0) {
+          const avg = wkVals.reduce((a,b)=>a+b,0)/wkVals.length;
+          if (minThisWk >= avg * 1.2) {
+            insights.push({ icon:"📈", text:`Esta semana llevas ${minThisWk}min — un ${Math.round((minThisWk/avg-1)*100)}% más de tu media habitual.` });
+          } else if (minThisWk <= avg * 0.5 && new Date().getDay() >= 3) {
+            insights.push({ icon:"📉", text:`Esta semana llevas solo ${minThisWk}min. Tu media es ${Math.round(avg)}min semanales.` });
+          }
+        }
+
+        // 4. Racha actual vs mejor racha histórica
+        const sessByDate = {};
+        sessions.forEach(s => { sessByDate[s.fecha] = true; });
+        let curStreak=0, bestStreak=0, tempStreak=0;
+        const allDays = [...sessions.map(s=>s.fecha)].sort();
+        if (allDays.length) {
+          const from = new Date(allDays[0]+"T12:00:00");
+          const to   = new Date(today+"T12:00:00");
+          let last = null, cur = 0, best = 0;
+          for (let d = new Date(from); d <= to; d.setDate(d.getDate()+1)) {
+            const key = d.toISOString().slice(0,10);
+            if (sessByDate[key]) { cur++; if (cur>best) best=cur; }
+            else { if (key<today) cur=0; }
+          }
+          curStreak = sessByDate[today] ? cur : 0;
+          bestStreak = best;
+        }
+        if (curStreak > 0 && curStreak >= bestStreak && curStreak >= 5) {
+          insights.push({ icon:"🏆", text:`¡Racha histórica! Llevas ${curStreak} días seguidos entrenando. Tu récord anterior era ${bestStreak}.` });
+        } else if (curStreak >= 5) {
+          insights.push({ icon:"🔥", text:`Llevas ${curStreak} días seguidos. Tu mejor racha fue de ${bestStreak} días — ¡a por ella!` });
+        }
+
+        if (insights.length === 0) return null;
+        const shown = insights.slice(0, 3);
+
+        return (
+          <div style={{ marginBottom:18 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+              <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// INSIGHTS</div>
+              <div style={{ flex:1, height:1, background:"var(--border)" }} />
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {shown.map((ins, i) => (
+                <div key={i} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 16px", display:"flex", alignItems:"flex-start", gap:12 }}>
+                  <div style={{ fontSize:22, lineHeight:1, flexShrink:0, marginTop:1 }}>{ins.icon}</div>
+                  <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6 }}>{ins.text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── BIOMETRÍA ── */}
       <div style={{ marginBottom:18 }}>
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>

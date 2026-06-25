@@ -4380,6 +4380,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
   const [passSaving, setPassSaving] = React.useState(false);
   const [passMsg, setPassMsg] = React.useState("");
   const [showNovedadesHistory, setShowNovedadesHistory] = React.useState(false);
+  const [deleteError, setDeleteError] = React.useState("");
   const ref = React.useRef(null);
   const fileInputRef = React.useRef(null);
 
@@ -4444,11 +4445,11 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
         await supabase.auth.signOut();
         onSignOut();
       } else {
-        alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
+        setDeleteError("Error al eliminar la cuenta. Inténtalo de nuevo.");
       }
     } catch (err) {
       console.error("Error eliminando cuenta:", err);
-      alert("Error al eliminar la cuenta. Inténtalo de nuevo.");
+      setDeleteError("Error al eliminar la cuenta. Inténtalo de nuevo.");
     }
     setDeleting(false);
   };
@@ -4683,6 +4684,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                     {deleting ? "Eliminando..." : "Eliminar todo"}
                   </button>
                 </div>
+                {deleteError && <div style={{ color: "#f87171", fontSize: 12, marginTop: 6, textAlign: "center" }}>{deleteError}</div>}
               </div>
             </div>
           )}
@@ -5903,6 +5905,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   // Fetch plan directly as a safety net (in case select("*") misses it)
   const [coachPlanOverride, setCoachPlanOverride] = React.useState(null);
   const [portalLoading, setPortalLoading] = React.useState(false);
+  const [portalError, setPortalError] = React.useState("");
   React.useEffect(() => {
     if (!user?.id) return;
     supabase.from("profiles").select("plan").eq("id", user.id).single()
@@ -6041,10 +6044,10 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       if (res.ok && data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error || "No se pudo abrir el portal. Inténtalo de nuevo.");
+        setPortalError(data.error || "No se pudo abrir el portal. Inténtalo de nuevo.");
       }
     } catch (err) {
-      alert("Error al conectar con el portal de suscripción.");
+      setPortalError("Error al conectar con el portal de suscripción.");
     }
     setPortalLoading(false);
   };
@@ -7740,6 +7743,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     style={{ width:"100%", padding:"11px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-elevated)", color:"var(--text)", fontSize:13, fontWeight:700, cursor:"pointer", opacity: portalLoading ? 0.6 : 1, display:"flex", alignItems:"center", justifyContent:"center", gap:8 }}>
                     {portalLoading ? "⏳ Abriendo portal..." : "⚙️ Gestionar suscripción"}
                   </button>
+                  {portalError && <div style={{ color:"#f87171", fontSize:12, marginTop:6 }}>{portalError}</div>}
                 </div>
               )}
 
@@ -10225,9 +10229,10 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
   const BLUE = "#3b82f6";
 
   React.useEffect(() => {
-    supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") setMode("reset");
     });
+    return () => subscription.unsubscribe();
   }, []);
 
   // PASSWORD_RECOVERY detection at MainApp level (for users already logged in)
@@ -14715,7 +14720,7 @@ function MainApp() {
                     <button style={{ padding:"6px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text-faint)", fontSize:10, fontWeight:700, cursor:"pointer" }} onClick={() => exportJSON(sessions, goals)}>↓ JSON</button>
                     <button style={{ padding:"6px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text-faint)", fontSize:10, fontWeight:700, cursor:"pointer" }} onClick={() => fileInputRef.current?.click()}>↑</button>
                     <input ref={fileInputRef} type="file" accept=".json" style={{ display:"none" }}
-                      onChange={e => { const file = e.target.files?.[0]; if (!file) return; importJSON(file, data => { setRestoreConfirm({ open:true, data }); }, () => alert(t("import_error", lang))); e.target.value=""; }} />
+                      onChange={e => { const file = e.target.files?.[0]; if (!file) return; importJSON(file, data => { setRestoreConfirm({ open:true, data }); }, () => showToast(t("import_error", lang), "error")); e.target.value=""; }} />
                   </div>
                 </div>
               </div>

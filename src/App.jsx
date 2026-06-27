@@ -10473,7 +10473,7 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
         // Siempre mostramos el mismo mensaje para no revelar si el email existe
         setSuccess("Si este email está registrado, recibirás un enlace de recuperación en breve. Revisa también el spam.");
       } else if (mode === "reset") {
-        if (form.newPassword.length < 6) throw new Error("La contraseña debe tener al menos 6 caracteres.");
+        if (form.newPassword.length < 8) throw new Error("La contraseña debe tener al menos 8 caracteres.");
         const { error } = await supabase.auth.updateUser({ password: form.newPassword });
         if (error) throw error;
         setSuccess("¡Contraseña actualizada!");

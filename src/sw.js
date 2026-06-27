@@ -84,8 +84,9 @@ self.addEventListener('notificationclick', (event) => {
           return client.focus();
         }
       }
-      // Otherwise open new window
-      if (clients.openWindow) return clients.openWindow(url);
+      // Otherwise open new window — fix: validar origen para evitar open redirect desde payload push
+      const safeUrl = url.startsWith('/') || url.startsWith(self.location.origin) ? url : '/';
+      if (clients.openWindow) return clients.openWindow(safeUrl);
     })
   );
 });

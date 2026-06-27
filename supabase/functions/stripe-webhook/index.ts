@@ -82,22 +82,31 @@ serve(async (req: Request) => {
     // Update plan in Supabase (service_role bypasses RLS)
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
-    // Find user by email via admin API
-    const { data: { users }, error: listErr } = await supabase.auth.admin.listUsers({
-      page: 1,
-      perPage: 1000,
-    });
+    // FIX #5: buscar por email directamente en profiles, evita limit 1000
+    const { data: profileByEmail, error: listErr } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email.toLowerCase())
+      .single();
 
-    if (listErr) {
-      console.error("Failed to list users:", listErr);
-      return new Response("DB error", { status: 500 });
-    }
-
-    const user = users.find(u => u.email?.toLowerCase() === email.toLowerCase());
-    if (!user) {
-      console.error("User not found for email:", email);
-      // Return 200 to avoid retries — user may have deleted account
-      return new Response(JSON.stringify({ received: true, warning: "user_not_found" }), { status: 200 });
+    if (listErr || !profileByEmail) {
+      // Fallback: buscar en auth.users (por si profiles no tiene columna email)
+      const { data: { users: allUsers }, error: listErr2 } = await supabase.auth.admin.listUsers({
+        page: 1, perPage: 1000,
+      });
+      if (listErr2) {
+        console.error("Failed to find user:", listErr2);
+        return new Response("DB error", { status: 500 });
+      }
+      const foundUser = allUsers.find(u => u.email?.toLowerCase() === email.toLowerCase());
+      if (!foundUser) {
+        console.warn("User not found for email:", email);
+        return new Response(JSON.stringify({ received: true, warning: "user_not_found" }), { status: 200 });
+      }
+      // usar foundUser.id como user
+      var user = foundUser;
+    } else {
+      var user = { id: profileByEmail.id } as { id: string };
     }
 
     const { error: updateErr } = await supabase

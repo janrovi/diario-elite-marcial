@@ -9,6 +9,8 @@ const corsHeaders = {
 const VAPID_PUBLIC_KEY  = Deno.env.get("VAPID_PUBLIC_KEY")  || "";
 const VAPID_PRIVATE_KEY = Deno.env.get("VAPID_PRIVATE_KEY") || "";
 const VAPID_SUBJECT     = "mailto:jan@elitemarcial.com";
+const SUPABASE_URL      = Deno.env.get("SUPABASE_URL")!;
+const ANON_KEY          = Deno.env.get("ANON_KEY")!;
 
 // ── VAPID signing helpers ───────────────────────────────────────────────────
 function b64urlDecode(str: string): Uint8Array {
@@ -60,14 +62,12 @@ async function encryptPayload(
 ): Promise<{ ciphertext: Uint8Array; salt: Uint8Array; serverPublicKey: Uint8Array }> {
   const enc = new TextEncoder();
 
-  // Recipient public key
   const recipientPub = await crypto.subtle.importKey(
     "raw", b64urlDecode(p256dh),
     { name: "ECDH", namedCurve: "P-256" },
     false, []
   );
 
-  // Generate ephemeral key pair
   const serverKeyPair = await crypto.subtle.generateKey(
     { name: "ECDH", namedCurve: "P-256" },
     true, ["deriveKey", "deriveBits"]
@@ -76,31 +76,25 @@ async function encryptPayload(
     await crypto.subtle.exportKey("raw", serverKeyPair.publicKey)
   );
 
-  // ECDH shared secret
   const sharedBits = await crypto.subtle.deriveBits(
     { name: "ECDH", public: recipientPub },
     serverKeyPair.privateKey, 256
   );
 
-  // Auth secret
   const authSecret = b64urlDecode(auth);
-
-  // HKDF: PRK
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const hkdfKey = await crypto.subtle.importKey("raw", sharedBits, "HKDF", false, ["deriveBits"]);
 
-  // Content encryption key + nonce
   const prkInfo = enc.encode("Content-Encoding: auth\0");
-  const prkSalt = authSecret;
   const prk = await crypto.subtle.deriveBits(
-    { name: "HKDF", hash: "SHA-256", salt: prkSalt, info: prkInfo },
+    { name: "HKDF", hash: "SHA-256", salt: authSecret, info: prkInfo },
     hkdfKey, 256
   );
 
   const cekInfo = new Uint8Array([
     ...enc.encode("Content-Encoding: aesgcm\0"),
     ...new Uint8Array(1),
-    ...new Uint8Array([65]), // length of pub key
+    ...new Uint8Array([65]),
     ...serverPublicKeyRaw,
     ...new Uint8Array([65]),
     ...b64urlDecode(p256dh),
@@ -127,7 +121,6 @@ async function encryptPayload(
   const cek   = await crypto.subtle.importKey("raw", cekBits, "AES-GCM", false, ["encrypt"]);
   const nonce = new Uint8Array(nonceBits);
 
-  // Pad payload (2-byte length prefix)
   const plaintext = enc.encode(payload);
   const padded = new Uint8Array(2 + plaintext.length);
   padded.set(plaintext, 2);
@@ -144,14 +137,39 @@ async function encryptPayload(
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
+  // ── FIX #1: Verificar JWT — solo usuarios autenticados pueden enviar push ──
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return new Response("Unauthorized", { status: 401, headers: corsHeaders });
+  }
+  const token = authHeader.slice(7);
+  const anonClient = createClient(SUPABASE_URL, ANON_KEY);
+  const { data: { user }, error: authErr } = await anonClient.auth.getUser(token);
+  if (authErr || !user) {
+    return new Response("Invalid token", { status: 401, headers: corsHeaders });
+  }
+
   try {
     const { user_id, title, body, url = "/", tag, icon } = await req.json();
     if (!user_id) return new Response(JSON.stringify({ error: "user_id required" }), { status: 400, headers: corsHeaders });
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
+    // ── FIX #1b: Solo puedes enviar push al propio usuario o a tus atletas ──
+    const supabase = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+
+    if (user_id !== user.id) {
+      // Verificar relación coach→atleta activa
+      const { data: rel } = await supabase
+        .from("coach_atleta")
+        .select("id")
+        .eq("coach_id", user.id)
+        .eq("atleta_id", user_id)
+        .eq("estado", "aceptado")
+        .single();
+
+      if (!rel) {
+        return new Response("Forbidden", { status: 403, headers: corsHeaders });
+      }
+    }
 
     // Fetch all subscriptions for this user
     const { data: subs } = await supabase
@@ -167,24 +185,22 @@ serve(async (req) => {
     const results = await Promise.allSettled(
       subs.map(async (sub) => {
         const endpoint = sub.endpoint;
-        const audience = new URL(endpoint).origin;
-        const headers  = await buildVapidHeaders(audience);
+        const audience  = new URL(endpoint).origin;
+        const headers   = await buildVapidHeaders(audience);
 
-        // Encrypt payload
         const { ciphertext, salt, serverPublicKey } = await encryptPayload(
           payload, sub.p256dh, sub.auth
         );
 
-        // Build body: salt(16) + rs(4) + keyid_len(1) + server_pub(65) + ciphertext
-        const rs = new Uint8Array([0, 0, 16, 0]); // record size 4096
+        const rs = new Uint8Array([0, 0, 16, 0]);
         const keyIdLen = new Uint8Array([65]);
-        const body = new Uint8Array(16 + 4 + 1 + 65 + ciphertext.length);
+        const bodyBuf = new Uint8Array(16 + 4 + 1 + 65 + ciphertext.length);
         let offset = 0;
-        body.set(salt, offset); offset += 16;
-        body.set(rs, offset);   offset += 4;
-        body.set(keyIdLen, offset); offset += 1;
-        body.set(serverPublicKey, offset); offset += 65;
-        body.set(ciphertext, offset);
+        bodyBuf.set(salt, offset); offset += 16;
+        bodyBuf.set(rs, offset);   offset += 4;
+        bodyBuf.set(keyIdLen, offset); offset += 1;
+        bodyBuf.set(serverPublicKey, offset); offset += 65;
+        bodyBuf.set(ciphertext, offset);
 
         const res = await fetch(endpoint, {
           method: "POST",
@@ -194,10 +210,9 @@ serve(async (req) => {
             "Encryption": `salt=${b64urlEncode(salt)}`,
             "Crypto-Key": `dh=${b64urlEncode(serverPublicKey)};p256ecdsa=${VAPID_PUBLIC_KEY}`,
           },
-          body,
+          body: bodyBuf,
         });
 
-        // Remove expired/invalid subscriptions
         if (res.status === 410 || res.status === 404) {
           await supabase.from("push_subscriptions").delete().eq("id", sub.id);
         }

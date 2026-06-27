@@ -17,7 +17,7 @@ create policy "Users manage own subscriptions"
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
--- Service role puede leer todas (para la edge function)
-create policy "Service role reads all"
-  on push_subscriptions for select
-  using (true);
+-- FIX #2: eliminada la policy "Service role reads all" con using(true)
+-- El service_role key ya bypasea RLS por completo — no necesita ninguna policy.
+-- Si necesitas ejecutar este fix en producción, corre en SQL Editor:
+-- drop policy if exists "Service role reads all" on push_subscriptions;

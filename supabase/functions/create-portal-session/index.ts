@@ -46,12 +46,18 @@ serve(async (req: Request) => {
     return new Response(JSON.stringify({ error: "No active subscription found" }), { status: 400 });
   }
 
-  // ── Leer return_url del body ───────────────────────────────────────────────
+  // ── Leer return_url del body — FIX #6: validar dominio para evitar open redirect ──
+  const ALLOWED_HOSTS = ["elitemarcial.com", "diario-elite-marcial.vercel.app"];
   let returnUrl = "https://diario-elite-marcial.vercel.app/";
   try {
     const body = await req.json();
-    if (body.return_url) returnUrl = body.return_url;
-  } catch (_) { /* body vacío, usar default */ }
+    if (body.return_url) {
+      const parsed = new URL(body.return_url);
+      if (ALLOWED_HOSTS.includes(parsed.hostname)) {
+        returnUrl = body.return_url;
+      }
+    }
+  } catch (_) { /* body vacío o URL inválida, usar default */ }
 
   // ── Crear sesión del Customer Portal ─────────────────────────────────────
   try {

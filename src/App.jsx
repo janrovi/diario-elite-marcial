@@ -429,6 +429,7 @@ const PRICES = {
   },
 };
 
+const ADMIN_USER_ID = import.meta.env.VITE_ADMIN_USER_ID || "";
 // ── i18n ─────────────────────────────────────────────────
 const TRANSLATIONS = {
   es: {
@@ -5736,7 +5737,7 @@ function ClubFundadorContent({ user, profile }) {
   const sendMensaje = async () => {
     if (!mensajeFund.trim()) return;
     await supabase.from("notificaciones").insert({
-      user_id: "fc8270f1-0be8-4248-90f8-a6517e845a0a",
+      user_id: ADMIN_USER_ID,
       tipo: "mensaje_fundador",
       titulo: `\u{1F4AC} ${profile?.nombre || user?.email} te escribe`,
       cuerpo: mensajeFund.trim(),
@@ -12810,7 +12811,7 @@ function MainApp() {
           const sendMensaje = async () => {
             if (!athMensajeFund.trim()) return;
             await supabase.from("notificaciones").insert({
-              user_id: "fc8270f1-0be8-4248-90f8-a6517e845a0a",
+              user_id: ADMIN_USER_ID,
               tipo: "mensaje_fundador",
               titulo: `\u{1F4AC} ${profile?.nombre || user?.email} te escribe`,
               cuerpo: athMensajeFund.trim(),

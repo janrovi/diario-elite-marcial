@@ -25,10 +25,25 @@ create policy "Users read own notifs"
   on notificaciones for select
   using (auth.uid() = user_id);
 
--- Cualquier usuario autenticado puede insertar (coach → atleta, atleta → coach)
-create policy "Authenticated users insert notifs"
+-- FIX #3: INSERT solo permitido al propio usuario o a coaches hacia sus atletas
+-- Reemplaza la policy anterior "Authenticated users insert notifs" que no validaba destinatario
+create policy "Coaches notify own athletes"
   on notificaciones for insert
-  with check (auth.role() = 'authenticated');
+  with check (
+    auth.role() = 'authenticated'
+    AND (
+      -- El destinatario es el propio usuario (notificaciones propias del sistema)
+      user_id = auth.uid()
+      OR
+      -- O existe una relación coach→atleta activa
+      EXISTS (
+        SELECT 1 FROM coach_atleta
+        WHERE coach_id = auth.uid()
+          AND atleta_id = notificaciones.user_id
+          AND estado = 'aceptado'
+      )
+    )
+  );
 
 -- Solo el destinatario puede marcarlas como leídas
 create policy "Users update own notifs"
@@ -45,3 +60,8 @@ create policy "Users delete own notifs"
 -- IMPORTANTE: habilitar también desde Supabase → Database → Replication
 -- o con este comando:
 alter publication supabase_realtime add table notificaciones;
+
+-- ── Aplicar en producción ─────────────────────────────────────────────────
+-- Si la tabla ya existe, corre esto en SQL Editor para actualizar las policies:
+-- drop policy if exists "Authenticated users insert notifs" on notificaciones;
+-- (luego crea la nueva policy "Coaches notify own athletes" de arriba)

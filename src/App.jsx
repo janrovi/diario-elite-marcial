@@ -4817,6 +4817,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
+                { fecha:"28 Jun 2026", icon:"🛡️", titulo:"v2.7 — Seguridad reforzada & Email de bienvenida", items:["🛡️ Auditoría de seguridad completada — 12 puntos revisados","📧 Email de bienvenida al confirmar tu cuenta","💬 Mensajes coach↔atleta requieren conexión activa","⚡ Novedades accesibles desde el menú Más"] },
                 { fecha:"25 Jun 2026", icon:"⚡", titulo:"v2.6 — Portal, contraseña y Club", items:["🔑 Cambio de contraseña desde el perfil","💳 Portal de gestión de suscripción Stripe","🏅 Club Fundador en su propia pestaña","🔒 Cancelación de suscripción automática"] },
                 { fecha:"24 Jun 2026", icon:"🔒", titulo:"v2.0 — Seguridad y RGPD", items:["🛡 Headers de seguridad HTTP (CSP, HSTS)","⏱ Rate limiting en el login","🗑 Borrado de cuenta y datos (RGPD)","✉️ Prevención de enumeración de emails"] },
                 { fecha:"Jun 2026", icon:"📲", titulo:"v2.0 — Push nativas y módulo lesiones", items:["🔔 Notificaciones push nativas (Web Push)","🩹 Módulo de lesiones con 35 zonas","📱 Corrección zoom iOS en inputs"] },
@@ -5747,7 +5748,8 @@ function ClubFundadorContent({ user, profile }) {
   };
 
   const CHANGELOG = [
-    { version:"2.6", fecha:"Jun 2026", titulo:"Mejoras 23-25 Jun — Portal, seguridad & Club", desc:"Portal de gestión de suscripción Stripe. Cambio de contraseña desde el perfil. Cancelación automática de suscripción. Club Fundador en su propia pestaña. Borrado de cuenta RGPD.", nuevo:true },
+    { version:"2.7", fecha:"Jun 2026", titulo:"Auditoría de seguridad completada & Email de bienvenida", desc:"Auditoría de seguridad completa — 12 puntos revisados y cerrados. Email de bienvenida automático al registrarse. Mensajes entre coach y atleta ahora requieren conexión activa. Novedades accesibles desde el menú.", nuevo:true },
+    { version:"2.6", fecha:"Jun 2026", titulo:"Mejoras 23-25 Jun — Portal, seguridad & Club", desc:"Portal de gestión de suscripción Stripe. Cambio de contraseña desde el perfil. Cancelación automática de suscripción. Club Fundador en su propia pestaña. Borrado de cuenta RGPD.", nuevo:false },
     { version:"2.5", fecha:"Jun 2026", titulo:"Club Fundador en Panel Coach", desc:"El Club Fundador ahora vive directamente en el panel de entrenador: changelog, roadmap, muro de fundadores y canal directo.", nuevo:false },
     { version:"2.4", fecha:"Jun 2026", titulo:"Confirmación de email & SMTP propio", desc:"Verificación de cuenta al registrarse via email desde jan@elitemarcial.com. Integración con Resend + dominio propio.", nuevo:false },
     { version:"2.3", fecha:"Jun 2026", titulo:"Ecosistema Fundador completo", desc:"@Username único. Roadmap con votación real. Muro de Fundadores. Canal Directo a Jan.", nuevo:false },
@@ -5766,6 +5768,7 @@ function ClubFundadorContent({ user, profile }) {
     { version:"1.0", fecha:"Abr 2026", titulo:"Lanzamiento", desc:"Primera versión pública. Diario, cinturón y estadísticas." },
   ];
   const clMap = {
+    "2.7":{ icon:"🛡️", color:"#10b981", tag:"Seguridad" },
     "2.5":{ icon:"🏅", color:"#f59e0b", tag:"Coach" },
     "2.4":{ icon:"✉️", color:"#10b981", tag:"Seguridad" },
     "2.3":{ icon:"🏅", color:"#f59e0b", tag:"Fundador" },

@@ -6454,6 +6454,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
   React.useEffect(() => { fetchAllScheduled(); }, [fetchAllScheduled]);
 
+  // Cargar último mensaje por atleta cuando el equipo carga
+  React.useEffect(() => { if (athletes.length > 0) fetchLastMessages(); }, [athletes, fetchLastMessages]);
+
   React.useEffect(() => {
     if (!selectedAthlete) { setAthleteSessions([]); setCoachNote(""); return; }
     const fetch = async () => {

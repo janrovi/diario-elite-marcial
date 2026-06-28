@@ -28,7 +28,7 @@ create policy "mensajes_insert"
       SELECT 1 FROM coach_atleta ca
       WHERE ca.coach_id = mensajes.coach_id
         AND ca.atleta_id = mensajes.atleta_id
-        AND ca.estado = 'aceptado'
+        AND ca.estado = 'activo'  -- fix: el app usa 'activo' al aceptar, no 'aceptado'
     )
   );
 
@@ -69,13 +69,15 @@ create policy "coach_atleta_atleta_select"
   using (atleta_id = auth.uid());
 
 -- Atletas: solo pueden actualizar el campo estado (aceptar/rechazar invitación)
--- No pueden cambiar coach_id ni atleta_id
+-- with check restringe: no pueden cambiar coach_id/atleta_id, y estado solo puede
+-- ser 'aceptado' o 'rechazado' — no 'pendiente' (evita reactivar relaciones eliminadas)
 create policy "coach_atleta_atleta_update"
   on coach_atleta for update
   using (atleta_id = auth.uid())
   with check (
     atleta_id = auth.uid()
-    AND coach_id = (SELECT coach_id FROM coach_atleta WHERE id = coach_atleta.id)
+    AND coach_id = (SELECT coach_id FROM coach_atleta ca2 WHERE ca2.id = coach_atleta.id)
+    AND estado IN ('aceptado', 'rechazado')
   );
 
 
@@ -84,5 +86,4 @@ create policy "coach_atleta_atleta_update"
 -- ══════════════════════════════════════════════════════════════════════════════
 -- SELECT schemaname, tablename, policyname, cmd, qual, with_check
 -- FROM pg_policies
--- WHERE tablename IN ('mensajes', 'coach_atleta')
--- ORDER BY tablename, policyname;
+-- WHERE tablename IN ('mensajes'

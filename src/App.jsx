@@ -11174,7 +11174,7 @@ function MainApp() {
   // ── Update disponible (Service Worker) ──────────────────────────────────────
   const [swUpdateReady, setSwUpdateReady] = useState(false);
   const [showNovedades, setShowNovedades] = useState(() =>
-    !localStorage.getItem("em_novedades_jun2026_v2")
+    !localStorage.getItem("em_novedades_jun2026_v3")
   );
   const swRegistrationRef = useRef(null);
   useEffect(() => {
@@ -15554,24 +15554,24 @@ function MainApp() {
       {/* ── SUCCESS overlay post-guardado ── */}
       {showNovedades && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4000, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
-          onClick={() => { localStorage.setItem("em_novedades_jun2026_v2","1"); setShowNovedades(false); }}>
+          onClick={() => { localStorage.setItem("em_novedades_jun2026_v3","1"); setShowNovedades(false); }}>
           <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:400, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.4)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14 }}>
-              <span style={{ fontSize:22 }}>⚡</span>
+              <span style={{ fontSize:22 }}>🛡️</span>
               <div>
-                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Novedades — 25 Jun 2026</div>
-                <div style={{ fontSize:11, color:"var(--text-muted)" }}>Élite Marcial v2.6</div>
+                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>Novedades — 28 Jun 2026</div>
+                <div style={{ fontSize:11, color:"var(--text-muted)" }}>Élite Marcial v2.7</div>
               </div>
             </div>
             <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.9, marginBottom:16 }}>
-              🔑 <strong style={{ color:"var(--text)" }}>Cambio de contraseña</strong> desde tu perfil<br/>
-              💳 <strong style={{ color:"var(--text)" }}>Gestión de suscripción</strong> directo con Stripe<br/>
-              🔒 Seguridad reforzada + borrado de cuenta RGPD<br/>
-              🏅 Club Fundador reorganizado y más limpio<br/>
-              <span style={{ fontSize:11, color:"var(--text-faint)", marginTop:8, display:"block" }}>Estamos en fase de consolidación en Vercel. Cada semana mejoras reales — hasta tener todo atado para la app nativa. 🚀</span>
+              📧 <strong style={{ color:"var(--text)" }}>Email de bienvenida</strong> al registrarte — ya activo<br/>
+              🔒 <strong style={{ color:"var(--text)" }}>Seguridad reforzada</strong> en toda la plataforma<br/>
+              💬 Los mensajes coach↔atleta ahora requieren conexión activa<br/>
+              🛡️ Auditoría de seguridad completada — 12 puntos revisados<br/>
+              <span style={{ fontSize:11, color:"var(--text-faint)", marginTop:8, display:"block" }}>Tu cuenta y tus datos están mejor protegidos que nunca. Seguimos mejorando cada semana. 🚀</span>
             </div>
             <button
-              onClick={() => { localStorage.setItem("em_novedades_jun2026_v2","1"); setShowNovedades(false); }}
+              onClick={() => { localStorage.setItem("em_novedades_jun2026_v3","1"); setShowNovedades(false); }}
               style={{ width:"100%", padding:"12px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
               Entendido
             </button>
@@ -15747,18 +15747,28 @@ function MainApp() {
             <div style={{ width:36, height:4, borderRadius:2, background:"var(--border)", margin:"4px auto 14px" }} />
             <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
               {[
-                { key:"cal",      icon:"📅", label:"Cal"      },
-                { key:"tecnicas", icon:"🥋", label:"Técnicas" },
-                { key:"progreso", icon:"🏅", label:"Progreso" },
-                { key:"notas",    icon:"📝", label:"Notas"    },
-                { key:"cuerpo",   icon:"⚖️", label:"Bio"      },
-                { key:"stats",    icon:"📊", label:"Stats"    },
-                { key:"perfil",   icon:"👤", label:"Perfil"   },
+                { key:"cal",       icon:"📅", label:"Cal"      },
+                { key:"tecnicas",  icon:"🥋", label:"Técnicas" },
+                { key:"progreso",  icon:"🏅", label:"Progreso" },
+                { key:"notas",     icon:"📝", label:"Notas"    },
+                { key:"cuerpo",    icon:"⚖️", label:"Bio"      },
+                { key:"stats",     icon:"📊", label:"Stats"    },
+                { key:"perfil",    icon:"👤", label:"Perfil"   },
+                { key:"novedades", icon:"⚡", label:"Novedades" },
               ].map(({ key, icon, label }) => {
                 const active = view === key;
+                const isNovedades = key === "novedades";
                 return (
                   <button key={key}
-                    onClick={() => { setView(key); setShowMoreNav(false); }}
+                    onClick={() => {
+                      if (isNovedades) {
+                        setShowNovedades(true);
+                        localStorage.removeItem("em_novedades_jun2026_v3");
+                      } else {
+                        setView(key);
+                      }
+                      setShowMoreNav(false);
+                    }}
                     style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:6, padding:"12px 4px", borderRadius:14, border:"none", cursor:"pointer", background: active ? "rgba(196,26,26,0.12)" : "var(--bg-input)", color: active ? "#C41A1A" : "var(--text-muted)", transition:"all 0.15s" }}>
                     <span style={{ fontSize:22 }}>{icon}</span>
                     <span style={{ fontSize:10, fontWeight:600, letterSpacing:0.2 }}>{label}</span>

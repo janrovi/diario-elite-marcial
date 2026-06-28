@@ -6060,6 +6060,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [chatSending, setChatSending] = React.useState(false);
   const [chatUnread, setChatUnread] = React.useState({});
   const [lastMessages, setLastMessages] = React.useState({});
+  const [inboxSelected, setInboxSelected] = React.useState(null); // atleta_id seleccionado en inbox
   const [showSchedule, setShowSchedule] = React.useState(false);
   const [scheduleDiscCat, setScheduleDiscCat] = React.useState("");
   const [scheduleTypeCat, setScheduleTypeCat] = React.useState("");
@@ -6969,28 +6970,28 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         ) : coachView === "mensajes" ? (() => {
           const activeAthletesList = athletes.filter(a => a.estado === "activo");
           const totalUnread = Object.values(chatUnread).reduce((a,b)=>a+b,0);
+          const inboxAthlete = inboxSelected ? athletes.find(a => a.atleta_id === inboxSelected) : null;
+          const openInbox = (atleta_id) => {
+            setInboxSelected(atleta_id);
+            fetchChat(atleta_id);
+            setChatUnread(prev => ({ ...prev, [atleta_id]: 0 }));
+          };
           return (
-            <div style={{ maxWidth:680, margin:"0 auto" }}>
-              {/* Header */}
-              <div style={{ marginBottom:24 }}>
-                <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, marginBottom:4 }}>
-                  💬 Mensajes
-                  {totalUnread > 0 && (
-                    <span style={{ marginLeft:10, background:"#ef4444", color:"#fff", borderRadius:12, fontSize:13, fontWeight:900, padding:"2px 10px", verticalAlign:"middle" }}>{totalUnread}</span>
-                  )}
-                </h2>
-                <p style={{ fontSize:13, color:"var(--text-muted)", margin:0 }}>Conversaciones con tus atletas</p>
-              </div>
-
-              {activeAthletesList.length === 0 ? (
-                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, padding:"40px 24px", textAlign:"center" }}>
-                  <div style={{ fontSize:40, marginBottom:12 }}>💬</div>
-                  <div style={{ fontSize:16, fontWeight:800, color:"var(--text)", marginBottom:6 }}>Sin conversaciones aún</div>
-                  <div style={{ fontSize:13, color:"var(--text-muted)" }}>Cuando tengas atletas activos podrás chatear con ellos aquí.</div>
+            <div style={{ display:"flex", gap:0, height:"calc(100vh - 140px)", minHeight:500, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, overflow:"hidden" }}>
+              {/* ── Columna lista atletas ── */}
+              <div style={{ width:300, flexShrink:0, borderRight:"1px solid var(--border)", display:"flex", flexDirection:"column", overflowY:"auto" }}>
+                {/* Header lista */}
+                <div style={{ padding:"18px 16px 12px", borderBottom:"1px solid var(--border)", flexShrink:0 }}>
+                  <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", display:"flex", alignItems:"center", gap:8 }}>
+                    💬 Mensajes
+                    {totalUnread > 0 && <span style={{ background:"#ef4444", color:"#fff", borderRadius:10, fontSize:11, fontWeight:900, padding:"1px 7px" }}>{totalUnread}</span>}
+                  </div>
                 </div>
-              ) : (
-                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {activeAthletesList
+                {/* Lista */}
+                {activeAthletesList.length === 0 ? (
+                  <div style={{ padding:24, textAlign:"center", color:"var(--text-faint)", fontSize:13 }}>Sin atletas activos</div>
+                ) : (
+                  activeAthletesList
                     .map(a => ({ ...a, lastMsg: lastMessages[a.atleta_id], unread: chatUnread[a.atleta_id] || 0 }))
                     .sort((a,b) => {
                       if (b.unread !== a.unread) return b.unread - a.unread;
@@ -7001,11 +7002,10 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     .map(({ atleta_id, profiles: prof, lastMsg, unread: u }) => {
                       const nombre = prof?.nombre || "Atleta";
                       const initials = nombre.slice(0,2).toUpperCase();
-                      const preview = lastMsg ? (lastMsg.contenido.length > 55 ? lastMsg.contenido.slice(0,55)+"…" : lastMsg.contenido) : "Sin mensajes aún";
+                      const preview = lastMsg ? (lastMsg.contenido.length > 42 ? lastMsg.contenido.slice(0,42)+"…" : lastMsg.contenido) : "Sin mensajes";
                       const timeStr = lastMsg ? (() => {
                         const d = new Date(lastMsg.created_at);
-                        const now = new Date();
-                        const diffMin = Math.round((now - d) / 60000);
+                        const diffMin = Math.round((new Date() - d) / 60000);
                         if (diffMin < 1) return "Ahora";
                         if (diffMin < 60) return `${diffMin}min`;
                         const diffH = Math.floor(diffMin / 60);
@@ -7013,50 +7013,109 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         return d.toLocaleDateString("es", { day:"numeric", month:"short" });
                       })() : "";
                       const isFromMe = lastMsg?.remitente_id === user.id;
+                      const isActive = inboxSelected === atleta_id;
                       return (
-                        <div key={atleta_id}
-                          onClick={() => {
-                            const athlete = athletes.find(a => a.atleta_id === atleta_id);
-                            if (athlete) {
-                              setSelectedAthlete(athlete);
-                              setAthletePanel("chat");
-                              setCoachView("equipo");
-                              fetchChat(atleta_id);
-                              setChatUnread(prev => ({ ...prev, [atleta_id]: 0 }));
-                            }
-                          }}
-                          style={{ background: u > 0 ? "linear-gradient(135deg,#1d4ed808,#3b82f608)" : "var(--bg-card)",
-                            border: `1.5px solid ${u > 0 ? "#3b82f630" : "var(--border)"}`,
-                            borderRadius:16, padding:"14px 18px", cursor:"pointer",
-                            display:"flex", alignItems:"center", gap:14, transition:"all 0.15s" }}
-                          onMouseEnter={e => { e.currentTarget.style.borderColor="#3b82f650"; e.currentTarget.style.transform="translateY(-1px)"; }}
-                          onMouseLeave={e => { e.currentTarget.style.borderColor=u>0?"#3b82f630":"var(--border)"; e.currentTarget.style.transform="none"; }}>
-                          {/* Avatar */}
-                          <div style={{ width:48, height:48, borderRadius:24, background: u>0?"#3b82f620":RED+"20", display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, fontWeight:900, color: u>0?"#3b82f6":RED, flexShrink:0, overflow:"hidden", border: u>0?"2px solid #3b82f640":"2px solid "+RED+"30" }}>
-                            {prof?.avatar_url
-                              ? <img loading="lazy" src={prof.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                              : initials}
-                          </div>
-                          {/* Contenido */}
-                          <div style={{ flex:1, minWidth:0 }}>
-                            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:3 }}>
-                              <div style={{ fontSize:15, fontWeight: u>0 ? 900 : 700, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{nombre}</div>
-                              <div style={{ fontSize:11, color: u>0?"#3b82f6":"var(--text-faint)", fontWeight: u>0?700:400, flexShrink:0, marginLeft:8 }}>{timeStr}</div>
+                        <div key={atleta_id} onClick={() => openInbox(atleta_id)}
+                          style={{ padding:"12px 16px", cursor:"pointer", borderBottom:"1px solid var(--border)",
+                            background: isActive ? RED+"12" : "transparent",
+                            borderLeft: isActive ? `3px solid ${RED}` : "3px solid transparent",
+                            transition:"all 0.12s" }}
+                          onMouseEnter={e => { if (!isActive) e.currentTarget.style.background="var(--bg-elevated)"; }}
+                          onMouseLeave={e => { if (!isActive) e.currentTarget.style.background="transparent"; }}>
+                          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                            <div style={{ width:40, height:40, borderRadius:20, background: u>0?"#3b82f620":RED+"18", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:900, color: u>0?"#3b82f6":RED, flexShrink:0, overflow:"hidden", position:"relative" }}>
+                              {prof?.avatar_url ? <img loading="lazy" src={prof.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : initials}
+                              {u > 0 && <div style={{ position:"absolute", top:-2, right:-2, width:16, height:16, borderRadius:8, background:"#ef4444", border:"2px solid var(--bg-card)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:900, color:"#fff" }}>{u}</div>}
                             </div>
-                            <div style={{ fontSize:12, color: u>0?"var(--text-muted)":"var(--text-faint)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontWeight: u>0?600:400 }}>
-                              {isFromMe && lastMsg ? <span style={{ color:"var(--text-faint)" }}>Tú: </span> : null}
-                              {preview}
+                            <div style={{ flex:1, minWidth:0 }}>
+                              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                                <div style={{ fontSize:13, fontWeight: u>0?900:700, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{nombre}</div>
+                                <div style={{ fontSize:10, color: u>0?"#3b82f6":"var(--text-faint)", flexShrink:0, marginLeft:4 }}>{timeStr}</div>
+                              </div>
+                              <div style={{ fontSize:11, color: u>0?"var(--text-muted)":"var(--text-faint)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontWeight: u>0?600:400, marginTop:1 }}>
+                                {isFromMe && lastMsg ? "Tú: " : ""}{preview}
+                              </div>
                             </div>
                           </div>
-                          {/* Badge */}
-                          {u > 0 && (
-                            <div style={{ width:22, height:22, borderRadius:11, background:"#ef4444", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:900, flexShrink:0 }}>{u}</div>
-                          )}
-                          {u === 0 && <span style={{ color:"var(--text-faint)", fontSize:16, flexShrink:0 }}>›</span>}
                         </div>
                       );
                     })
-                  }
+                )}
+              </div>
+
+              {/* ── Panel chat derecho ── */}
+              {inboxAthlete ? (() => {
+                const atletaId = inboxAthlete.atleta_id;
+                const atletaNombre = inboxAthlete.profiles?.nombre || "Atleta";
+                return (
+                  <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0 }}>
+                    {/* Header chat */}
+                    <div style={{ padding:"14px 20px", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", gap:12, background:"var(--bg-card)", flexShrink:0 }}>
+                      <div style={{ width:36, height:36, borderRadius:18, background:RED+"20", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:900, color:RED, overflow:"hidden", flexShrink:0 }}>
+                        {inboxAthlete.profiles?.avatar_url ? <img loading="lazy" src={inboxAthlete.profiles.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : atletaNombre.slice(0,2).toUpperCase()}
+                      </div>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:15, fontWeight:800, color:"var(--text)" }}>{atletaNombre}</div>
+                        <div style={{ fontSize:11, color:"var(--text-faint)" }}>{inboxAthlete.profiles?.email || ""}</div>
+                      </div>
+                    </div>
+                    {/* Mensajes */}
+                    <div style={{ flex:1, overflowY:"auto", padding:"16px 20px", display:"flex", flexDirection:"column", gap:8 }}
+                      ref={el => { if (el) el.scrollTop = el.scrollHeight; }}>
+                      {chatMessages.length === 0 && (
+                        <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", textAlign:"center", gap:8, paddingTop:60 }}>
+                          <div style={{ fontSize:36 }}>💬</div>
+                          <div style={{ fontSize:13, fontWeight:700, color:"var(--text-muted)" }}>Sin mensajes aún</div>
+                          <div style={{ fontSize:12, color:"var(--text-faint)" }}>Escribe para iniciar la conversación con {atletaNombre}</div>
+                        </div>
+                      )}
+                      {chatMessages.map((msg, i) => {
+                        const isCoach = msg.remitente_id === user.id;
+                        const showDate = i === 0 || new Date(chatMessages[i-1].created_at).toDateString() !== new Date(msg.created_at).toDateString();
+                        return (
+                          <React.Fragment key={msg.id}>
+                            {showDate && (
+                              <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", margin:"6px 0" }}>
+                                {new Date(msg.created_at).toLocaleDateString("es",{weekday:"short",day:"numeric",month:"short"})}
+                              </div>
+                            )}
+                            <div style={{ display:"flex", justifyContent: isCoach ? "flex-end" : "flex-start" }}>
+                              <div style={{ maxWidth:"72%", background: isCoach ? `linear-gradient(135deg,${RED},#a31515)` : "var(--bg-elevated)", color: isCoach ? "#fff" : "var(--text)", borderRadius: isCoach ? "16px 4px 16px 16px" : "4px 16px 16px 16px", padding:"9px 13px", fontSize:13, lineHeight:1.5, boxShadow: isCoach ? `0 2px 8px ${RED}30` : "none" }}>
+                                {msg.contenido}
+                                <div style={{ fontSize:10, color: isCoach ? "rgba(255,255,255,0.6)" : "var(--text-faint)", marginTop:3, textAlign:"right" }}>
+                                  {new Date(msg.created_at).toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"})}
+                                  {isCoach && <span style={{ marginLeft:4 }}>{msg.leido ? "✓✓" : "✓"}</span>}
+                                </div>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                        );
+                      })}
+                    </div>
+                    {/* Input */}
+                    <div style={{ padding:"12px 20px", borderTop:"1px solid var(--border)", display:"flex", gap:8, background:"var(--bg-card)", flexShrink:0 }}>
+                      <input
+                        value={chatInput} maxLength={1000}
+                        onChange={e => setChatInput(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(atletaId); } }}
+                        placeholder={`Mensaje para ${atletaNombre}...`}
+                        style={{ flex:1, padding:"9px 14px", borderRadius:22, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none" }}
+                        onFocus={e => e.target.style.borderColor=RED}
+                        onBlur={e => e.target.style.borderColor="var(--border)"}
+                        autoFocus
+                      />
+                      <button onClick={() => sendChat(atletaId)} disabled={!chatInput.trim() || chatSending}
+                        style={{ width:38, height:38, borderRadius:19, border:"none", background: chatInput.trim() ? `linear-gradient(135deg,${RED},#a31515)` : "var(--bg-input)", color: chatInput.trim() ? "#fff" : "var(--text-faint)", fontSize:16, cursor: chatInput.trim() ? "pointer" : "default", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                        {chatSending ? "…" : "↑"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })() : (
+                <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", gap:12 }}>
+                  <div style={{ fontSize:48, opacity:0.3 }}>💬</div>
+                  <div style={{ fontSize:14, fontWeight:700, color:"var(--text-muted)" }}>Selecciona una conversación</div>
+                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>Elige un atleta de la lista para ver el chat</div>
                 </div>
               )}
             </div>

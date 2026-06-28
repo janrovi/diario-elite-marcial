@@ -7433,17 +7433,11 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   </div>
                   {/* Cabecera mes + nav */}
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12 }}>
-                    <button onClick={() => {
-                      const d = new Date(calY, calM-2, 1);
-                      setCalMonth(d.toISOString().slice(0,7));
-                      setCalSelectedDate(null);
-                    }} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, padding:"6px 12px", cursor:"pointer", color:"var(--text)", fontSize:14, fontWeight:700 }}>‹</button>
+                    <button onClick={goPrevMonth}
+                      style={{ minWidth:44, minHeight:44, background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:10, cursor:"pointer", color:"var(--text)", fontSize:20, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>‹</button>
                     <span style={{ fontSize:16, fontWeight:800, color:"var(--text)", textTransform:"capitalize" }}>{monthLabel}</span>
-                    <button onClick={() => {
-                      const d = new Date(calY, calM, 1);
-                      setCalMonth(d.toISOString().slice(0,7));
-                      setCalSelectedDate(null);
-                    }} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:8, padding:"6px 12px", cursor:"pointer", color:"var(--text)", fontSize:14, fontWeight:700 }}>›</button>
+                    <button onClick={goNextMonth}
+                      style={{ minWidth:44, minHeight:44, background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:10, cursor:"pointer", color:"var(--text)", fontSize:20, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>›</button>
                   </div>
                   {/* Grid */}
                   <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, overflow:"hidden" }}>
@@ -7457,7 +7451,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     {Array.from({length: cells.length/7}, (_,w) => (
                       <div key={w} style={{ display:"grid", gridTemplateColumns:"repeat(7,1fr)" }}>
                         {cells.slice(w*7, w*7+7).map((day, di) => {
-                          if (!day) return <div key={di} style={{ minHeight:82, borderRight:"1px solid var(--border)", borderBottom:"1px solid var(--border)", background:"var(--bg-elevated)", opacity:0.3 }}/>;
+                          if (!day) return <div key={di} style={{ minHeight: window.innerWidth < 600 ? 52 : 82, borderRight:"1px solid var(--border)", borderBottom:"1px solid var(--border)", background:"var(--bg-elevated)", opacity:0.3 }}/>;
                           const dateStr = `${calY}-${String(calM).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
                           const daySessions = byDate[dateStr] || [];
                           const isToday = dateStr === today;

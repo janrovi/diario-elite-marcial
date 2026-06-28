@@ -6976,10 +6976,11 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             fetchChat(atleta_id);
             setChatUnread(prev => ({ ...prev, [atleta_id]: 0 }));
           };
+          const isMobile = window.innerWidth < 640;
           return (
-            <div style={{ display:"flex", gap:0, height:"calc(100vh - 140px)", minHeight:500, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, overflow:"hidden" }}>
+            <div style={{ display:"flex", gap:0, height: isMobile ? "calc(100vh - 160px)" : "calc(100vh - 140px)", minHeight:400, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, overflow:"hidden" }}>
               {/* ── Columna lista atletas ── */}
-              <div style={{ width:300, flexShrink:0, borderRight:"1px solid var(--border)", display:"flex", flexDirection:"column", overflowY:"auto" }}>
+              <div style={{ width: isMobile ? "100%" : 300, flexShrink:0, borderRight: isMobile ? "none" : "1px solid var(--border)", display: isMobile && inboxSelected ? "none" : "flex", flexDirection:"column", overflowY:"auto" }}>
                 {/* Header lista */}
                 <div style={{ padding:"18px 16px 12px", borderBottom:"1px solid var(--border)", flexShrink:0 }}>
                   <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", display:"flex", alignItems:"center", gap:8 }}>
@@ -7048,15 +7049,19 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 const atletaId = inboxAthlete.atleta_id;
                 const atletaNombre = inboxAthlete.profiles?.nombre || "Atleta";
                 return (
-                  <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0 }}>
+                  <div style={{ flex:1, display:"flex", flexDirection:"column", minWidth:0, width: isMobile ? "100%" : "auto" }}>
                     {/* Header chat */}
-                    <div style={{ padding:"14px 20px", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", gap:12, background:"var(--bg-card)", flexShrink:0 }}>
-                      <div style={{ width:36, height:36, borderRadius:18, background:RED+"20", display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, fontWeight:900, color:RED, overflow:"hidden", flexShrink:0 }}>
+                    <div style={{ padding:"12px 16px", borderBottom:"1px solid var(--border)", display:"flex", alignItems:"center", gap:10, background:"var(--bg-card)", flexShrink:0 }}>
+                      {isMobile && (
+                        <button onClick={() => setInboxSelected(null)}
+                          style={{ background:"none", border:"none", color:"var(--text-muted)", fontSize:20, cursor:"pointer", padding:"0 6px 0 0", lineHeight:1, flexShrink:0 }}>‹</button>
+                      )}
+                      <div style={{ width:34, height:34, borderRadius:17, background:RED+"20", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, fontWeight:900, color:RED, overflow:"hidden", flexShrink:0 }}>
                         {inboxAthlete.profiles?.avatar_url ? <img loading="lazy" src={inboxAthlete.profiles.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} /> : atletaNombre.slice(0,2).toUpperCase()}
                       </div>
-                      <div style={{ flex:1 }}>
-                        <div style={{ fontSize:15, fontWeight:800, color:"var(--text)" }}>{atletaNombre}</div>
-                        <div style={{ fontSize:11, color:"var(--text-faint)" }}>{inboxAthlete.profiles?.email || ""}</div>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontSize:14, fontWeight:800, color:"var(--text)" }}>{atletaNombre}</div>
+                        {!isMobile && <div style={{ fontSize:11, color:"var(--text-faint)" }}>{inboxAthlete.profiles?.email || ""}</div>}
                       </div>
                     </div>
                     {/* Mensajes */}

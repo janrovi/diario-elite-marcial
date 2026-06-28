@@ -6059,6 +6059,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [chatInput, setChatInput] = React.useState("");
   const [chatSending, setChatSending] = React.useState(false);
   const [chatUnread, setChatUnread] = React.useState({});
+  const [lastMessages, setLastMessages] = React.useState({});
   const [showSchedule, setShowSchedule] = React.useState(false);
   const [scheduleDiscCat, setScheduleDiscCat] = React.useState("");
   const [scheduleTypeCat, setScheduleTypeCat] = React.useState("");
@@ -6381,6 +6382,19 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
     setChatUnread(counts);
   }, [user.id]);
 
+  const fetchLastMessages = React.useCallback(async () => {
+    const activeIds = athletes.filter(a => a.estado === "activo").map(a => a.atleta_id);
+    if (!activeIds.length) return;
+    const { data } = await supabase.from("mensajes")
+      .select("*").eq("coach_id", user.id)
+      .in("atleta_id", activeIds)
+      .order("created_at", { ascending: false })
+      .limit(activeIds.length * 5);
+    const map = {};
+    (data || []).forEach(m => { if (!map[m.atleta_id]) map[m.atleta_id] = m; });
+    setLastMessages(map);
+  }, [user.id, athletes]);
+
   const saveCoachNote = async (atletaId, contenido) => {
     setCoachNoteSaving(true);
     await supabase.from("coach_notas").upsert(
@@ -6460,6 +6474,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   // Cargar unreads al montar y suscripción real-time
   React.useEffect(() => {
     fetchChatUnread();
+    fetchLastMessages();
     const channel = supabase.channel("coach-chat-" + user.id)
       .on("postgres_changes", {
         event: "INSERT", schema: "public", table: "mensajes",
@@ -6875,15 +6890,17 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         <nav className="em-coach-header-nav" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-evenly", height: "100%", overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", minWidth: 0, padding: "10px 4px" }}>
           {[
             { key: "equipo",    icon: "👥", label: "Equipo" },
+            { key: "mensajes",  icon: "💬", label: "Mensajes", unread: Object.values(chatUnread).reduce((a,b)=>a+b,0) },
             { key: "agenda",    icon: "📅", label: "Agenda" },
             { key: "stats",     icon: "📊", label: "Estadísticas" },
             { key: "periodo",   icon: "📆", label: "Período" },
             { key: "perfil",    icon: "👤", label: "Mi perfil" },
             isCoachFundador && { key: "club",  icon: "🏅", label: "Club" },
-          ].filter(Boolean).map(({ key, icon, label }) => {
+          ].filter(Boolean).map((item) => {
+            const { key, icon, label } = item;
             const active = coachView === key;
             return (
-              <button key={key} data-nav-coach={key} onClick={() => { setCoachView(key); if (key !== "equipo") setSelectedAthlete(null); }}
+              <button key={key} data-nav-coach={key} onClick={() => { setCoachView(key); if (key !== "equipo") setSelectedAthlete(null); if (key === "mensajes") fetchLastMessages(); }}
                 style={{
                   display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
                   gap: 3, padding: "6px 14px", height: "100%", border: "none", cursor: "pointer",
@@ -6893,7 +6910,10 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   fontWeight: active ? 700 : 400,
                   boxShadow: active ? (darkMode ? "0 0 16px rgba(196,26,26,0.25),inset 0 1px 0 rgba(255,255,255,0.06)" : "0 2px 10px rgba(196,26,26,0.15)") : "none",
                 }}>
-                <span style={{ fontSize: 18, lineHeight: 1, filter: active ? "drop-shadow(0 0 6px rgba(229,62,62,0.6))" : "none", transition: "filter 0.2s" }}>{icon}</span>
+                <span style={{ fontSize: 18, lineHeight: 1, filter: active ? "drop-shadow(0 0 6px rgba(229,62,62,0.6))" : "none", transition: "filter 0.2s", position:"relative", display:"inline-block" }}>
+                  {icon}
+                  {item.unread > 0 && <span style={{ position:"absolute", top:-4, right:-6, background:"#ef4444", color:"#fff", borderRadius:8, fontSize:9, fontWeight:900, padding:"1px 4px", lineHeight:1.4, minWidth:14, textAlign:"center" }}>{item.unread}</span>}
+                </span>
                 <span style={{ fontSize: 10.5, lineHeight: 1, letterSpacing: active ? 0.3 : 0, transition: "all 0.18s" }}>{label}</span>
               </button>
             );
@@ -6943,7 +6963,102 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           <div style={{ display: "flex", justifyContent: "center", padding: 80 }}>
             <div style={{ width: 36, height: 36, border: "3px solid #C41A1A", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
           </div>
-        ) : coachView === "stats" ? (
+        ) : coachView === "mensajes" ? (() => {
+          const activeAthletesList = athletes.filter(a => a.estado === "activo");
+          const totalUnread = Object.values(chatUnread).reduce((a,b)=>a+b,0);
+          return (
+            <div style={{ maxWidth:680, margin:"0 auto" }}>
+              {/* Header */}
+              <div style={{ marginBottom:24 }}>
+                <h2 style={{ fontSize:22, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, marginBottom:4 }}>
+                  💬 Mensajes
+                  {totalUnread > 0 && (
+                    <span style={{ marginLeft:10, background:"#ef4444", color:"#fff", borderRadius:12, fontSize:13, fontWeight:900, padding:"2px 10px", verticalAlign:"middle" }}>{totalUnread}</span>
+                  )}
+                </h2>
+                <p style={{ fontSize:13, color:"var(--text-muted)", margin:0 }}>Conversaciones con tus atletas</p>
+              </div>
+
+              {activeAthletesList.length === 0 ? (
+                <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, padding:"40px 24px", textAlign:"center" }}>
+                  <div style={{ fontSize:40, marginBottom:12 }}>💬</div>
+                  <div style={{ fontSize:16, fontWeight:800, color:"var(--text)", marginBottom:6 }}>Sin conversaciones aún</div>
+                  <div style={{ fontSize:13, color:"var(--text-muted)" }}>Cuando tengas atletas activos podrás chatear con ellos aquí.</div>
+                </div>
+              ) : (
+                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                  {activeAthletesList
+                    .map(a => ({ ...a, lastMsg: lastMessages[a.atleta_id], unread: chatUnread[a.atleta_id] || 0 }))
+                    .sort((a,b) => {
+                      if (b.unread !== a.unread) return b.unread - a.unread;
+                      const ta = a.lastMsg?.created_at || "0";
+                      const tb = b.lastMsg?.created_at || "0";
+                      return tb.localeCompare(ta);
+                    })
+                    .map(({ atleta_id, profiles: prof, lastMsg, unread: u }) => {
+                      const nombre = prof?.nombre || "Atleta";
+                      const initials = nombre.slice(0,2).toUpperCase();
+                      const preview = lastMsg ? (lastMsg.contenido.length > 55 ? lastMsg.contenido.slice(0,55)+"…" : lastMsg.contenido) : "Sin mensajes aún";
+                      const timeStr = lastMsg ? (() => {
+                        const d = new Date(lastMsg.created_at);
+                        const now = new Date();
+                        const diffMin = Math.round((now - d) / 60000);
+                        if (diffMin < 1) return "Ahora";
+                        if (diffMin < 60) return `${diffMin}min`;
+                        const diffH = Math.floor(diffMin / 60);
+                        if (diffH < 24) return `${diffH}h`;
+                        return d.toLocaleDateString("es", { day:"numeric", month:"short" });
+                      })() : "";
+                      const isFromMe = lastMsg?.remitente_id === user.id;
+                      return (
+                        <div key={atleta_id}
+                          onClick={() => {
+                            const athlete = athletes.find(a => a.atleta_id === atleta_id);
+                            if (athlete) {
+                              setSelectedAthlete(athlete);
+                              setAthletePanel("chat");
+                              setCoachView("equipo");
+                              fetchChat(atleta_id);
+                              setChatUnread(prev => ({ ...prev, [atleta_id]: 0 }));
+                            }
+                          }}
+                          style={{ background: u > 0 ? "linear-gradient(135deg,#1d4ed808,#3b82f608)" : "var(--bg-card)",
+                            border: `1.5px solid ${u > 0 ? "#3b82f630" : "var(--border)"}`,
+                            borderRadius:16, padding:"14px 18px", cursor:"pointer",
+                            display:"flex", alignItems:"center", gap:14, transition:"all 0.15s" }}
+                          onMouseEnter={e => { e.currentTarget.style.borderColor="#3b82f650"; e.currentTarget.style.transform="translateY(-1px)"; }}
+                          onMouseLeave={e => { e.currentTarget.style.borderColor=u>0?"#3b82f630":"var(--border)"; e.currentTarget.style.transform="none"; }}>
+                          {/* Avatar */}
+                          <div style={{ width:48, height:48, borderRadius:24, background: u>0?"#3b82f620":RED+"20", display:"flex", alignItems:"center", justifyContent:"center", fontSize:17, fontWeight:900, color: u>0?"#3b82f6":RED, flexShrink:0, overflow:"hidden", border: u>0?"2px solid #3b82f640":"2px solid "+RED+"30" }}>
+                            {prof?.avatar_url
+                              ? <img loading="lazy" src={prof.avatar_url} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                              : initials}
+                          </div>
+                          {/* Contenido */}
+                          <div style={{ flex:1, minWidth:0 }}>
+                            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:3 }}>
+                              <div style={{ fontSize:15, fontWeight: u>0 ? 900 : 700, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{nombre}</div>
+                              <div style={{ fontSize:11, color: u>0?"#3b82f6":"var(--text-faint)", fontWeight: u>0?700:400, flexShrink:0, marginLeft:8 }}>{timeStr}</div>
+                            </div>
+                            <div style={{ fontSize:12, color: u>0?"var(--text-muted)":"var(--text-faint)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontWeight: u>0?600:400 }}>
+                              {isFromMe && lastMsg ? <span style={{ color:"var(--text-faint)" }}>Tú: </span> : null}
+                              {preview}
+                            </div>
+                          </div>
+                          {/* Badge */}
+                          {u > 0 && (
+                            <div style={{ width:22, height:22, borderRadius:11, background:"#ef4444", color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:11, fontWeight:900, flexShrink:0 }}>{u}</div>
+                          )}
+                          {u === 0 && <span style={{ color:"var(--text-faint)", fontSize:16, flexShrink:0 }}>›</span>}
+                        </div>
+                      );
+                    })
+                  }
+                </div>
+              )}
+            </div>
+          );
+        })() : coachView === "stats" ? (
           <>
             {/* Saludo */}
             <div className="em-coach-stats-saludo" style={{ marginBottom: 28 }}>
@@ -9790,18 +9905,23 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       {/* ── Bottom nav coach (solo mobile) ── */}
       <nav className="em-coach-bottom-nav" aria-label="Navegación coach">
         {[
-          { key: "equipo",  icon: "👥", label: "Equipo" },
-          { key: "agenda",  icon: "📅", label: "Agenda" },
-          { key: "stats",   icon: "📊", label: "Stats" },
-          { key: "periodo", icon: "📆", label: "Período" },
-          { key: "perfil",  icon: "👤", label: "Perfil" },
+          { key: "equipo",   icon: "👥", label: "Equipo" },
+          { key: "mensajes", icon: "💬", label: "Mensajes", unread: Object.values(chatUnread).reduce((a,b)=>a+b,0) },
+          { key: "agenda",   icon: "📅", label: "Agenda" },
+          { key: "stats",    icon: "📊", label: "Stats" },
+          { key: "periodo",  icon: "📆", label: "Período" },
+          { key: "perfil",   icon: "👤", label: "Perfil" },
           ...(isCoachFundador ? [{ key: "club", icon: "🏅", label: "Club" }] : []),
-        ].map(({ key, icon, label }) => {
+        ].map((item) => {
+          const { key, icon, label, unread } = item;
           const active = coachView === key;
           return (
             <button key={key} className={`em-coach-bottom-nav__item${active ? " active" : ""}`}
-              onClick={() => { setCoachView(key); if (key !== "equipo") setSelectedAthlete(null); }}>
-              <span className="em-coach-bottom-nav__icon">{icon}</span>
+              onClick={() => { setCoachView(key); if (key !== "equipo") setSelectedAthlete(null); if (key === "mensajes") fetchLastMessages(); }}>
+              <span className="em-coach-bottom-nav__icon" style={{ position:"relative", display:"inline-block" }}>
+                {icon}
+                {unread > 0 && <span style={{ position:"absolute", top:-4, right:-6, background:"#ef4444", color:"#fff", borderRadius:8, fontSize:9, fontWeight:900, padding:"1px 4px", lineHeight:1.4, minWidth:14, textAlign:"center" }}>{unread}</span>}
+              </span>
               {label}
             </button>
           );

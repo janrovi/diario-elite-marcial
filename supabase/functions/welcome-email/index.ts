@@ -20,15 +20,26 @@ serve(async (req: Request) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  let payload: { type?: string; record?: { email?: string; raw_user_meta_data?: { full_name?: string } } };
+  let payload: {
+    type?: string;
+    record?: { email?: string; email_confirmed_at?: string | null; raw_user_meta_data?: { full_name?: string } };
+    old_record?: { email_confirmed_at?: string | null };
+  };
   try {
     payload = await req.json();
   } catch {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  // Supabase database webhook sends: { type: "UPDATE", record: { ... }, old_record: { ... } }
+  // Solo disparar cuando email_confirmed_at pasa de NULL a un valor (primera confirmación)
+  // El webhook se dispara en TODOS los UPDATEs de auth.users, incluido cada login
   const record = payload?.record;
+  const oldRecord = payload?.old_record;
+  const isFirstConfirmation = record?.email_confirmed_at && !oldRecord?.email_confirmed_at;
+  if (!isFirstConfirmation) {
+    return new Response(JSON.stringify({ skipped: true }), { status: 200 });
+  }
+
   const email = record?.email;
   if (!email) {
     return new Response("No email in payload", { status: 400 });
@@ -108,7 +119,7 @@ serve(async (req: Request) => {
             <td style="padding:20px 40px;border-top:1px solid #2a2a2a;text-align:center;">
               <p style="font-size:11px;color:#555;margin:0;">
                 Recibes este email porque creaste una cuenta en Élite Marcial.<br>
-                © 2025 Élite Marcial · <a href="${APP_URL}" style="color:#C41A1A;text-decoration:none;">elitemarcial.com</a>
+                © 2026 Élite Marcial · <a href="${APP_URL}" style="color:#C41A1A;text-decoration:none;">elitemarcial.com</a>
               </p>
             </td>
           </tr>

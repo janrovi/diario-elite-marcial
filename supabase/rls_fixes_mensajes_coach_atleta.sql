@@ -86,4 +86,5 @@ create policy "coach_atleta_atleta_update"
 -- ══════════════════════════════════════════════════════════════════════════════
 -- SELECT schemaname, tablename, policyname, cmd, qual, with_check
 -- FROM pg_policies
--- WHERE tablename IN ('mensajes'
+-- WHERE tablename IN ('mensajes', 'coach_atleta')
+-- ORDER BY tablename, policyname;

@@ -7397,6 +7397,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               // ── VISTA CALENDARIO ───────────────────────────────────────────
               const today = new Date().toISOString().slice(0,10);
               const [calY, calM] = calMonth.split("-").map(Number);
+              const goNextMonth = () => { const d = new Date(calY, calM, 1); setCalMonth(d.toISOString().slice(0,7)); setCalSelectedDate(null); };
+              const goPrevMonth = () => { const d = new Date(calY, calM - 2, 1); setCalMonth(d.toISOString().slice(0,7)); setCalSelectedDate(null); };
               const firstDay = new Date(calY, calM - 1, 1);
               const lastDay  = new Date(calY, calM, 0);
               const startDow = (firstDay.getDay() + 6) % 7; // lunes=0

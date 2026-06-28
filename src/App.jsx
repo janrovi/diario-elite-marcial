@@ -12332,6 +12332,83 @@ function MainApp() {
                 </div>
               )}
 
+              {/* Contactar coach — chat inline */}
+              {myCoachId && (
+                <div style={{ marginBottom:20 }}>
+                  {!showChat ? (
+                    <button onClick={() => { setShowChat(true); fetchAthleteChat(myCoachId); setUnreadChat(0); }}
+                      style={{ width:"100%", padding:"13px 20px", borderRadius:14, border:"none",
+                        background:"linear-gradient(135deg,#3b82f6,#1d4ed8)", color:"#fff",
+                        fontSize:14, fontWeight:800, cursor:"pointer", display:"flex",
+                        alignItems:"center", justifyContent:"center", gap:8, boxShadow:"0 2px 12px #3b82f630" }}>
+                      💬 Contactar con {coachName}
+                      {unreadChat > 0 && (
+                        <span style={{ background:"#ef4444", color:"#fff", borderRadius:10, padding:"1px 8px", fontSize:11, fontWeight:900 }}>
+                          {unreadChat}
+                        </span>
+                      )}
+                    </button>
+                  ) : (
+                    <div style={{ background:"var(--bg-card)", border:"1.5px solid #3b82f630", borderRadius:16, overflow:"hidden" }}>
+                      {/* Header */}
+                      <div style={{ background:"linear-gradient(135deg,#1d4ed815,#3b82f610)", padding:"12px 18px", display:"flex", alignItems:"center", justifyContent:"space-between", borderBottom:"1px solid var(--border)" }}>
+                        <div style={{ fontSize:14, fontWeight:800, color:"var(--text)" }}>💬 Chat con {coachName}</div>
+                        <button onClick={() => setShowChat(false)}
+                          style={{ background:"none", border:"none", color:"var(--text-faint)", fontSize:18, cursor:"pointer", lineHeight:1, padding:"2px 6px" }}>✕</button>
+                      </div>
+                      {/* Mensajes */}
+                      <div style={{ height:320, overflowY:"auto", padding:"14px 16px", display:"flex", flexDirection:"column", gap:8 }}
+                        ref={el => { if (el) el.scrollTop = el.scrollHeight; }}>
+                        {chatMessages.length === 0 && (
+                          <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", textAlign:"center", gap:8, paddingTop:60 }}>
+                            <div style={{ fontSize:32 }}>💬</div>
+                            <div style={{ fontSize:13, fontWeight:700, color:"var(--text-muted)" }}>Sin mensajes aún</div>
+                            <div style={{ fontSize:12, color:"var(--text-faint)" }}>Escribe para iniciar la conversación</div>
+                          </div>
+                        )}
+                        {chatMessages.map((msg, idx) => {
+                          const isMe = msg.remitente_id === user.id;
+                          const showDate = idx === 0 || new Date(chatMessages[idx-1].created_at).toDateString() !== new Date(msg.created_at).toDateString();
+                          return (
+                            <React.Fragment key={msg.id}>
+                              {showDate && (
+                                <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", margin:"4px 0" }}>
+                                  {new Date(msg.created_at).toLocaleDateString("es",{weekday:"short",day:"numeric",month:"short"})}
+                                </div>
+                              )}
+                              <div style={{ display:"flex", justifyContent: isMe ? "flex-end" : "flex-start" }}>
+                                <div style={{ maxWidth:"78%", background: isMe ? "linear-gradient(135deg,#3b82f6,#1d4ed8)" : "var(--bg-elevated)", color: isMe ? "#fff" : "var(--text)", borderRadius: isMe ? "16px 4px 16px 16px" : "4px 16px 16px 16px", padding:"9px 13px", fontSize:13, lineHeight:1.5, boxShadow: isMe ? "0 2px 8px #3b82f630" : "none" }}>
+                                  {msg.contenido}
+                                  <div style={{ fontSize:10, color: isMe ? "rgba(255,255,255,0.6)" : "var(--text-faint)", marginTop:3, textAlign:"right" }}>
+                                    {new Date(msg.created_at).toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"})}
+                                    {isMe && <span style={{ marginLeft:4 }}>{msg.leido ? "✓✓" : "✓"}</span>}
+                                  </div>
+                                </div>
+                              </div>
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                      {/* Input */}
+                      <div style={{ padding:"10px 14px", borderTop:"1px solid var(--border)", display:"flex", gap:8, background:"var(--bg-card)" }}>
+                        <input
+                          value={chatInput} maxLength={1000}
+                          onChange={e => setChatInput(e.target.value)}
+                          onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAthleteChat(); } }}
+                          placeholder={`Mensaje para ${coachName}...`}
+                          style={{ flex:1, padding:"9px 13px", borderRadius:20, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none" }}
+                          autoFocus
+                        />
+                        <button onClick={sendAthleteChat} disabled={!chatInput.trim() || chatSending}
+                          style={{ width:36, height:36, borderRadius:18, border:"none", background: chatInput.trim() ? "linear-gradient(135deg,#3b82f6,#1d4ed8)" : "var(--bg-input)", color: chatInput.trim() ? "#fff" : "var(--text-faint)", fontSize:16, cursor: chatInput.trim() ? "pointer" : "default", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                          {chatSending ? "…" : "↑"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Tu plan de temporada */}
               {myCoachId && coachProfile?.id && (() => {
                 const periodKey = `em_perio_${coachProfile.id}_${user?.id}`;

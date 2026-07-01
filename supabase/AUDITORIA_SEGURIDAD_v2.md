@@ -190,3 +190,19 @@ WHERE plan IN ('coach', 'fundador') AND stripe_customer_id IS NULL;
 | `07cc3a9` | security: second pass — webhook secret obligatorio, password min 8, SW open redirect, rate limit docs |
 | (Vercel env) | VITE_ADMIN_USER_ID: UUID admin eliminado del bundle |
 | (Supabase deploy) | welcome-email: isFirstConfirmation + secret obligatorio |
+
+---
+
+## Fix adicional — 28 jun 2026 (post-auditoría)
+
+#### 13. `mensajes_insert` — estado `'aceptado'` vs `'activo'`
+
+La policy del INSERT en `mensajes` verificaba `ca.estado = 'aceptado'` pero el app escribe `'activo'` cuando el atleta acepta la invitación (`'pendiente'` → `'activo'`). Resultado: los mensajes fallaban silenciosamente en producción.
+
+**Fix:** Policy `mensajes_insert` recreada con `ca.estado = 'activo'` (ejecutado en SQL Editor, confirmado funcionando).
+
+> Ver archivo `supabase/rls_fixes_mensajes_coach_atleta.sql` para el SQL completo.
+
+#### Nota sobre `coach_atleta_atleta_update`
+
+La policy de actualización para atletas usa `estado IN ('aceptado', 'rechazado')` en el `WITH CHECK`. Revisar si debe cambiarse a `('activo', 'inactivo')` para ser coherente con los valores reales del app. **Pendiente verificación.**

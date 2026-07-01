@@ -708,6 +708,62 @@ const TRANSLATIONS = {
     save_success_fallback:"Sesión registrada",
     save_returning:"Volviendo a sesiones...",
     coach_session_autofill:"Los campos se han rellenado automáticamente. Añade tu RPE y sensaciones al terminar.",
+    /* ── ATLETA: NAV ── */
+    nav_home:"Inicio", nav_coach:"Coach", nav_biometria:"Biometría", nav_profile:"Perfil",
+    /* ── ATLETA: BOTONES ── */
+    btn_logout:"Cerrar sesión", btn_accept:"Aceptar", btn_reject:"Rechazar",
+    btn_save_changes:"Guardar cambios", btn_saving:"Guardando...", btn_saved:"✅ Guardado",
+    btn_cancel_edit:"✕ Cancelar", btn_save_short:"Guardar", btn_upgrade:"⬆️ Mejorar",
+    btn_founder_panel:"Panel 🏅",
+    /* ── ATLETA: PERFIL ── */
+    profile_no_bio:"Sin bio — pulsa Editar para añadir una descripción",
+    profile_name_ph:"Tu nombre",
+    profile_bio_ph:"Describe tu trayectoria, estilo, motivación...",
+    profile_club:"Club / Equipo", profile_country:"País", profile_since:"Practicando desde",
+    profile_sport_info:"Información deportiva",
+    profile_no_name:"Sin nombre",
+    plan_free:"Plan gratuito", plan_coach_active:"Panel de entrenador activo",
+    founder_lifetime:"Acceso vitalicio · Miembro fundador",
+    plan_name_athlete:"Atleta", plan_name_coach:"Entrenador", plan_name_founder:"Fundador",
+    /* ── ATLETA: USERNAME ── */
+    username_hint:"Solo letras minúsculas, números y _ · Mínimo 3 caracteres",
+    username_error_short:"Mínimo 3 caracteres (a-z, 0-9, _)",
+    username_error_taken:"Ese @username ya está en uso",
+    error_saving:"Error al guardar",
+    /* ── ATLETA: ENTRENADOR VIEW ── */
+    athlete_no_blocks:"Sin bloques definidos aún.",
+    athlete_no_cycle:"Tu entrenador aún no ha configurado ningún ciclo activo.",
+    athlete_top_discs:"Top disciplinas:",
+    athlete_my_stats:"Mis stats",
+    athlete_rpe_avg:"RPE medio", athlete_streak_lbl:"Racha",
+    athlete_registered:"registradas", athlete_effort:"esfuerzo",
+    athlete_session_history:"Historial de sesiones",
+    athlete_season_plan:"Tu plan de temporada",
+    athlete_pct_done:"% completado", athlete_days_left:"días restantes",
+    badge_active:"ACTIVO", badge_upcoming:"PRÓXIMO", badge_now:"AHORA",
+    athlete_no_coach_sessions:"Aún no hay sesiones completadas del coach.",
+    chat_no_msgs:"Sin mensajes aún",
+    chat_start:"Escribe para iniciar la conversación",
+    chat_msg_ph:"Mensaje para", /* used as: t('chat_msg_ph',lang)+' '+coachName+'...' */
+    /* ── ATLETA: INVITACIONES ── */
+    invite_wants_coach:"quiere ser tu coach",
+    invite_cta:"Acepta o rechaza la invitación para continuar.",
+    /* ── ATLETA: FUNDADOR ── */
+    no_username:"sin @username", founder_username_lbl:"Tu @username",
+    loading_founders:"Cargando fundadores...",
+    founders_first_title:"¡Sé el primero!",
+    founders_none:"Aún no hay fundadores registrados en la comunidad.",
+    founders_order:"Por orden de adhesión",
+    badge_done:"✓ HECHO",
+    founder_club_label:"CLUB EXCLUSIVO",
+    founders_title:"Los primeros en creer",
+    founders_desc:"Estos son los fundadores que hicieron posible Élite Marcial. Para siempre en la historia.",
+    direct_access_label:"ACCESO DIRECTO",
+    direct_access_title:"Habla directamente con Jan",
+    direct_access_desc:"{t("direct_access_desc",lang)}",
+    msg_sent:"✓ Enviado — Jan lo verá pronto",
+    msg_send_btn:"Enviar mensaje a Jan →",
+    msg_response_time:"Tiempo de respuesta habitual: menos de 24h",
   
   
   
@@ -973,6 +1029,62 @@ const TRANSLATIONS = {
     save_success_fallback:"Session logged",
     save_returning:"Returning to sessions...",
     coach_session_autofill:"Fields have been pre-filled. Add your RPE and sensations when done.",
+    /* ── ATLETA: NAV ── */
+    nav_home:"Home", nav_coach:"Coach", nav_biometria:"Biometrics", nav_profile:"Profile",
+    /* ── ATLETA: BOTONES ── */
+    btn_logout:"Sign out", btn_accept:"Accept", btn_reject:"Reject",
+    btn_save_changes:"Save changes", btn_saving:"Saving...", btn_saved:"✅ Saved",
+    btn_cancel_edit:"✕ Cancel", btn_save_short:"Save", btn_upgrade:"⬆️ Upgrade",
+    btn_founder_panel:"Panel 🏅",
+    /* ── ATLETA: PERFIL ── */
+    profile_no_bio:"No bio — tap Edit to add a description",
+    profile_name_ph:"Your name",
+    profile_bio_ph:"Describe your journey, style, motivation...",
+    profile_club:"Club / Team", profile_country:"Country", profile_since:"Practicing since",
+    profile_sport_info:"Sports info",
+    profile_no_name:"No name",
+    plan_free:"Free plan", plan_coach_active:"Active coach panel",
+    founder_lifetime:"Lifetime access · Founding member",
+    plan_name_athlete:"Athlete", plan_name_coach:"Coach", plan_name_founder:"Founder",
+    /* ── ATLETA: USERNAME ── */
+    username_hint:"Lowercase letters, numbers and _ only · Minimum 3 characters",
+    username_error_short:"Minimum 3 characters (a-z, 0-9, _)",
+    username_error_taken:"That @username is already taken",
+    error_saving:"Error saving",
+    /* ── ATLETA: ENTRENADOR VIEW ── */
+    athlete_no_blocks:"No training blocks defined yet.",
+    athlete_no_cycle:"Your coach hasn't set up any active cycle yet.",
+    athlete_top_discs:"Top disciplines:",
+    athlete_my_stats:"My stats",
+    athlete_rpe_avg:"Avg RPE", athlete_streak_lbl:"Streak",
+    athlete_registered:"recorded", athlete_effort:"effort",
+    athlete_session_history:"Session history",
+    athlete_season_plan:"Your season plan",
+    athlete_pct_done:"% completed", athlete_days_left:"days remaining",
+    badge_active:"ACTIVE", badge_upcoming:"UPCOMING", badge_now:"NOW",
+    athlete_no_coach_sessions:"No coach sessions completed yet.",
+    chat_no_msgs:"No messages yet",
+    chat_start:"Type to start the conversation",
+    chat_msg_ph:"Message for",
+    /* ── ATLETA: INVITACIONES ── */
+    invite_wants_coach:"wants to be your coach",
+    invite_cta:"Accept or reject the invitation to continue.",
+    /* ── ATLETA: FUNDADOR ── */
+    no_username:"no @username", founder_username_lbl:"Your @username",
+    loading_founders:"Loading founders...",
+    founders_first_title:"Be the first!",
+    founders_none:"No founders registered in the community yet.",
+    founders_order:"By order of joining",
+    badge_done:"✓ DONE",
+    founder_club_label:"EXCLUSIVE CLUB",
+    founders_title:"The first to believe",
+    founders_desc:"These are the founders who made Élite Marcial possible. Forever in history.",
+    direct_access_label:"DIRECT ACCESS",
+    direct_access_title:"Talk directly to Jan",
+    direct_access_desc:"As a founder you have a direct line. Your message arrives unfiltered. Usual response within 24h.",
+    msg_sent:"✓ Sent — Jan will see it soon",
+    msg_send_btn:"Send message to Jan →",
+    msg_response_time:"Usual response time: under 24h",
   
   
   
@@ -1239,6 +1351,62 @@ const TRANSLATIONS = {
     save_success_fallback:"Sessió registrada",
     save_returning:"Tornant a sessions...",
     coach_session_autofill:"Els camps s'han emplenat automàticament. Afegeix el teu RPE i sensacions en acabar.",
+    /* ── ATLETA: NAV ── */
+    nav_home:"Inici", nav_coach:"Coach", nav_biometria:"Biometria", nav_profile:"Perfil",
+    /* ── ATLETA: BOTONES ── */
+    btn_logout:"Tancar sessió", btn_accept:"Acceptar", btn_reject:"Rebutjar",
+    btn_save_changes:"Desar canvis", btn_saving:"Desant...", btn_saved:"✅ Desat",
+    btn_cancel_edit:"✕ Cancel·lar", btn_save_short:"Desar", btn_upgrade:"⬆️ Millora",
+    btn_founder_panel:"Panell 🏅",
+    /* ── ATLETA: PERFIL ── */
+    profile_no_bio:"Sense bio — prem Editar per afegir una descripció",
+    profile_name_ph:"El teu nom",
+    profile_bio_ph:"Descriu la teva trajectòria, estil, motivació...",
+    profile_club:"Club / Equip", profile_country:"País", profile_since:"Practicant des de",
+    profile_sport_info:"Informació esportiva",
+    profile_no_name:"Sense nom",
+    plan_free:"Pla gratuït", plan_coach_active:"Panell d'entrenador actiu",
+    founder_lifetime:"Accés vitalici · Membre fundador",
+    plan_name_athlete:"Atleta", plan_name_coach:"Entrenador", plan_name_founder:"Fundador",
+    /* ── ATLETA: USERNAME ── */
+    username_hint:"Només lletres minúscules, números i _ · Mínim 3 caràcters",
+    username_error_short:"Mínim 3 caràcters (a-z, 0-9, _)",
+    username_error_taken:"Aquest @username ja està en ús",
+    error_saving:"Error en desar",
+    /* ── ATLETA: ENTRENADOR VIEW ── */
+    athlete_no_blocks:"Sense blocs definits encara.",
+    athlete_no_cycle:"El teu entrenador encara no ha configurat cap cicle actiu.",
+    athlete_top_discs:"Top disciplines:",
+    athlete_my_stats:"Les meves stats",
+    athlete_rpe_avg:"RPE mitjà", athlete_streak_lbl:"Ratxa",
+    athlete_registered:"registrades", athlete_effort:"esforç",
+    athlete_session_history:"Historial de sessions",
+    athlete_season_plan:"El teu pla de temporada",
+    athlete_pct_done:"% completat", athlete_days_left:"dies restants",
+    badge_active:"ACTIU", badge_upcoming:"PRÒXIM", badge_now:"ARA",
+    athlete_no_coach_sessions:"Encara no hi ha sessions completades del coach.",
+    chat_no_msgs:"Sense missatges encara",
+    chat_start:"Escriu per iniciar la conversa",
+    chat_msg_ph:"Missatge per a",
+    /* ── ATLETA: INVITACIONES ── */
+    invite_wants_coach:"vol ser el teu coach",
+    invite_cta:"Accepta o rebutja la invitació per continuar.",
+    /* ── ATLETA: FUNDADOR ── */
+    no_username:"sense @username", founder_username_lbl:"El teu @username",
+    loading_founders:"Carregant fundadors...",
+    founders_first_title:"Sigues el primer!",
+    founders_none:"Encara no hi ha fundadors registrats a la comunitat.",
+    founders_order:"Per ordre d'adhesió",
+    badge_done:"✓ FET",
+    founder_club_label:"CLUB EXCLUSIU",
+    founders_title:"Els primers en creure",
+    founders_desc:"Aquests són els fundadors que han fet possible Élite Marcial. Per sempre en la història.",
+    direct_access_label:"ACCÉS DIRECTE",
+    direct_access_title:"Parla directament amb en Jan",
+    direct_access_desc:"Com a fundador tens línia directa. El teu missatge arriba sense filtres. Resposta habitual en menys de 24h.",
+    msg_sent:"✓ Enviat — en Jan ho veurà aviat",
+    msg_send_btn:"Envia missatge a en Jan →",
+    msg_response_time:"Temps de resposta habitual: menys de 24h",
   
   
   
@@ -4635,7 +4803,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                  {profile?.nombre || "Sin nombre"}
+                  {profile?.nombre || t("profile_no_name",lang)}
                 </div>
                 <div style={{ fontSize: 11, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user?.email}</div>
                 {profile?.rol === "coach" && (
@@ -4659,7 +4827,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                 <div>
                   <label style={{ fontSize: 10, color: "var(--text-muted)", display: "block", marginBottom: 3 }}>{t("lbl_nombre",lang)}</label>
                   <input value={nombre} onChange={e => setNombre(e.target.value)}
-                    placeholder="Tu nombre" maxLength={100}
+                    placeholder={t("profile_name_ph",lang)} maxLength={100}
                     style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }} />
                 </div>
                 <div>
@@ -4753,7 +4921,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               onMouseEnter={e => e.currentTarget.style.background = RED + "15"}
               onMouseLeave={e => e.currentTarget.style.background = "none"}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              Cerrar sesión
+              {t("btn_logout",lang)}
             </button>
             {/* Eliminar cuenta */}
             <button onClick={() => { setShowDeleteConfirm(true); setDeleteInput(""); }}
@@ -5821,7 +5989,7 @@ function ClubFundadorContent({ user, profile }) {
           </div>
         </div>
         <div style={{ background:"rgba(0,0,0,0.2)", borderRadius:12, padding:"12px 14px" }}>
-          <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Tu @username</div>
+          <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("founder_username_lbl",lang)}</div>
           <div style={{ display:"flex", gap:8 }}>
             <div style={{ flex:1, position:"relative" }}>
               <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", fontSize:13, color:"var(--text-faint)", fontWeight:700 }}>@</span>
@@ -5926,7 +6094,7 @@ function ClubFundadorContent({ user, profile }) {
                     <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.5 }}>{item.desc}</div>
                   </div>
                   {item.done ? (
-                    <div style={{ flexShrink:0, padding:"6px 10px", borderRadius:8, background:"#10b98120", color:"#10b981", fontSize:10, fontWeight:800 }}>✓ HECHO</div>
+                    <div style={{ flexShrink:0, padding:"6px 10px", borderRadius:8, background:"#10b98120", color:"#10b981", fontSize:10, fontWeight:800 }}>{t("badge_done",lang)}</div>
                   ) : (
                     <button onClick={() => toggleVote(item.id)}
                       style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:1,
@@ -5954,11 +6122,11 @@ function ClubFundadorContent({ user, profile }) {
             <div style={{ fontSize:12, color:"var(--text-faint)", marginTop:4 }}>Estos son los fundadores que hicieron posible Élite Marcial.</div>
           </div>
           {!fundadoresLoaded ? (
-            <div style={{ textAlign:"center", padding:40, color:"var(--text-faint)", fontSize:13 }}>Cargando fundadores...</div>
+            <div style={{ textAlign:"center", padding:40, color:"var(--text-faint)", fontSize:13 }}>{t("loading_founders",lang)}</div>
           ) : fundadores.length === 0 ? (
             <div style={{ textAlign:"center", padding:40 }}>
               <div style={{ fontSize:48, marginBottom:12 }}>🏅</div>
-              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>¡Sé el primero!</div>
+              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>{t("founders_first_title",lang)}</div>
             </div>
           ) : (
             <>
@@ -5987,9 +6155,9 @@ function ClubFundadorContent({ user, profile }) {
       {fundTab === "directo" && (
         <div>
           <div style={{ background:"linear-gradient(135deg,#C41A1A18,#C41A1A08)", border:"1px solid #C41A1A30", borderRadius:16, padding:"18px 20px", marginBottom:16 }}>
-            <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.5, marginBottom:6 }}>ACCESO DIRECTO</div>
-            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:6 }}>Habla directamente con Jan</div>
-            <div style={{ fontSize:12, color:"var(--text-faint)", lineHeight:1.6 }}>Como fundador tienes línea directa. Tu mensaje llega sin filtros. Respuesta habitual en menos de 24h.</div>
+            <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.5, marginBottom:6 }}>{t("direct_access_label",lang)}</div>
+            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:6 }}>{t("direct_access_title",lang)}</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", lineHeight:1.6 }}>{t("direct_access_desc",lang)}</div>
           </div>
           <textarea value={mensajeFund} onChange={e => setMensajeFund(e.target.value)}
             placeholder="¿Qué quieres que sepa? Ideas, bugs críticos, peticiones de features, lo que sea..."
@@ -6002,7 +6170,7 @@ function ClubFundadorContent({ user, profile }) {
               color:"#fff", border:"none", fontSize:14, fontWeight:800, cursor:mensajeSent?"default":"pointer", transition:"background 0.3s" }}>
             {mensajeSent ? "✓ Enviado — Jan lo verá pronto" : "Enviar mensaje a Jan →"}
           </button>
-          <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>Tiempo de respuesta habitual: menos de 24h</div>
+          <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>{t("msg_response_time",lang)}</div>
         </div>
       )}
     </div>
@@ -8023,7 +8191,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   background: profileSaved ? "#16a34a" : `linear-gradient(135deg,${RED},#a31515)`,
                   color:"#fff", fontSize:15, fontWeight:800, cursor:"pointer", transition:"background 0.3s",
                   boxShadow: profileSaved ? "0 4px 16px #16a34a40" : `0 4px 16px ${RED}40` }}>
-                {profileSaving ? "Guardando..." : profileSaved ? "✅ Guardado" : "Guardar cambios"}
+                {profileSaving ? t("btn_saving",lang) : profileSaved ? t("btn_saved",lang) : t("btn_save_changes",lang)}
               </button>
 
               {/* Gestión de suscripción */}
@@ -8051,7 +8219,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </button>
                 <button onClick={onSignOut}
                   style={{ padding:"9px 20px", borderRadius:10, border:"1px solid var(--border)", background:"transparent", color:"var(--text-faint)", fontSize:12, fontWeight:600, cursor:"pointer" }}>
-                  Cerrar sesión
+                  {t("btn_logout",lang)}
                 </button>
               </div>
 
@@ -12302,16 +12470,16 @@ function MainApp() {
         {/* ── Nav tabs ── */}
         <nav className="em-header-nav" style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "space-evenly", height: "100%", overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", minWidth: 0, padding: "10px 4px" }}>
           {[
-            { key: "home",       label: "Inicio",             icon: "🏠", active: view === "home" },
+            { key: "home",       label: t("nav_home",lang),   icon: "🏠", active: view === "home" },
             { key: "sesiones",    label: tr("nav_sessions"),   icon: "📋", active: view === "sesiones" || view === "detail" },
-            profile?.rol !== "coach" && { key: "entrenador", label: "Coach", icon: "🎓", active: view === "entrenador", badge: (sesionesProgr.length + pendingInvitations.length) || null },
+            profile?.rol !== "coach" && { key: "entrenador", label: t("nav_coach",lang), icon: "🎓", active: view === "entrenador", badge: (sesionesProgr.length + pendingInvitations.length) || null },
             { key: "cal",        label: tr("nav_calendar"),   icon: "📅", active: view === "cal" },
             { key: "tecnicas",   label: tr("nav_techniques"), icon: "🥋", active: view === "tecnicas" },
             { key: "stats",      label: tr("nav_stats"),      icon: "📊", active: view === "stats" },
             { key: "progreso",   label: tr("nav_progress"),   icon: "🏅", active: view === "progreso" },
             { key: "notas",      label: tr("nav_notes"),      icon: "📝", active: view === "notas" },
-            { key: "cuerpo",     label: "Biometría",           icon: "⚖️", active: view === "cuerpo" },
-            profile?.rol !== "coach" && { key: "perfil", label: "Perfil", icon: "👤", active: view === "perfil" },
+            { key: "cuerpo",     label: t("nav_biometria",lang), icon: "⚖️", active: view === "cuerpo" },
+            profile?.rol !== "coach" && { key: "perfil", label: t("nav_profile",lang), icon: "👤", active: view === "perfil" },
 
           ].filter(Boolean).map(({ key, label, icon, active, badge }) => (
             <button key={key} data-nav={key} onClick={() => setView(key)}
@@ -12578,7 +12746,7 @@ function MainApp() {
                           value={chatInput} maxLength={1000}
                           onChange={e => setChatInput(e.target.value)}
                           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAthleteChat(); } }}
-                          placeholder={`Mensaje para ${coachName}...`}
+                          placeholder={`${t("chat_msg_ph",lang)} ${coachName}...`}
                           style={{ flex:1, padding:"9px 13px", borderRadius:20, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none" }}
                           autoFocus
                         />
@@ -12618,7 +12786,7 @@ function MainApp() {
 
                 return (
                   <div style={{ marginBottom: 24 }}>
-                    <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>📆 Tu plan de temporada</div>
+                    <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>📆 {t("athlete_season_plan",lang)}</div>
                     {displayMacro ? (
                       <div style={{ background:"var(--bg-card)", border:"1.5px solid #3b82f630", borderRadius:16, overflow:"hidden" }}>
                         {/* Cabecera del ciclo */}
@@ -12627,7 +12795,7 @@ function MainApp() {
                             <span style={{ fontSize:10, fontWeight:800, padding:"2px 8px", borderRadius:20,
                               background: activeMacro ? "#22c55e20" : "#6b728020",
                               color:      activeMacro ? "#22c55e"   : "#6b7280" }}>
-                              {activeMacro ? "🟢 ACTIVO" : "⏳ PRÓXIMO"}
+                              {activeMacro ? `🟢 ${t("badge_active",lang)}` : `⏳ ${t("badge_upcoming",lang)}`}
                             </span>
                             <span style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase" }}>
                               {displayMacro.tipo === "meso" ? "Mesociclo" : displayMacro.tipo === "micro" ? "Microciclo" : "Macrociclo"}
@@ -12651,8 +12819,8 @@ function MainApp() {
                             return (
                               <div style={{ marginTop: 10 }}>
                                 <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:"var(--text-faint)", marginBottom:4 }}>
-                                  <span>{pct}% completado</span>
-                                  <span>{daysLeft} días restantes</span>
+                                  <span>{pct}{t("athlete_pct_done",lang)}</span>
+                                  <span>{daysLeft} {t("athlete_days_left",lang)}</span>
                                 </div>
                                 <div style={{ height:5, borderRadius:3, background:"var(--bg-elevated)", overflow:"hidden" }}>
                                   <div style={{ height:"100%", width:`${pct}%`, background:"#3b82f6", borderRadius:3 }} />
@@ -12686,7 +12854,7 @@ function MainApp() {
                                     <div style={{ flex:1, minWidth:0 }}>
                                       <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                                         <span style={{ fontSize:12, fontWeight:800, color:fi.color }}>{fi.label}</span>
-                                        {isNow && <span style={{ fontSize:9, fontWeight:800, color:fi.color, background:fi.color+"20", borderRadius:10, padding:"1px 6px" }}>AHORA</span>}
+                                        {isNow && <span style={{ fontSize:9, fontWeight:800, color:fi.color, background:fi.color+"20", borderRadius:10, padding:"1px 6px" }}>{t("badge_now",lang)}</span>}
                                       </div>
                                       <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", marginTop:2 }}>{meso.nombre}</div>
                                       {meso.objetivo && <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:1 }}>{meso.objetivo}</div>}
@@ -12702,13 +12870,13 @@ function MainApp() {
                           </div>
                         )}
                         {(!displayMacro.mesociclos || displayMacro.mesociclos.length === 0) && (
-                          <div style={{ padding:"12px 18px", fontSize:12, color:"var(--text-faint)" }}>Sin bloques definidos aún.</div>
+                          <div style={{ padding:"12px 18px", fontSize:12, color:"var(--text-faint)" }}>{t("athlete_no_blocks",lang)}</div>
                         )}
                       </div>
                     ) : (
                       <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"20px", textAlign:"center" }}>
                         <div style={{ fontSize:28, marginBottom:8 }}>📅</div>
-                        <div style={{ fontSize:13, color:"var(--text-muted)" }}>Tu entrenador aún no ha configurado ningún ciclo activo.</div>
+                        <div style={{ fontSize:13, color:"var(--text-muted)" }}>{t("athlete_no_cycle",lang)}</div>
                       </div>
                     )}
                   </div>
@@ -12717,12 +12885,12 @@ function MainApp() {
 
               {/* Stats personales */}
               <div style={{ marginBottom:24 }}>
-                <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>📊 Mis stats</div>
+                <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>📊 {t("athlete_my_stats",lang)}</div>
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:10 }}>
                   {[
-                    { label:"Sesiones", value: sessions.length, sub:"registradas" },
-                    { label:"RPE medio", value: rpeMedia || "—", sub:"esfuerzo" },
-                    { label:"Racha", value: streak, sub: streak === 1 ? "día" : "días" },
+                    { label:t("stats_sessions",lang), value: sessions.length, sub:t("athlete_registered",lang) },
+                    { label:t("athlete_rpe_avg",lang), value: rpeMedia || "—", sub:t("athlete_effort",lang) },
+                    { label:t("athlete_streak_lbl",lang), value: streak, sub: streak === 1 ? t("pro_day",lang) : t("pro_days",lang) },
                   ].map(({ label, value, sub }) => (
                     <div key={label} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 12px", textAlign:"center" }}>
                       <div style={{ fontSize:22, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{value}</div>
@@ -12733,7 +12901,7 @@ function MainApp() {
                 </div>
                 {topDisc.length > 0 && (
                   <div style={{ marginTop:10, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
-                    <span style={{ fontSize:11, fontWeight:700, color:"var(--text-faint)", flexShrink:0 }}>Top disciplinas:</span>
+                    <span style={{ fontSize:11, fontWeight:700, color:"var(--text-faint)", flexShrink:0 }}>{t("athlete_top_discs",lang)}</span>
                     {topDisc.map(([disc, cnt]) => (
                       <span key={disc} style={{ fontSize:12, fontWeight:700, color:getDiscColor(disc), background:getDiscColor(disc)+"18", borderRadius:20, padding:"3px 10px" }}>{disc} <span style={{ opacity:0.6 }}>×{cnt}</span></span>
                     ))}
@@ -12769,7 +12937,7 @@ function MainApp() {
                           </div>
                           <div style={{ flex:1, padding:"10px 14px", minWidth:0 }}>
                             <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:4, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                              {sp.titulo || sp.disciplina || "Sesión programada"}
+                              {sp.titulo || sp.disciplina || t("home_coach_session",lang)}
                             </div>
                             <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
                               {sp.hora && <span style={{ fontSize:10, color:"var(--text-faint)" }}>⏰ {sp.hora}</span>}
@@ -12796,7 +12964,7 @@ function MainApp() {
 
               {/* Historial completadas */}
               <div>
-                <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>✅ Historial de sesiones</div>
+                <div style={{ fontSize:11, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.2, marginBottom:12 }}>✅ {t("athlete_session_history",lang)}</div>
                 {sesionesHistorico.length === 0 ? (
                   <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"28px", textAlign:"center" }}>
                     <div style={{ fontSize:28, marginBottom:8 }}>🏁</div>
@@ -13062,11 +13230,11 @@ function MainApp() {
 
           const saveUsername = async () => {
             const val = athUsername.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
-            if (!val || val.length < 3) { setAthUsernameError("Mínimo 3 caracteres (a-z, 0-9, _)"); return; }
+            if (!val || val.length < 3) { setAthUsernameError(t("username_error_short",lang)); return; }
             setAthUsernameSaving(true); setAthUsernameError("");
             const { error } = await supabase.from("profiles").update({ username: val }).eq("id", user.id);
-            if (error?.code === "23505") setAthUsernameError("Ese @username ya está en uso");
-            else if (error) setAthUsernameError("Error al guardar");
+            if (error?.code === "23505") setAthUsernameError(t("username_error_taken",lang));
+            else if (error) setAthUsernameError(t("error_saving",lang));
             else { if (profile) profile.username = val; }
             setAthUsernameSaving(false);
           };
@@ -13135,7 +13303,7 @@ function MainApp() {
                     <div style={{ fontSize:10, fontWeight:900, color:GOLD, textTransform:"uppercase", letterSpacing:1.5, marginBottom:2 }}>CLUB FUNDADOR</div>
                     <div style={{ fontSize:18, fontWeight:900, color:"var(--text)", lineHeight:1.2 }}>{profile?.nombre || "Fundador"}</div>
                     <div style={{ fontSize:11, color:"var(--text-faint)" }}>
-                      {profile?.username ? <span style={{ color:GOLD, fontWeight:700 }}>@{profile.username}</span> : <span style={{ color:"var(--text-faint)" }}>sin @username</span>} · Acceso vitalicio
+                      {profile?.username ? <span style={{ color:GOLD, fontWeight:700 }}>@{profile.username}</span> : <span style={{ color:"var(--text-faint)" }}>{t("no_username",lang)}</span>} · Acceso vitalicio
                     </div>
                   </div>
                   <div style={{ textAlign:"right" }}>
@@ -13145,7 +13313,7 @@ function MainApp() {
                 </div>
                 {/* @Username setter */}
                 <div style={{ background:"rgba(0,0,0,0.2)", borderRadius:12, padding:"12px 14px" }}>
-                  <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Tu @username</div>
+                  <div style={{ fontSize:10, fontWeight:800, color:GOLD, textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("founder_username_lbl",lang)}</div>
                   <div style={{ display:"flex", gap:8 }}>
                     <div style={{ flex:1, position:"relative" }}>
                       <span style={{ position:"absolute", left:10, top:"50%", transform:"translateY(-50%)", fontSize:13, color:"var(--text-faint)", fontWeight:700 }}>@</span>
@@ -13157,11 +13325,11 @@ function MainApp() {
                     </div>
                     <button onClick={saveUsername} disabled={athUsernameSaving}
                       style={{ padding:"8px 16px", borderRadius:8, background:GOLD, color:"#000", border:"none", fontSize:12, fontWeight:800, cursor:"pointer", whiteSpace:"nowrap", opacity: athUsernameSaving?0.7:1 }}>
-                      {athUsernameSaving ? "..." : "Guardar"}
+                      {athUsernameSaving ? "..." : t("btn_save_short",lang)}
                     </button>
                   </div>
                   {athUsernameError && <div style={{ fontSize:11, color:"#ef4444", marginTop:6 }}>{athUsernameError}</div>}
-                  {!athUsernameError && <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6 }}>Solo letras minúsculas, números y _ · Mínimo 3 caracteres</div>}
+                  {!athUsernameError && <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:6 }}>{t("username_hint",lang)}</div>}
                 </div>
               </div>
 
@@ -13256,7 +13424,7 @@ function MainApp() {
                             <div style={{ fontSize:11, color:"var(--text-faint)", lineHeight:1.5 }}>{item.desc}</div>
                           </div>
                           {item.done ? (
-                            <div style={{ flexShrink:0, padding:"6px 10px", borderRadius:8, background:"#10b98120", color:"#10b981", fontSize:10, fontWeight:800 }}>✓ HECHO</div>
+                            <div style={{ flexShrink:0, padding:"6px 10px", borderRadius:8, background:"#10b98120", color:"#10b981", fontSize:10, fontWeight:800 }}>{t("badge_done",lang)}</div>
                           ) : (
                             <button onClick={() => toggleVote(item.id)}
                               style={{ flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:1,
@@ -13286,16 +13454,16 @@ function MainApp() {
                     </div>
                   </div>
                   {!athFundadoresLoaded ? (
-                    <div style={{ textAlign:"center", padding:40, color:"var(--text-faint)", fontSize:13 }}>Cargando fundadores...</div>
+                    <div style={{ textAlign:"center", padding:40, color:"var(--text-faint)", fontSize:13 }}>{t("loading_founders",lang)}</div>
                   ) : athFundadores.length === 0 ? (
                     <div style={{ textAlign:"center", padding:40 }}>
                       <div style={{ fontSize:48, marginBottom:12 }}>🏅</div>
-                      <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>¡Sé el primero!</div>
-                      <div style={{ fontSize:12, color:"var(--text-faint)" }}>Aún no hay fundadores registrados en la comunidad.</div>
+                      <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>{t("founders_first_title",lang)}</div>
+                      <div style={{ fontSize:12, color:"var(--text-faint)" }}>{t("founders_none",lang)}</div>
                     </div>
                   ) : (
                     <>
-                      <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:14 }}>{athFundadores.length} fundador{athFundadores.length!==1?"es":""} · Por orden de adhesión</div>
+                      <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:14 }}>{athFundadores.length} {athFundadores.length!==1?t("club_title",lang).toLowerCase().replace("club ","")+"s":"fundador"} · {t("founders_order",lang)}</div>
                       <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(130px, 1fr))", gap:12 }}>
                         {athFundadores.map((f, i) => {
                           const initials = (f.nombre || "?").slice(0,2).toUpperCase();
@@ -13325,10 +13493,10 @@ function MainApp() {
               {activeTab === "directo" && (
                 <div>
                   <div style={{ background:"linear-gradient(135deg,#C41A1A18,#C41A1A08)", border:"1px solid #C41A1A30", borderRadius:16, padding:"18px 20px", marginBottom:16 }}>
-                    <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.5, marginBottom:6 }}>ACCESO DIRECTO</div>
-                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:6 }}>Habla directamente con Jan</div>
+                    <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.5, marginBottom:6 }}>{t("direct_access_label",lang)}</div>
+                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:6 }}>{t("direct_access_title",lang)}</div>
                     <div style={{ fontSize:12, color:"var(--text-faint)", lineHeight:1.6 }}>
-                      Como fundador tienes línea directa. Tu mensaje llega sin filtros. Respuesta habitual en menos de 24h.
+                      {t("direct_access_desc",lang)}
                     </div>
                   </div>
                   <textarea value={athMensajeFund} onChange={e => setAthMensajeFund(e.target.value)}
@@ -13340,10 +13508,10 @@ function MainApp() {
                     style={{ width:"100%", padding:"14px", borderRadius:12,
                       background: athMensajeSent ? "#10b981" : "#C41A1A",
                       color:"#fff", border:"none", fontSize:14, fontWeight:800, cursor: athMensajeSent?"default":"pointer", transition:"background 0.3s" }}>
-                    {athMensajeSent ? "✓ Enviado — Jan lo verá pronto" : "Enviar mensaje a Jan →"}
+                    {athMensajeSent ? t("msg_sent",lang) : t("msg_send_btn",lang)}
                   </button>
                   <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:10, textAlign:"center" }}>
-                    Tiempo de respuesta habitual: menos de 24h
+                    {t("msg_response_time",lang)}
                   </div>
                 </div>
               )}
@@ -13442,19 +13610,19 @@ function MainApp() {
                       style={{ padding:"8px 18px", borderRadius:20, border: editing ? "1.5px solid #C41A1A" : "1px solid var(--border)",
                         background: editing ? "#C41A1A18" : "var(--bg-elevated)", color: editing ? "#C41A1A" : "var(--text-muted)",
                         fontSize:12, fontWeight:700, cursor:"pointer" }}>
-                      {editing ? "✕ Cancelar" : "✏️ Editar"}
+                      {editing ? t("btn_cancel_edit",lang) : "✏️ " + t("btn_edit",lang)}
                     </button>
                   </div>
 
                   {/* Nombre + email */}
                   {editing ? (
-                    <input value={editName} onChange={e => setEditName(e.target.value)} placeholder="Tu nombre"
+                    <input value={editName} onChange={e => setEditName(e.target.value)} placeholder={t("profile_name_ph",lang)}
                       style={{ width:"100%", boxSizing:"border-box", fontSize:20, fontWeight:900, color:"var(--text)",
                         background:"var(--bg-elevated)", border:"1.5px solid #C41A1A40", borderRadius:10,
                         padding:"8px 12px", marginBottom:6 }} />
                   ) : (
                     <div style={{ fontSize:22, fontWeight:900, color:"var(--text)", marginBottom:3, lineHeight:1.2 }}>
-                      {profile?.nombre || "Sin nombre"}
+                      {profile?.nombre || t("profile_no_name",lang)}
                     </div>
                   )}
                   <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:10 }}>{user?.email}</div>
@@ -13472,7 +13640,7 @@ function MainApp() {
                   {/* Bio */}
                   {editing ? (
                     <textarea value={editBio} onChange={e => setEditBio(e.target.value)} rows={3}
-                      placeholder="Describe tu trayectoria, estilo, motivación..."
+                      placeholder={t("profile_bio_ph",lang)}
                       style={{ width:"100%", boxSizing:"border-box", fontSize:13, color:"var(--text)",
                         background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:10,
                         padding:"10px 12px", resize:"vertical", lineHeight:1.5 }} />
@@ -13482,7 +13650,7 @@ function MainApp() {
                         {editBio || athExt.bio || profile?.bio}
                       </p>
                     ) : (
-                      !editing && <p style={{ fontSize:13, color:"var(--text-faint)", fontStyle:"italic", margin:0 }}>Sin bio — pulsa Editar para añadir una descripción</p>
+                      !editing && <p style={{ fontSize:13, color:"var(--text-faint)", fontStyle:"italic", margin:0 }}>{t("profile_no_bio",lang)}</p>
                     )
                   )}
                 </div>
@@ -13505,13 +13673,13 @@ function MainApp() {
 
               {/* ── Información deportiva ── */}
               <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"16px 18px", marginBottom:16 }}>
-                <div style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14, display:"flex", alignItems:"center", gap:8 }}><span style={{ color:"#C41A1A" }}>//</span> Información deportiva</div>
+                <div style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14, display:"flex", alignItems:"center", gap:8 }}><span style={{ color:"#C41A1A" }}>//</span> {t("profile_sport_info",lang)}</div>
                 {editing ? (
                   <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                     {[
-                      { label:"Club / Equipo", val:editClub, set:setEditClub, ph:"Ej. Team Lagarto BJJ" },
-                      { label:"País",           val:editPais, set:setEditPais, ph:"España" },
-                      { label:"Practicando desde", val:editYear, set:setEditYear, ph:"2018", type:"number" },
+                      { label:t("profile_club",lang), val:editClub, set:setEditClub, ph:"Ej. Team Lagarto BJJ" },
+                      { label:t("profile_country",lang), val:editPais, set:setEditPais, ph:"España" },
+                      { label:t("profile_since",lang), val:editYear, set:setEditYear, ph:"2018", type:"number" },
                     ].map(f => (
                       <div key={f.label}>
                         <div style={{ fontSize:10, color:"var(--text-muted)", marginBottom:4 }}>{f.label}</div>
@@ -13566,7 +13734,7 @@ function MainApp() {
                   <button onClick={handleSave} disabled={profileSaving}
                     style={{ marginTop:14, width:"100%", padding:12, borderRadius:11, border:"none",
                       background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
-                    {profileSaving ? "Guardando..." : profileSaved ? "✅ Guardado" : "Guardar cambios"}
+                    {profileSaving ? t("btn_saving",lang) : profileSaved ? t("btn_saved",lang) : t("btn_save_changes",lang)}
                   </button>
                 )}
               </div>
@@ -13622,23 +13790,23 @@ function MainApp() {
                     <span style={{ fontSize:22 }}>{isFundador ? "🏅" : userPlan==="coach" ? "🎓" : "📋"}</span>
                     <div>
                       <div style={{ fontSize:13, fontWeight:900, color: isFundador ? "#f59e0b" : "var(--text)" }}>
-                        {isFundador ? "Fundador" : userPlan==="coach" ? "Entrenador" : "Atleta"}
+                        {isFundador ? t("plan_name_founder",lang) : userPlan==="coach" ? t("plan_name_coach",lang) : t("plan_name_athlete",lang)}
                       </div>
                       <div style={{ fontSize:11, color:"var(--text-faint)" }}>
-                        {isFundador ? "Acceso vitalicio · Miembro fundador" : userPlan==="coach" ? "Panel de entrenador activo" : "Plan gratuito"}
+                        {isFundador ? t("founder_lifetime",lang) : userPlan==="coach" ? t("plan_coach_active",lang) : t("plan_free",lang)}
                       </div>
                     </div>
                   </div>
                   {!isFundador && (
                     <button onClick={() => setShowPlanesModal(true)}
                       style={{ padding:"7px 14px", borderRadius:10, border:"1px solid #f59e0b50", background:"#f59e0b18", color:"#f59e0b", fontSize:12, fontWeight:700, cursor:"pointer" }}>
-                      ⬆️ Mejorar
+                      {t("btn_upgrade",lang)}
                     </button>
                   )}
                   {isFundador && (
                     <button onClick={() => setView("fundador")}
                       style={{ padding:"7px 14px", borderRadius:10, border:"1px solid #f59e0b50", background:"#f59e0b20", color:"#f59e0b", fontSize:12, fontWeight:700, cursor:"pointer" }}>
-                      Panel 🏅
+                      {t("btn_founder_panel",lang)}
                     </button>
                   )}
                 </div>
@@ -13648,7 +13816,7 @@ function MainApp() {
               <button onClick={() => supabase.auth.signOut()}
                 style={{ width:"100%", padding:"13px", borderRadius:14, border:"1.5px solid #ef444440",
                   background:"#ef444408", color:"#ef4444", fontSize:14, fontWeight:700, cursor:"pointer" }}>
-                Cerrar sesión
+                {t("btn_logout",lang)}
               </button>
             </div>
           );
@@ -13660,9 +13828,9 @@ function MainApp() {
             <span style={{ fontSize: 22 }}>🏆</span>
             <div style={{ flex: 1, minWidth: 200 }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}>
-                {pendingInvitations[0].profiles?.nombre || "Un entrenador"} quiere ser tu coach
+                {pendingInvitations[0].profiles?.nombre || "Un entrenador"} {t("invite_wants_coach",lang)}
               </div>
-              <div style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>Acepta o rechaza la invitación para continuar.</div>
+              <div style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>{t("invite_cta",lang)}</div>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -13684,7 +13852,7 @@ function MainApp() {
                   setPendingInvitations(p => p.slice(1));
                 }}
                 style={{ padding: "7px 14px", borderRadius: 8, border: "1px solid #f6ad5560", background: "transparent", color: "#f6ad55", fontSize: 12, fontWeight: 600, cursor: "pointer" }}>
-                Rechazar
+                {t("btn_reject",lang)}
               </button>
               <button
                 onClick={async () => {
@@ -13711,7 +13879,7 @@ function MainApp() {
                   if (cp) setCoachProfile(cp);
                 }}
                 style={{ padding: "7px 14px", borderRadius: 8, border: "none", background: "#f6ad55", color: "#000", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-                Aceptar
+                {t("btn_accept",lang)}
               </button>
             </div>
           </div>
@@ -13804,7 +13972,7 @@ function MainApp() {
                 {/* Contenido */}
                 <div style={{ flex:1, padding:"10px 12px", minWidth:0 }}>
                   <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:4, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
-                    {sp.titulo || sp.disciplina || "Sesión programada"}
+                    {sp.titulo || sp.disciplina || t("home_coach_session",lang)}
                   </div>
                   <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
                     {sp.hora && <span style={{ fontSize:10, color:"var(--text-faint)" }}>🕐 {sp.hora}</span>}
@@ -13875,7 +14043,7 @@ function MainApp() {
                         {/* Fila: título + badges */}
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                           <div style={{ fontSize: 14, fontWeight: 800, color: "var(--text)", flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {sp.titulo || sp.disciplina || "Sesión programada"}
+                            {sp.titulo || sp.disciplina || t("home_coach_session",lang)}
                           </div>
                           {isToday && <span style={{ fontSize: 9, fontWeight: 800, color: "#f59e0b", background: "#f59e0b20", border: "1px solid #f59e0b40", borderRadius: 5, padding: "2px 7px", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>HOY</span>}
                           {isPast && !isToday && <span style={{ fontSize: 9, fontWeight: 800, color: "#f87171", background: "#f8717120", border: "1px solid #f8717140", borderRadius: 5, padding: "2px 7px", letterSpacing: 0.5, textTransform: "uppercase", flexShrink: 0 }}>{t("lbl_pendiente",lang)}</span>}
@@ -15938,7 +16106,7 @@ function MainApp() {
                 <div style={{ width:5, flexShrink:0, borderRadius:3, background:`linear-gradient(180deg,${discColor},${discColor}60)`, alignSelf:"stretch", minHeight:48 }} />
                 <div style={{ flex:1 }}>
                   <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", lineHeight:1.2, marginBottom:6 }}>
-                    {sp.titulo || sp.disciplina || "Sesión programada"}
+                    {sp.titulo || sp.disciplina || t("home_coach_session",lang)}
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
                     <span style={{ fontSize:11, color:"#3b82f6", background:"#3b82f615", borderRadius:5, padding:"2px 9px", fontWeight:700 }}>📅 {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{weekday:"short",day:"numeric",month:"long"})}</span>

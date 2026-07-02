@@ -760,7 +760,7 @@ const TRANSLATIONS = {
     founders_desc:"Estos son los fundadores que hicieron posible Élite Marcial. Para siempre en la historia.",
     direct_access_label:"ACCESO DIRECTO",
     direct_access_title:"Habla directamente con Jan",
-    direct_access_desc:"{t("direct_access_desc",lang)}",
+    direct_access_desc:"Como fundador tienes línea directa. Tu mensaje llega sin filtros. Respuesta habitual en menos de 24h.",
     msg_sent:"✓ Enviado — Jan lo verá pronto",
     msg_send_btn:"Enviar mensaje a Jan →",
     msg_response_time:"Tiempo de respuesta habitual: menos de 24h",

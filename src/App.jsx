@@ -716,6 +716,23 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratación", home_action_water:"Añadir agua",
     home_action_recov:"+ Recuperación", home_action_physio:"Fisio / masaje",
     home_action_weight:"Registrar peso", home_action_bio_sub:"Actualizar bio",
+    recup_fisio:"Fisioterapia", recup_masaje:"Masaje", recup_estira:"Estiramiento", recup_hielo:"Hielo/Cryo",
+    recup_stat_week:"Esta semana", recup_stat_fisio:"Fisio", lbl_total:"Total",
+    lbl_since:"Desde", period_weeks_planned:"semanas planificadas",
+    macro_edit:"✏️ Editar macrociclo", lbl_scheduled_f:"programadas", schedule_ok:"✅ Sesión programada correctamente",
+    coach_stat_active:"Atletas activos", coach_stat_sessions_wk:"Sesiones esta semana",
+    coach_stat_rpe_team:"RPE medio del equipo", coach_stat_sched:"Sesiones programadas",
+    coach_stat_team_sub:"en tu equipo", coach_stat_last7_sub:"últimos 7 días",
+    coach_stat_intensity_sub:"intensidad media", coach_stat_pending_sub:"pendientes",
+    coach_chat_select:"Selecciona una conversación", coach_chat_pick:"Elige un atleta de la lista para ver el chat",
+    period_edit_session:"✏️ Editar sesión", period_schedule_session:"Programar sesión",
+    period_for:"Para", lbl_the_athlete:"el atleta",
+    insight_rpe_up:"Tu intensidad subió esta semana (RPE {0} vs {1} la semana pasada).",
+    insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
+    insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
+    insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
+    insight_vol_up:"Esta semana llevas {0}min — un {1}% más de tu media habitual.",
+    insight_vol_down:"Esta semana llevas solo {0}min. Tu media es {1}min semanales.",
     /* ── TÉCNICAS ── */
     tec_unique:"Técnicas únicas", tec_records:"Registros",
     tec_most:"Más practicada", tec_no_disc:"Sin disciplina",
@@ -1071,6 +1088,23 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hydration", home_action_water:"Add water",
     home_action_recov:"+ Recovery", home_action_physio:"Physio / massage",
     home_action_weight:"Log weight", home_action_bio_sub:"Update biometrics",
+    recup_fisio:"Physiotherapy", recup_masaje:"Massage", recup_estira:"Stretching", recup_hielo:"Ice/Cryo",
+    recup_stat_week:"This week", recup_stat_fisio:"Physio", lbl_total:"Total",
+    lbl_since:"Since", period_weeks_planned:"planned weeks",
+    macro_edit:"✏️ Edit macrocycle", lbl_scheduled_f:"scheduled", schedule_ok:"✅ Session scheduled",
+    coach_stat_active:"Active athletes", coach_stat_sessions_wk:"Sessions this week",
+    coach_stat_rpe_team:"Team avg RPE", coach_stat_sched:"Scheduled sessions",
+    coach_stat_team_sub:"on your team", coach_stat_last7_sub:"last 7 days",
+    coach_stat_intensity_sub:"avg intensity", coach_stat_pending_sub:"pending",
+    coach_chat_select:"Select a conversation", coach_chat_pick:"Choose an athlete from the list to view the chat",
+    period_edit_session:"✏️ Edit session", period_schedule_session:"Schedule session",
+    period_for:"For", lbl_the_athlete:"the athlete",
+    insight_rpe_up:"Your intensity went up this week (RPE {0} vs {1} last week).",
+    insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
+    insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
+    insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
+    insight_vol_up:"This week you've logged {0}min — {1}% above your usual average.",
+    insight_vol_down:"This week you've only logged {0}min. Your average is {1}min/week.",
     /* ── TÉCNICAS ── */
     tec_unique:"Unique techniques", tec_records:"Records",
     tec_most:"Most practiced", tec_no_disc:"No discipline",
@@ -1427,6 +1461,23 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratació", home_action_water:"Afegir aigua",
     home_action_recov:"+ Recuperació", home_action_physio:"Fisio / massatge",
     home_action_weight:"Registrar pes", home_action_bio_sub:"Actualitzar bio",
+    recup_fisio:"Fisioteràpia", recup_masaje:"Massatge", recup_estira:"Estirament", recup_hielo:"Gel/Cryo",
+    recup_stat_week:"Aquesta setmana", recup_stat_fisio:"Fisio", lbl_total:"Total",
+    lbl_since:"Des de", period_weeks_planned:"setmanes planificades",
+    macro_edit:"✏️ Editar macrocicle", lbl_scheduled_f:"programades", schedule_ok:"✅ Sessió programada correctament",
+    coach_stat_active:"Atletes actius", coach_stat_sessions_wk:"Sessions aquesta setmana",
+    coach_stat_rpe_team:"RPE mig de l\'equip", coach_stat_sched:"Sessions programades",
+    coach_stat_team_sub:"al teu equip", coach_stat_last7_sub:"últims 7 dies",
+    coach_stat_intensity_sub:"intensitat mitjana", coach_stat_pending_sub:"pendents",
+    coach_chat_select:"Selecciona una conversa", coach_chat_pick:"Tria un atleta de la llista per veure el xat",
+    period_edit_session:"✏️ Editar sessió", period_schedule_session:"Programar sessió",
+    period_for:"Per a", lbl_the_athlete:"l\'atleta",
+    insight_rpe_up:"La teva intensitat ha pujat aquesta setmana (RPE {0} vs {1} la setmana passada).",
+    insight_rpe_down:"El teu cos descansa millor: RPE va baixar a {0} vs {1} la setmana passada.",
+    insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
+    insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
+    insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
+    insight_vol_down:"Aquesta setmana portes només {0}min. La teva mitjana és {1}min setmanals.",
     /* ── TÉCNICAS ── */
     tec_unique:"Tècniques úniques", tec_records:"Registres",
     tec_most:"Més practicada", tec_no_disc:"Sense disciplina",
@@ -2817,7 +2868,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
                   <div style={{ width:3, height:18, borderRadius:2, background:discColor, flexShrink:0 }} />
                   <span style={{ fontSize:11, fontWeight:800, color:discColor, textTransform:"uppercase", letterSpacing:1.2 }}>{discLabel(disc, lang)}</span>
                   <div style={{ flex:1, height:1, background:"var(--border)", opacity:0.5 }} />
-                  <span style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", background:"var(--bg-elevated)", borderRadius:10, padding:"2px 8px" }}>{ssList.length} sesión{ssList.length!==1?"es":""}</span>
+                  <span style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", background:"var(--bg-elevated)", borderRadius:10, padding:"2px 8px" }}>{ssList.length} {ssList.length!==1?t("lbl_sessions_plural",lang):t("lbl_session_s",lang)}</span>
                 </div>
                 {/* Cards */}
                 {ssList.map((ss, i) => (
@@ -2915,7 +2966,7 @@ function CalendarView({ sessions, onOpenDetail, lang = "es" }) {
   const thisWeekDays = Array.from({length:7}, (_,i) => {
     const d = new Date(today + "T12:00:00"); d.setDate(d.getDate() - d.getDay() + i + 1);
     const key = d.toISOString().slice(0,10);
-    return { key, label: d.toLocaleDateString("es",{weekday:"short"}).slice(0,2).toUpperCase(), has: !!(sessionMap[key]?.length) };
+    return { key, label: d.toLocaleDateString(lang,{weekday:"short"}).slice(0,2).toUpperCase(), has: !!(sessionMap[key]?.length) };
   });
 
   return (
@@ -3032,7 +3083,7 @@ function CalendarView({ sessions, onOpenDetail, lang = "es" }) {
               {new Date(selectedDay+"T12:00:00").toLocaleDateString(lang,{weekday:"long",day:"numeric",month:"long"})}
             </div>
             <div style={{ marginLeft:"auto", fontSize:11, fontWeight:700, color:"var(--text-faint)", background:"var(--bg-elevated)", borderRadius:8, padding:"2px 8px" }}>
-              {selectedSessions.length} sesión{selectedSessions.length!==1?"es":""}
+              {selectedSessions.length} {selectedSessions.length!==1?t("lbl_sessions_plural",lang):t("lbl_session_s",lang)}
             </div>
           </div>
           {selectedSessions.map((ss, i) => {
@@ -3113,7 +3164,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     const d = new Date(today + "T12:00:00"); d.setDate(d.getDate() - (6-i));
     const key = d.toISOString().slice(0,10);
     const count = sessByDate[key] || 0;
-    const label = d.toLocaleDateString("es",{weekday:"short"}).slice(0,2).toUpperCase();
+    const label = d.toLocaleDateString(lang,{weekday:"short"}).slice(0,2).toUpperCase();
     return { key, label, count, isToday: key === today };
   });
 
@@ -3133,7 +3184,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         <div style={{ position:"relative", display:"flex", justifyContent:"space-between", alignItems:"flex-start", gap:16 }}>
           <div>
             <div style={{ fontSize:10, fontWeight:900, color:`${RED}99`, letterSpacing:3, textTransform:"uppercase", marginBottom:8 }}>
-              {new Date().toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"}).toUpperCase()}
+              {new Date().toLocaleDateString(lang,{weekday:"long",day:"numeric",month:"long"}).toUpperCase()}
             </div>
             <div style={{ fontSize:13, color:"var(--text-muted)", fontWeight:600, marginBottom:4 }}>{saludo},</div>
             <div style={{ fontSize:42, fontWeight:900, color:"var(--text)", lineHeight:1, letterSpacing:-2 }}>{nombre.toUpperCase()}<span style={{ color:RED }}>.</span></div>
@@ -3169,7 +3220,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
       {/* ── HOY ── */}
       <div style={{ marginBottom:18 }}>
         <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
-          <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// Hoy</div>
+          <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// {t("lbl_today",lang)}</div>
           <div style={{ flex:1, height:1, background:"var(--border)" }} />
         </div>
         {sesHoy.length > 0 ? (
@@ -3224,8 +3275,8 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           const diff = avgThis - avgLast;
           if (Math.abs(diff) >= 0.4) {
             insights.push(diff > 0
-              ? { icon:"🔥", text:`Tu intensidad subió esta semana (RPE ${avgThis.toFixed(1)} vs ${avgLast.toFixed(1)} la semana pasada).` }
-              : { icon:"🧘", text:`Tu cuerpo descansa mejor: RPE bajó a ${avgThis.toFixed(1)} vs ${avgLast.toFixed(1)} la semana pasada.` }
+              ? { icon:"🔥", text:t("insight_rpe_up",lang).replace("{0}",avgThis.toFixed(1)).replace("{1}",avgLast.toFixed(1)) }
+              : { icon:"🧘", text:t("insight_rpe_down",lang).replace("{0}",avgThis.toFixed(1)).replace("{1}",avgLast.toFixed(1)) }
             );
           }
         }
@@ -3239,9 +3290,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           const lastTopSes = [...sessions].filter(s=>s.disciplina===topDisc).sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
           const daysSince = lastTopSes ? Math.floor((new Date(today)-new Date(lastTopSes.fecha+"T12:00:00"))/(86400000)) : 99;
           if (daysSince >= 7) {
-            insights.push({ icon:"⚠️", text:`Llevas ${daysSince} días sin entrenar ${topDisc}, tu disciplina principal.` });
+            insights.push({ icon:"⚠️", text:t("insight_days_no_disc",lang).replace("{0}",daysSince).replace("{1}",topDisc) });
           } else if (topDiscs.length > 1) {
-            insights.push({ icon:"🥋", text:`${topDisc} es tu disciplina estrella con ${topDiscs[0][1]} sesiones registradas.` });
+            insights.push({ icon:"🥋", text:t("insight_top_disc",lang).replace("{0}",topDisc).replace("{1}",topDiscs[0][1]) });
           }
         }
 
@@ -3259,9 +3310,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         if (wkVals.length >= 3 && minThisWk > 0) {
           const avg = wkVals.reduce((a,b)=>a+b,0)/wkVals.length;
           if (minThisWk >= avg * 1.2) {
-            insights.push({ icon:"📈", text:`Esta semana llevas ${minThisWk}min — un ${Math.round((minThisWk/avg-1)*100)}% más de tu media habitual.` });
+            insights.push({ icon:"📈", text:t("insight_vol_up",lang).replace("{0}",minThisWk).replace("{1}",Math.round((minThisWk/avg-1)*100)) });
           } else if (minThisWk <= avg * 0.5 && new Date().getDay() >= 3) {
-            insights.push({ icon:"📉", text:`Esta semana llevas solo ${minThisWk}min. Tu media es ${Math.round(avg)}min semanales.` });
+            insights.push({ icon:"📉", text:t("insight_vol_down",lang).replace("{0}",minThisWk).replace("{1}",Math.round(avg)) });
           }
         }
 
@@ -3392,7 +3443,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           <span style={{ fontSize:24 }}>🧘</span>
           <div>
             <div style={{ fontSize:9, fontWeight:900, color:PURPLE, textTransform:"uppercase", letterSpacing:1.5, marginBottom:3 }}>{t("home_recup_card",lang)}</div>
-            <div style={{ fontSize:13, color:"var(--text)", fontWeight:600 }}>{recupHoy.map(r => ({fisio:"Fisioterapia",masaje:"Masaje",estira:"Estiramiento",hielo:"Hielo/Cryo"}[r.tipo]||r.tipo)).join(" · ")}</div>
+            <div style={{ fontSize:13, color:"var(--text)", fontWeight:600 }}>{recupHoy.map(r => ({fisio:t("recup_fisio",lang),masaje:t("recup_masaje",lang),estira:t("recup_estira",lang),hielo:t("recup_hielo",lang)}[r.tipo]||r.tipo)).join(" · ")}</div>
           </div>
         </div>
       )}
@@ -3401,7 +3452,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
       <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:18, padding:"18px 20px", marginBottom:18 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 }}>
           <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// Últimos 7 días</div>
-          <div style={{ fontSize:12, color:RED, fontWeight:900, background:`${RED}12`, padding:"3px 10px", borderRadius:20 }}>{sesSemana.length} sesión{sesSemana.length!==1?"es":""}</div>
+          <div style={{ fontSize:12, color:RED, fontWeight:900, background:`${RED}12`, padding:"3px 10px", borderRadius:20 }}>{sesSemana.length} {sesSemana.length!==1?t("lbl_sessions_plural",lang):t("lbl_session_s",lang)}</div>
         </div>
         <div style={{ display:"flex", gap:6, alignItems:"flex-end", height:64 }}>
           {last7.map(d => {
@@ -3483,7 +3534,7 @@ function NotasView({ lang = "es", userId = "anon" }) {
   const add = () => {
     const txt = texto.trim();
     if (!txt) return;
-    setNotas(n => [{ id: Date.now(), texto: txt, tag, fecha: new Date().toISOString().slice(0,10), hora: new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"}) }, ...n]);
+    setNotas(n => [{ id: Date.now(), texto: txt, tag, fecha: new Date().toISOString().slice(0,10), hora: new Date().toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"}) }, ...n]);
     setTexto("");
     setExpandCompose(false);
     textareaRef.current?.focus();
@@ -3723,7 +3774,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     const key = d.toISOString().slice(0,10);
     const dayEntries = nutriEntries.filter(e => e.fecha === key);
     const total = dayEntries.reduce((s,e) => s + (parseFloat(e.calorias)||0), 0);
-    return { key, label: d.toLocaleDateString("es",{weekday:"short"}).slice(0,3), total };
+    return { key, label: d.toLocaleDateString(lang,{weekday:"short"}).slice(0,3), total };
   }).reverse();
 
   // ── Tab principal ──
@@ -3781,7 +3832,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     const d = new Date(todayH + "T12:00:00"); d.setDate(d.getDate()-i);
     const key = d.toISOString().slice(0,10);
     const entry = hidraEntries.find(e => e.fecha === key);
-    return { key, label: d.toLocaleDateString("es",{weekday:"short"}).slice(0,3), ml: entry?.agua_ml||0, entry };
+    return { key, label: d.toLocaleDateString(lang,{weekday:"short"}).slice(0,3), ml: entry?.agua_ml||0, entry };
   }).reverse();
   const avgMl = last7.filter(d=>d.ml>0).length ? Math.round(last7.filter(d=>d.ml>0).reduce((s,d)=>s+d.ml,0)/last7.filter(d=>d.ml>0).length) : 0;
   const diasOk = last7.filter(d=>d.ml >= AGUA_RECOMENDADA).length;
@@ -4472,10 +4523,10 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:6, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_tipo",lang)}</label>
                 <div style={{ display:"flex", gap:6 }}>
                   {[
-                    { k:"fisio",   icon:"🩺", label:"Fisioterapia", color:PURPLE },
-                    { k:"masaje",  icon:"👋", label:"Masaje",        color:BLUE },
-                    { k:"estira",  icon:"🧘", label:"Estiramiento",  color:GREEN },
-                    { k:"hielo",   icon:"🧊", label:"Hielo/Cryo",    color:"#06b6d4" },
+                    { k:"fisio",   icon:"🩺", label:t("recup_fisio",lang), color:PURPLE },
+                    { k:"masaje",  icon:"👋", label:t("recup_masaje",lang), color:BLUE },
+                    { k:"estira",  icon:"🧘", label:t("recup_estira",lang), color:GREEN },
+                    { k:"hielo",   icon:"🧊", label:t("recup_hielo",lang), color:"#06b6d4" },
                   ].map(t => (
                     <button key={t.k} type="button" onClick={() => setRecupForm(f=>({...f,tipo:t.k}))}
                       style={{ flex:1, padding:"8px 4px", borderRadius:9, border:`1px solid ${recupForm.tipo===t.k?t.color:"var(--border)"}`, background:recupForm.tipo===t.k?`${t.color}15`:"transparent", color:recupForm.tipo===t.k?t.color:"var(--text-faint)", fontSize:9, fontWeight:700, cursor:"pointer", textAlign:"center" }}>
@@ -4532,9 +4583,9 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           {/* Stats rápidas */}
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:16 }}>
             {[
-              { label:"Esta semana", val: recupThisWeek.length, color:PURPLE },
-              { label:"Fisio",    val: recupEntries.filter(e=>e.tipo==="fisio").length,   color:PURPLE },
-              { label:"Total",    val: recupEntries.length,                               color:"var(--text-muted)" },
+              { label:t("recup_stat_week",lang), val: recupThisWeek.length, color:PURPLE },
+              { label:t("recup_stat_fisio",lang), val: recupEntries.filter(e=>e.tipo==="fisio").length, color:PURPLE },
+              { label:t("lbl_total",lang), val: recupEntries.length, color:"var(--text-muted)" },
             ].map(s=>(
               <div key={s.label} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"12px 8px", textAlign:"center" }}>
                 <div style={{ fontSize:20, fontWeight:900, color:s.color }}>{s.val}</div>
@@ -4555,10 +4606,10 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:10 }}>{t("lbl_historial",lang)}</div>
               {recupEntries.map(e => {
                 const tipoMeta = {
-                  fisio:  { icon:"🩺", label:"Fisioterapia", color:PURPLE },
-                  masaje: { icon:"👋", label:"Masaje",        color:BLUE },
-                  estira: { icon:"🧘", label:"Estiramiento",  color:GREEN },
-                  hielo:  { icon:"🧊", label:"Hielo/Cryo",    color:"#06b6d4" },
+                  fisio:  { icon:"🩺", label:t("recup_fisio",lang), color:PURPLE },
+                  masaje: { icon:"👋", label:t("recup_masaje",lang), color:BLUE },
+                  estira: { icon:"🧘", label:t("recup_estira",lang), color:GREEN },
+                  hielo:  { icon:"🧊", label:t("recup_hielo",lang), color:"#06b6d4" },
                 }[e.tipo] || { icon:"🧘", label:e.tipo, color:PURPLE };
                 return (
                   <div key={e.id} style={{ background:"var(--bg-card)", border:`1px solid ${tipoMeta.color}20`, borderRadius:14, padding:14, marginBottom:8, borderLeft:`3px solid ${tipoMeta.color}` }}>
@@ -5641,7 +5692,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
           texto:  cfSuggForm.texto.trim(),
           nombre: profile?.nombre || user?.email || "Fundador",
           email:  user?.email || "—",
-          fecha:  new Date().toLocaleDateString("es-ES"),
+          fecha:  new Date().toLocaleDateString(lang),
         },
       });
     } catch (e) {
@@ -6857,7 +6908,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           `${scheduleForm.titulo || scheduleForm.disciplina || "Sesión"} · ${scheduleForm.fecha}${scheduleForm.hora ? " a las " + scheduleForm.hora : ""}`,
           "/", "sesion-programada"
         );
-        setScheduleOk("✅ Sesión programada correctamente");
+        setScheduleOk(t("schedule_ok",lang));
       }
     }
     if (!error) {
@@ -7281,7 +7332,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         if (diffMin < 60) return `${diffMin}min`;
                         const diffH = Math.floor(diffMin / 60);
                         if (diffH < 24) return `${diffH}h`;
-                        return d.toLocaleDateString("es", { day:"numeric", month:"short" });
+                        return d.toLocaleDateString(lang, { day:"numeric", month:"short" });
                       })() : "";
                       const isFromMe = lastMsg?.remitente_id === user.id;
                       const isActive = inboxSelected === atleta_id;
@@ -7351,14 +7402,14 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           <React.Fragment key={msg.id}>
                             {showDate && (
                               <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", margin:"6px 0" }}>
-                                {new Date(msg.created_at).toLocaleDateString("es",{weekday:"short",day:"numeric",month:"short"})}
+                                {new Date(msg.created_at).toLocaleDateString(lang,{weekday:"short",day:"numeric",month:"short"})}
                               </div>
                             )}
                             <div style={{ display:"flex", justifyContent: isCoach ? "flex-end" : "flex-start" }}>
                               <div style={{ maxWidth:"72%", background: isCoach ? `linear-gradient(135deg,${RED},#a31515)` : "var(--bg-elevated)", color: isCoach ? "#fff" : "var(--text)", borderRadius: isCoach ? "16px 4px 16px 16px" : "4px 16px 16px 16px", padding:"9px 13px", fontSize:13, lineHeight:1.5, boxShadow: isCoach ? `0 2px 8px ${RED}30` : "none" }}>
                                 {msg.contenido}
                                 <div style={{ fontSize:10, color: isCoach ? "rgba(255,255,255,0.6)" : "var(--text-faint)", marginTop:3, textAlign:"right" }}>
-                                  {new Date(msg.created_at).toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"})}
+                                  {new Date(msg.created_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}
                                   {isCoach && <span style={{ marginLeft:4 }}>{msg.leido ? "✓✓" : "✓"}</span>}
                                 </div>
                               </div>
@@ -7389,8 +7440,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               })() : (
                 <div style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", gap:12 }}>
                   <div style={{ fontSize:48, opacity:0.3 }}>💬</div>
-                  <div style={{ fontSize:14, fontWeight:700, color:"var(--text-muted)" }}>Selecciona una conversación</div>
-                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>Elige un atleta de la lista para ver el chat</div>
+                  <div style={{ fontSize:14, fontWeight:700, color:"var(--text-muted)" }}>{t("coach_chat_select",lang)}</div>
+                  <div style={{ fontSize:12, color:"var(--text-faint)" }}>{t("coach_chat_pick",lang)}</div>
                 </div>
               )}
             </div>
@@ -7403,16 +7454,16 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 {saludo}, <span style={{ color: RED }}>{nombre}</span> 🏆
               </h1>
               <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0 }}>
-                {new Date().toLocaleDateString("es", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+                {new Date().toLocaleDateString(lang, { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
               </p>
             </div>
             {/* Stats del equipo */}
             <div className="em-coach-stats-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 32 }}>
               {[
-                { label: "Atletas activos",         value: activeAthletes.length,  icon: "🥋", sub: "en tu equipo",     accent: "#3b82f6" },
-                { label: "Sesiones esta semana",    value: totalSessions,           icon: "📋", sub: "últimos 7 días",   accent: "#10b981" },
-                { label: "RPE medio del equipo",    value: avgRpe,                  icon: "⚡", sub: "intensidad media", accent: "#f59e0b" },
-                { label: "Sesiones programadas",    value: allScheduled.filter(s => s.fecha >= new Date().toISOString().slice(0,10)).length, icon: "📅", sub: "pendientes", accent: "#e97b0a" },
+                { label: t("coach_stat_active",lang), value: activeAthletes.length, icon: "🥋", sub: t("coach_stat_team_sub",lang), accent: "#3b82f6" },
+                { label: t("coach_stat_sessions_wk",lang), value: totalSessions, icon: "📋", sub: t("coach_stat_last7_sub",lang), accent: "#10b981" },
+                { label: t("coach_stat_rpe_team",lang), value: avgRpe, icon: "⚡", sub: t("coach_stat_intensity_sub",lang), accent: "#f59e0b" },
+                { label: t("coach_stat_sched",lang), value: allScheduled.filter(s => s.fecha >= new Date().toISOString().slice(0,10)).length, icon: "📅", sub: t("coach_stat_pending_sub",lang), accent: "#e97b0a" },
               ].map(({ label, value, icon, sub, accent }) => (
                 <div key={label} style={{ background: "var(--bg-card)", border: `1px solid ${accent}30`, borderRadius: 18, padding: "22px 22px 20px", position: "relative", overflow: "hidden", transition: "transform 0.15s, box-shadow 0.15s" }}
                   onMouseEnter={e => { e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow=`0 8px 24px ${accent}20`; }}
@@ -7530,7 +7581,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               const _atletaIdOrder2 = [...new Set(allScheduled.map(s => s.atleta_id))];
               const atletaColor2 = (id) => _atletaColors2[_atletaIdOrder2.indexOf(id) % _atletaColors2.length];
               // Etiqueta de semana
-              const weekLabel = `${weekDays[0].toLocaleDateString("es",{day:"numeric",month:"short"})} – ${weekDays[6].toLocaleDateString("es",{day:"numeric",month:"short",year:"numeric"})}`;
+              const weekLabel = `${weekDays[0].toLocaleDateString(lang,{day:"numeric",month:"short"})} – ${weekDays[6].toLocaleDateString(lang,{day:"numeric",month:"short",year:"numeric"})}`;
               const isCurrentWeek = weekOffset === 0;
               const dayNames = ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
               return (
@@ -7633,7 +7684,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                   <div style={{ fontSize:11, fontWeight:800, color: isDone?"var(--text-muted)":"var(--text)", lineHeight:1.2,
                                     overflow:"hidden", textOverflow:"ellipsis", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical",
                                     textDecoration: isDone?"line-through":"none" }}>
-                                    {s.titulo || s.disciplina || "Sesión"}
+                                    {t("gsearch_sesion",lang)}
                                   </div>
                                   <div style={{ fontSize:10, color, fontWeight:700, marginTop:3, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{nombre}</div>
                                   {isDone && <div style={{ fontSize:9, color:"#4ade80", fontWeight:800, marginTop:2 }}>✅ Hecha</div>}
@@ -7673,7 +7724,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               const lastDay  = new Date(calY, calM, 0);
               const startDow = (firstDay.getDay() + 6) % 7; // lunes=0
               const totalDays = lastDay.getDate();
-              const monthLabel = firstDay.toLocaleDateString("es", { month: "long", year: "numeric" });
+              const monthLabel = firstDay.toLocaleDateString(lang, { month: "long", year: "numeric" });
               // Índice fecha→sesiones
               const byDate = {};
               allScheduled.forEach(s => {
@@ -7771,7 +7822,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                       style={{ background: `${color}20`, borderLeft:`2px solid ${isDone?"#4ade80":color}`, borderRadius:3, padding:"1px 4px", cursor:"grab",
                                         opacity: (isPast && !isDone) ? 0.45 : 1 }}>
                                       <div style={{ fontSize:9, fontWeight:800, color: isDone?"#4ade80":color, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{nombre}</div>
-                                      <div style={{ fontSize:9, color:"var(--text-muted)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontWeight:600 }}>{s.titulo || s.disciplina || "Sesión"}</div>
+                                      <div style={{ fontSize:9, color:"var(--text-muted)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", fontWeight:600 }}>{t("gsearch_sesion",lang)}</div>
                                     </div>
                                   );
                                 })}
@@ -7793,8 +7844,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   {calSelectedDate && (
                     <div style={{ marginTop:12, background:"var(--bg-card)", border:`1px solid ${RED}30`, borderRadius:14, padding:"16px 18px" }}>
                       <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:12 }}>
-                        📅 {new Date(calSelectedDate+"T12:00:00").toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"})}
-                        <span style={{ marginLeft:10, fontSize:12, color:"var(--text-muted)", fontWeight:600 }}>{selectedSessions.length} sesión{selectedSessions.length!==1?"es":""}</span>
+                        📅 {new Date(calSelectedDate+"T12:00:00").toLocaleDateString(lang,{weekday:"long",day:"numeric",month:"long"})}
+                        <span style={{ marginLeft:10, fontSize:12, color:"var(--text-muted)", fontWeight:600 }}>{selectedSessions.length} {selectedSessions.length!==1?t("lbl_sessions_plural",lang):t("lbl_session_s",lang)}</span>
                       </div>
                       {selectedSessions.length === 0 ? (
                         <div style={{ fontSize:13, color:"var(--text-faint)" }}>{t("lbl_no_sessions",lang)}</div>
@@ -7808,7 +7859,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           <div key={s.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:"var(--bg-elevated)", borderRadius:10, marginBottom:8, borderLeft:`3px solid ${isDone?"#4ade80":color}` }}>
                             <span style={{ width:8, height:8, borderRadius:"50%", background:color, flexShrink:0 }}/>
                             <div style={{ flex:1, minWidth:0 }}>
-                              <div style={{ fontSize:13, fontWeight:700, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{s.titulo || s.disciplina || "Sesión"}</div>
+                              <div style={{ fontSize:13, fontWeight:700, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{t("gsearch_sesion",lang)}</div>
                               <div style={{ fontSize:11, color:"var(--text-muted)", marginTop:2, display:"flex", gap:8, flexWrap:"wrap" }}>
                                 <span style={{ color:color, fontWeight:700 }}>{nombre}</span>
                                 {s.hora && <span>🕐 {s.hora}</span>}
@@ -7860,7 +7911,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 const isDone = isPast && s.estado === "completada";
                 const isMissed = isPast && s.estado !== "completada";
                 const accentColor = isDone ? "#4ade80" : isMissed ? "#4b5563" : discColor;
-                const mesStr = new Date(s.fecha+"T12:00:00").toLocaleDateString("es",{month:"short"}).toUpperCase();
+                const mesStr = new Date(s.fecha+"T12:00:00").toLocaleDateString(lang,{month:"short"}).toUpperCase();
                 return (
                   <div key={s.id} style={{
                     display: "flex", alignItems: "stretch",
@@ -7881,7 +7932,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     {/* Contenido */}
                     <div style={{ flex: 1, minWidth: 0, padding: "14px 18px", display: "flex", flexDirection: "column", justifyContent: "center", gap: 7 }}>
                       <div style={{ fontSize: 15, fontWeight: 800, color: isDone ? "var(--text-muted)" : "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textDecoration: isDone ? "line-through" : "none", letterSpacing: -0.3 }}>
-                        {s.titulo || s.disciplina || "Sesión"}
+                        {t("gsearch_sesion",lang)}
                       </div>
                       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                         {s.disciplina && <span style={{ fontSize: 11, fontWeight: 800, color: discColor, background: discColor+"18", borderRadius: 20, padding: "3px 10px", letterSpacing: 0.2 }}>{s.disciplina}</span>}
@@ -8628,12 +8679,12 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 14, padding: "18px 20px", marginBottom: 20 }}>
                   <div style={{ fontSize: 19, fontWeight: 900, color: "var(--text)", marginBottom: 4 }}>{selectedMacro.nombre}</div>
                   {selectedMacro.competicion && <div style={{ fontSize: 13, color: RED, fontWeight: 600, marginBottom: 4 }}>🏆 {selectedMacro.competicion}</div>}
-                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: selectedMacro.notas ? 6 : 0 }}>{selectedMacro.inicio} → {selectedMacro.fin}{totalSemanas > 0 ? ` · ${totalSemanas} semanas planificadas` : ""}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: selectedMacro.notas ? 6 : 0 }}>{selectedMacro.inicio} → {selectedMacro.fin}{totalSemanas > 0 ? ` · ${totalSemanas} ${t("period_weeks_planned",lang)}` : ""}</div>
                   {selectedMacro.notas && <div style={{ fontSize: 12, color: "var(--text-muted)", fontStyle: "italic" }}>{selectedMacro.notas}</div>}
                   <div style={{ display:"flex", gap:8, marginTop:12 }}>
                     <button onClick={()=>{ setEditingMacroId(selectedMacro.id); setEditMacroForm({ nombre:selectedMacro.nombre, competicion:selectedMacro.competicion||"", inicio:selectedMacro.inicio||"", fin:selectedMacro.fin||"", notas:selectedMacro.notas||"" }); setPeriodoView("list"); }}
                       style={{ fontSize:12, padding:"5px 12px", borderRadius:7, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", cursor:"pointer", fontWeight:600 }}>
-                      ✏️ Editar macrociclo
+                      {t("macro_edit",lang)}
                     </button>
                   </div>
                   {selectedMacro.mesociclos.length > 0 && (
@@ -9125,12 +9176,12 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           ); })()}
                           {/* Sesiones programadas pendientes */}
                           {(() => { const pend = allScheduled.filter(s => s.atleta_id === selectedAthlete.atleta_id && s.fecha >= new Date().toISOString().slice(0,10) && s.estado !== "completada").length; return pend > 0 ? (
-                            <span style={{ fontSize: 10, fontWeight: 700, color: "#f59e0b", background: "#f59e0b15", border: "1px solid #f59e0b30", padding: "2px 8px", borderRadius: 5 }}>📅 {pend} programadas</span>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: "#f59e0b", background: "#f59e0b15", border: "1px solid #f59e0b30", padding: "2px 8px", borderRadius: 5 }}>📅 {pend} {t("lbl_scheduled_f",lang)}</span>
                           ) : null; })()}
                           {/* Fecha de incorporación */}
                           {selectedAthlete.created_at && (
                             <span style={{ fontSize: 10, color: "var(--text-faint)", padding: "2px 0" }}>
-                              Desde {new Date(selectedAthlete.created_at).toLocaleDateString("es", { month: "short", year: "numeric" })}
+                              {t("lbl_since",lang)} {new Date(selectedAthlete.created_at).toLocaleDateString(lang, { month: "short", year: "numeric" })}
                             </span>
                           )}
                         </div>
@@ -9191,14 +9242,14 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                               <React.Fragment key={msg.id}>
                                 {showDate && (
                                   <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", margin:"6px 0" }}>
-                                    {new Date(msg.created_at).toLocaleDateString("es",{weekday:"short",day:"numeric",month:"short"})}
+                                    {new Date(msg.created_at).toLocaleDateString(lang,{weekday:"short",day:"numeric",month:"short"})}
                                   </div>
                                 )}
                                 <div style={{ display:"flex", justifyContent: isCoach ? "flex-end" : "flex-start" }}>
                                   <div style={{ maxWidth:"78%", background: isCoach ? `linear-gradient(135deg,${RED},#a31515)` : "var(--bg-elevated)", color: isCoach ? "#fff" : "var(--text)", borderRadius: isCoach ? "16px 4px 16px 16px" : "4px 16px 16px 16px", padding:"9px 13px", fontSize:13, lineHeight:1.5, boxShadow: isCoach ? `0 2px 8px ${RED}30` : "none" }}>
                                     {msg.contenido}
                                     <div style={{ fontSize:10, color: isCoach ? "rgba(255,255,255,0.6)" : "var(--text-faint)", marginTop:3, textAlign:"right" }}>
-                                      {new Date(msg.created_at).toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"})}
+                                      {new Date(msg.created_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}
                                       {isCoach && <span style={{ marginLeft:4 }}>{msg.leido ? "✓✓" : "✓"}</span>}
                                     </div>
                                   </div>
@@ -9347,7 +9398,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                   <div style={{ flexShrink: 0, textAlign: "center", minWidth: 36 }}>
                                     <div style={{ fontSize: 15, fontWeight: 900, color: RED, lineHeight: 1 }}>{sp.fecha.slice(8)}</div>
                                     <div style={{ fontSize: 8, fontWeight: 700, color: RED+"aa", textTransform: "uppercase" }}>
-                                      {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{month:"short"})}
+                                      {new Date(sp.fecha+"T12:00:00").toLocaleDateString(lang,{month:"short"})}
                                     </div>
                                   </div>
                                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -9425,7 +9476,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                               <div style={{ width: 4, flexShrink: 0, background: `linear-gradient(180deg,${discColor},${discColor}80)`, borderRadius: "12px 0 0 12px" }} />
                               {/* Contenido */}
                               <div style={{ flex: 1, padding: "10px 12px", minWidth: 0 }}>
-                                <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 4 }}>{s.nombre || s.disciplina || "Sesión"}</div>
+                                <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 4 }}>{t("gsearch_sesion",lang)}</div>
                                 <div style={{ display: "flex", gap: 5, flexWrap: "wrap", alignItems: "center" }}>
                                   <span style={{ fontSize: 10, color: "var(--text-faint)" }}>{s.fecha}</span>
                                   {s.disciplina && <span style={{ fontSize: 10, fontWeight: 700, color: discColor, background: discColor+"18", borderRadius: 4, padding: "0px 5px" }}>{s.disciplina}</span>}
@@ -9551,7 +9602,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             <button onClick={() => setSessionDetail(null)}
               style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", fontSize: 22, lineHeight: 1, padding: "2px 6px", borderRadius: 6 }}>×</button>
 
-            <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", marginBottom: 10, paddingRight: 32, lineHeight: 1.3 }}>{sessionDetail.nombre || "Sesión"}</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", marginBottom: 10, paddingRight: 32, lineHeight: 1.3 }}>{sessionDetail.nombre || t("gsearch_sesion",lang)}</div>
 
             <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
               <span style={{ fontSize: 13, color: "var(--text-muted)" }}>📅 {sessionDetail.fecha}</span>
@@ -9666,8 +9717,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <AthleteAvatar profile={selectedAthlete.profiles} size={44} fontSize={18} />
                 <div>
-                  <div style={{ fontSize: 17, fontWeight: 900, color: "var(--text)", letterSpacing: -0.3 }}>{editingScheduledId ? "✏️ Editar sesión" : "Programar sesión"}</div>
-                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 1 }}>Para <strong style={{ color: RED }}>{selectedAthlete.profiles?.nombre || "el atleta"}</strong></div>
+                  <div style={{ fontSize: 17, fontWeight: 900, color: "var(--text)", letterSpacing: -0.3 }}>{editingScheduledId ? t("period_edit_session",lang) : t("period_schedule_session",lang)}</div>
+                  <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 1 }}>{t("period_for",lang)} <strong style={{ color: RED }}>{selectedAthlete.profiles?.nombre || t("lbl_the_athlete",lang)}</strong></div>
                 </div>
                 <button onClick={() => { setShowSchedule(false); setEditingScheduledId(null); setScheduleForm(SCHEDULE_EMPTY); }} style={{ marginLeft: "auto", background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", fontSize: 22, lineHeight: 1, padding: 4 }}>×</button>
               </div>
@@ -10466,7 +10517,7 @@ function CoachView({ user }) {
                       className="em-session-row"
                       style={{ background: "var(--bg-input)", borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer", transition: "background 0.12s", border: "1px solid transparent" }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 3 }}>{s.nombre || s.disciplina || "Sesión"}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 3 }}>{t("gsearch_sesion",lang)}</div>
                         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                           <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{s.fecha.slice(5).replace("-", "/")}</span>
                           {s.disciplina && <span style={{ fontSize: 10, fontWeight: 700, color: getDiscColor(s.disciplina), background: getDiscColor(s.disciplina) + "20", borderRadius: 4, padding: "1px 6px" }}>{s.disciplina}</span>}
@@ -10501,7 +10552,7 @@ function CoachView({ user }) {
               style={{ position: "absolute", top: 16, right: 16, background: "none", border: "none", cursor: "pointer", color: "var(--text-faint)", fontSize: 22, lineHeight: 1, padding: "2px 6px", borderRadius: 6 }}>×</button>
 
             {/* Nombre */}
-            <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", marginBottom: 10, paddingRight: 32, lineHeight: 1.3 }}>{sessionDetail.nombre || "Sesión"}</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "var(--text)", marginBottom: 10, paddingRight: 32, lineHeight: 1.3 }}>{sessionDetail.nombre || t("gsearch_sesion",lang)}</div>
 
             {/* Fecha + hora */}
             <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
@@ -12318,7 +12369,7 @@ function MainApp() {
       }
     } catch { /* ignore */ }
     const lastDisc = sessions.length > 0 ? sessions[0].disciplina || "" : "";
-    const nowTime = new Date().toLocaleTimeString("es", { hour:"2-digit", minute:"2-digit", hour12:false });
+    const nowTime = new Date().toLocaleTimeString(lang, { hour:"2-digit", minute:"2-digit", hour12:false });
     setForm({ ...EMPTY_SESSION, id: null, fecha: new Date().toISOString().slice(0, 10), disciplina: lastDisc, hora: nowTime, duracionMin: elapsedMins });
     setShowDraftBanner(false);
     setView("form");
@@ -12826,14 +12877,14 @@ function MainApp() {
                             <React.Fragment key={msg.id}>
                               {showDate && (
                                 <div style={{ textAlign:"center", fontSize:10, color:"var(--text-faint)", margin:"4px 0" }}>
-                                  {new Date(msg.created_at).toLocaleDateString("es",{weekday:"short",day:"numeric",month:"short"})}
+                                  {new Date(msg.created_at).toLocaleDateString(lang,{weekday:"short",day:"numeric",month:"short"})}
                                 </div>
                               )}
                               <div style={{ display:"flex", justifyContent: isMe ? "flex-end" : "flex-start" }}>
                                 <div style={{ maxWidth:"78%", background: isMe ? "linear-gradient(135deg,#3b82f6,#1d4ed8)" : "var(--bg-elevated)", color: isMe ? "#fff" : "var(--text)", borderRadius: isMe ? "16px 4px 16px 16px" : "4px 16px 16px 16px", padding:"9px 13px", fontSize:13, lineHeight:1.5, boxShadow: isMe ? "0 2px 8px #3b82f630" : "none" }}>
                                   {msg.contenido}
                                   <div style={{ fontSize:10, color: isMe ? "rgba(255,255,255,0.6)" : "var(--text-faint)", marginTop:3, textAlign:"right" }}>
-                                    {new Date(msg.created_at).toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"})}
+                                    {new Date(msg.created_at).toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit"})}
                                     {isMe && <span style={{ marginLeft:4 }}>{msg.leido ? "✓✓" : "✓"}</span>}
                                   </div>
                                 </div>
@@ -13034,7 +13085,7 @@ function MainApp() {
                             {isToday && <div style={{ fontSize:9, fontWeight:800, color:"#3b82f6", textTransform:"uppercase", letterSpacing:0.5, marginBottom:2 }}>HOY</div>}
                             <div style={{ fontSize:20, fontWeight:900, color:isToday?"#3b82f6":"var(--text)", lineHeight:1 }}>{sp.fecha.slice(8)}</div>
                             <div style={{ fontSize:9, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase" }}>
-                              {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{month:"short"})}
+                              {new Date(sp.fecha+"T12:00:00").toLocaleDateString(lang,{month:"short"})}
                             </div>
                           </div>
                           <div style={{ flex:1, padding:"10px 14px", minWidth:0 }}>
@@ -13085,7 +13136,7 @@ function MainApp() {
                           <div style={{ flexShrink:0, textAlign:"center", minWidth:36 }}>
                             <div style={{ fontSize:16, fontWeight:900, color:"#4ade80", lineHeight:1 }}>{sp.fecha.slice(8)}</div>
                             <div style={{ fontSize:9, fontWeight:700, color:"#4ade8080", textTransform:"uppercase" }}>
-                              {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{month:"short"})}
+                              {new Date(sp.fecha+"T12:00:00").toLocaleDateString(lang,{month:"short"})}
                             </div>
                           </div>
                           <div style={{ flex:1, minWidth:0 }}>
@@ -14068,7 +14119,7 @@ function MainApp() {
                 <div style={{ flexShrink:0, background:"#3b82f615", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"10px 12px", borderRight:"1px solid #3b82f625" }}>
                   <div style={{ fontSize:18, fontWeight:900, color: isPast?"#f87171":"#3b82f6", lineHeight:1 }}>{sp.fecha.slice(8)}</div>
                   <div style={{ fontSize:9, fontWeight:700, color: isPast?"#f87171aa":"#3b82f6aa", textTransform:"uppercase" }}>
-                    {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{month:"short"})}
+                    {new Date(sp.fecha+"T12:00:00").toLocaleDateString(lang,{month:"short"})}
                   </div>
                 </div>
                 {/* Contenido */}
@@ -14857,7 +14908,7 @@ function MainApp() {
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#38a169", textTransform: "uppercase", letterSpacing: 1.2 }}>{tr("detail_next")}</div>
                   <button
                     onClick={() => {
-                      const nowTime = new Date().toLocaleTimeString("es", { hour:"2-digit", minute:"2-digit", hour12:false });
+                      const nowTime = new Date().toLocaleTimeString(lang, { hour:"2-digit", minute:"2-digit", hour12:false });
                       setFormErrors({});
                       setFormStep(1);
                       setFormDiscCat("");
@@ -15766,7 +15817,7 @@ function MainApp() {
                         }} />
                       <div style={{ display:"flex", gap:4, marginTop:6, flexWrap:"wrap" }}>
                         {[
-                          [tr("time_now"),       () => new Date().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit",hour12:false})],
+                          [tr("time_now"),       () => new Date().toLocaleTimeString(lang,{hour:"2-digit",minute:"2-digit",hour12:false})],
                           [tr("time_morning"),   () => "07:00"],
                           [tr("time_afternoon"), () => "17:00"],
                           [tr("time_evening"),   () => "21:00"],
@@ -16211,7 +16262,7 @@ function MainApp() {
                     {sp.titulo || sp.disciplina || t("home_coach_session",lang)}
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:5 }}>
-                    <span style={{ fontSize:11, color:"#3b82f6", background:"#3b82f615", borderRadius:5, padding:"2px 9px", fontWeight:700 }}>📅 {new Date(sp.fecha+"T12:00:00").toLocaleDateString("es",{weekday:"short",day:"numeric",month:"long"})}</span>
+                    <span style={{ fontSize:11, color:"#3b82f6", background:"#3b82f615", borderRadius:5, padding:"2px 9px", fontWeight:700 }}>📅 {new Date(sp.fecha+"T12:00:00").toLocaleDateString(lang,{weekday:"short",day:"numeric",month:"long"})}</span>
                     {sp.hora && <span style={{ fontSize:11, color:"var(--text-muted)", background:"var(--bg-input)", borderRadius:5, padding:"2px 9px" }}>🕐 {sp.hora}</span>}
                     {sp.disciplina && <span style={{ fontSize:11, fontWeight:700, color:discColor, background:discColor+"18", borderRadius:5, padding:"2px 9px" }}>{sp.disciplina}</span>}
                     {spMeta.tipo && <span style={{ fontSize:11, fontWeight:700, color:tipoColor, background:tipoColor+"18", borderRadius:5, padding:"2px 9px" }}>{spMeta.tipo}</span>}

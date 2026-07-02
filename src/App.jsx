@@ -708,6 +708,40 @@ const TRANSLATIONS = {
     save_success_fallback:"Sesión registrada",
     save_returning:"Volviendo a sesiones...",
     coach_session_autofill:"Los campos se han rellenado automáticamente. Añade tu RPE y sensaciones al terminar.",
+    /* ── GREETINGS ── */
+    greet_morning:"Buenos días", greet_afternoon:"Buenas tardes", greet_night:"Buenas noches",
+    /* ── HOME STATS STRIP ── */
+    home_sessions_lbl:"sesiones", home_volume_lbl:"volumen",
+    home_action_log:"Nueva sesión", home_action_log_sub:"Registrar entreno",
+    home_action_hydra:"+ Hidratación", home_action_water:"Añadir agua",
+    home_action_recov:"+ Recuperación", home_action_physio:"Fisio / masaje",
+    home_action_weight:"Registrar peso", home_action_bio_sub:"Actualizar bio",
+    /* ── TÉCNICAS ── */
+    tec_unique:"Técnicas únicas", tec_records:"Registros",
+    tec_most:"Más practicada", tec_no_disc:"Sin disciplina",
+    /* ── CALENDARIO KPIs ── */
+    cal_workouts:"entrenamientos", cal_workout:"entrenamiento",
+    cal_vol:"Volumen", cal_rpe:"RPE med",
+    /* ── STATS KPI LABELS ── */
+    kpi_time:"TIEMPO", kpi_rpe:"RPE MEDIO", kpi_top_disc:"TOP DISC.",
+    kpi_streak:"RACHA ACTIVA", kpi_best_streak:"MEJOR RACHA", kpi_this_month:"ESTE MES",
+    /* ── PAGE HEADERS ── */
+    page_sessions_sub:"Registro de entrenamiento",
+    page_stats_sub:"Análisis de rendimiento",
+    page_progress_sub:"Sistema de progreso",
+    /* ── BIOMETRICS TABS ── */
+    bio_tab_peso:"PESO", bio_tab_agua:"AGUA", bio_tab_cal:"CALORÍAS",
+    bio_tab_inj:"LESIONES", bio_tab_rec:"RECUPERACIÓN",
+    /* ── PROFILE ── */
+    lbl_time_kpi:"TIEMPO", lbl_arts:"ARTES", lbl_preferences:"Preferencias",
+    /* ── DROPDOWN ── */
+    settings_light:"Modo claro",
+    dropdown_updates:"Novedades", dropdown_change_pass:"Cambiar contraseña",
+    auth_confirm_password:"Confirmar contraseña",
+    btn_update_pass:"Actualizar contraseña",
+    dropdown_delete:"Eliminar cuenta",
+    /* ── MISC ── */
+    year_full:"Año completo",
     /* ── ATLETA: NAV ── */
     nav_home:"Inicio", nav_coach:"Coach", nav_biometria:"Biometría", nav_profile:"Perfil",
     /* ── ATLETA: BOTONES ── */
@@ -1029,6 +1063,40 @@ const TRANSLATIONS = {
     save_success_fallback:"Session logged",
     save_returning:"Returning to sessions...",
     coach_session_autofill:"Fields have been pre-filled. Add your RPE and sensations when done.",
+    /* ── GREETINGS ── */
+    greet_morning:"Good morning", greet_afternoon:"Good afternoon", greet_night:"Good evening",
+    /* ── HOME STATS STRIP ── */
+    home_sessions_lbl:"sessions", home_volume_lbl:"volume",
+    home_action_log:"New session", home_action_log_sub:"Log training",
+    home_action_hydra:"+ Hydration", home_action_water:"Add water",
+    home_action_recov:"+ Recovery", home_action_physio:"Physio / massage",
+    home_action_weight:"Log weight", home_action_bio_sub:"Update biometrics",
+    /* ── TÉCNICAS ── */
+    tec_unique:"Unique techniques", tec_records:"Records",
+    tec_most:"Most practiced", tec_no_disc:"No discipline",
+    /* ── CALENDARIO KPIs ── */
+    cal_workouts:"workouts", cal_workout:"workout",
+    cal_vol:"Volume", cal_rpe:"Avg RPE",
+    /* ── STATS KPI LABELS ── */
+    kpi_time:"TIME", kpi_rpe:"AVG RPE", kpi_top_disc:"TOP DISC.",
+    kpi_streak:"ACTIVE STREAK", kpi_best_streak:"BEST STREAK", kpi_this_month:"THIS MONTH",
+    /* ── PAGE HEADERS ── */
+    page_sessions_sub:"Training log",
+    page_stats_sub:"Performance analysis",
+    page_progress_sub:"Progress system",
+    /* ── BIOMETRICS TABS ── */
+    bio_tab_peso:"WEIGHT", bio_tab_agua:"WATER", bio_tab_cal:"CALORIES",
+    bio_tab_inj:"INJURIES", bio_tab_rec:"RECOVERY",
+    /* ── PROFILE ── */
+    lbl_time_kpi:"TIME", lbl_arts:"ARTS", lbl_preferences:"Preferences",
+    /* ── DROPDOWN ── */
+    settings_light:"Light mode",
+    dropdown_updates:"What's new", dropdown_change_pass:"Change password",
+    auth_confirm_password:"Confirm password",
+    btn_update_pass:"Update password",
+    dropdown_delete:"Delete account",
+    /* ── MISC ── */
+    year_full:"Full year",
     /* ── ATLETA: NAV ── */
     nav_home:"Home", nav_coach:"Coach", nav_biometria:"Biometrics", nav_profile:"Profile",
     /* ── ATLETA: BOTONES ── */
@@ -1351,6 +1419,40 @@ const TRANSLATIONS = {
     save_success_fallback:"Sessió registrada",
     save_returning:"Tornant a sessions...",
     coach_session_autofill:"Els camps s'han emplenat automàticament. Afegeix el teu RPE i sensacions en acabar.",
+    /* ── GREETINGS ── */
+    greet_morning:"Bon dia", greet_afternoon:"Bona tarda", greet_night:"Bona nit",
+    /* ── HOME STATS STRIP ── */
+    home_sessions_lbl:"sessions", home_volume_lbl:"volum",
+    home_action_log:"Nova sessió", home_action_log_sub:"Registrar entrenament",
+    home_action_hydra:"+ Hidratació", home_action_water:"Afegir aigua",
+    home_action_recov:"+ Recuperació", home_action_physio:"Fisio / massatge",
+    home_action_weight:"Registrar pes", home_action_bio_sub:"Actualitzar bio",
+    /* ── TÉCNICAS ── */
+    tec_unique:"Tècniques úniques", tec_records:"Registres",
+    tec_most:"Més practicada", tec_no_disc:"Sense disciplina",
+    /* ── CALENDARIO KPIs ── */
+    cal_workouts:"entrenaments", cal_workout:"entrenament",
+    cal_vol:"Volum", cal_rpe:"RPE mit.",
+    /* ── STATS KPI LABELS ── */
+    kpi_time:"TEMPS", kpi_rpe:"RPE MITJÀ", kpi_top_disc:"TOP DISC.",
+    kpi_streak:"RATXA ACTIVA", kpi_best_streak:"MILLOR RATXA", kpi_this_month:"AQUEST MES",
+    /* ── PAGE HEADERS ── */
+    page_sessions_sub:"Registre d'entrenament",
+    page_stats_sub:"Anàlisi de rendiment",
+    page_progress_sub:"Sistema de progrés",
+    /* ── BIOMETRICS TABS ── */
+    bio_tab_peso:"PES", bio_tab_agua:"AIGUA", bio_tab_cal:"CALORIES",
+    bio_tab_inj:"LESIONS", bio_tab_rec:"RECUPERACIÓ",
+    /* ── PROFILE ── */
+    lbl_time_kpi:"TEMPS", lbl_arts:"ARTS", lbl_preferences:"Preferències",
+    /* ── DROPDOWN ── */
+    settings_light:"Mode clar",
+    dropdown_updates:"Novetats", dropdown_change_pass:"Canviar contrasenya",
+    auth_confirm_password:"Confirmar contrasenya",
+    btn_update_pass:"Actualitzar contrasenya",
+    dropdown_delete:"Eliminar compte",
+    /* ── MISC ── */
+    year_full:"Any complet",
     /* ── ATLETA: NAV ── */
     nav_home:"Inici", nav_coach:"Coach", nav_biometria:"Biometria", nav_profile:"Perfil",
     /* ── ATLETA: BOTONES ── */
@@ -1506,7 +1608,7 @@ function YearHeatmap({ sessions, lang = "es", onOpenSession }) {
           style={{ fontSize:11, fontWeight:600, padding:"4px 12px", borderRadius:20, border:"1px solid var(--border)",
             background: showFull ? "#ef444422" : "var(--bg-input)", color: showFull ? "#ef4444" : "var(--text-muted)",
             cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
-          {showFull ? "▲ 18 sem." : "▼ Año completo"}
+          {showFull ? "▲ 18 sem." : "▼ " + t("year_full",lang)}
         </button>
       </div>
       <svg viewBox={`0 0 ${W} ${H - LEGEND_H}`} className="em-heatmap-svg" width={showFull ? W : undefined} style={{ display: "block", height: "auto", overflow:"visible", width: showFull ? W : "100%" }}>
@@ -2535,7 +2637,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
   const totalSessions = allWithTecnica.length;
   const topDisc = (() => {
     const dc = {};
-    allWithTecnica.forEach(ss => { const d = ss.disciplina || "Sin disciplina"; dc[d] = (dc[d]||0)+1; });
+    allWithTecnica.forEach(ss => { const d = ss.disciplina || t("tec_no_disc",lang); dc[d] = (dc[d]||0)+1; });
     return Object.entries(dc).sort((a,b)=>b[1]-a[1])[0]?.[0] || "—";
   })();
   const topTecnica = allTecnicas[0]?.[0] || "—";
@@ -2552,7 +2654,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
 
   const byDisc = {};
   filtered.forEach(ss => {
-    const disc = ss.disciplina || "Sin disciplina";
+    const disc = ss.disciplina || t("tec_no_disc",lang);
     if (!byDisc[disc]) byDisc[disc] = [];
     byDisc[disc].push(ss);
   });
@@ -2590,10 +2692,10 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
         <div style={{ fontSize:10, fontWeight:800, color:RED, textTransform:"uppercase", letterSpacing:1.5, marginBottom:14 }}>🥋 Biblioteca de técnicas</div>
         <div className="em-tec-kpi-grid">
           {[
-            { label:"Técnicas únicas", value:totalUnicas, icon:"📚" },
-            { label:"Registros",       value:totalSessions, icon:"📝" },
-            { label:"Top disciplina",  value:discLabel(topDisc, lang), icon:"🏆", small:true },
-            { label:"Más practicada",  value:totalUnicas>0?`${allTecnicas[0][1].count}×`:"—", icon:"🔥" },
+            { label:t("tec_unique",lang), value:totalUnicas, icon:"📚" },
+            { label:t("tec_records",lang), value:totalSessions, icon:"📝" },
+            { label:t("stats_top_disc",lang), value:discLabel(topDisc, lang), icon:"🏆", small:true },
+            { label:t("tec_most",lang), value:totalUnicas>0?`${allTecnicas[0][1].count}×`:"—", icon:"🔥" },
           ].map(({ label, value, icon, small }) => (
             <div key={label} className="em-tec-kpi" style={{ textAlign:"center" }}>
               <div style={{ fontSize:18, marginBottom:4 }}>{icon}</div>
@@ -2675,7 +2777,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name}</div>
                     <div style={{ fontSize:11, color:"var(--text-faint)" }}>
-                      {info.disc ? discLabel(info.disc, lang) : "Sin disciplina"}
+                      {info.disc ? discLabel(info.disc, lang) : t("tec_no_disc",lang)}
                       {info.lastDate && <> · última vez {info.lastDate}</>}
                     </div>
                   </div>
@@ -2825,7 +2927,7 @@ function CalendarView({ sessions, onOpenDetail, lang = "es" }) {
         <div style={{ textAlign:"center" }}>
           <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", textTransform:"capitalize", letterSpacing:-0.3 }}>{monthLabel}</div>
           <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1 }}>
-            {monthDates.length} entrenamiento{monthDates.length!==1?"s":""}
+            {monthDates.length} {monthDates.length!==1?t("cal_workouts",lang):t("cal_workout",lang)}
           </div>
         </div>
         <button style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:10, color:"var(--text)", width:36, height:36, fontSize:16, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center" }} onClick={next}>→</button>
@@ -2835,9 +2937,9 @@ function CalendarView({ sessions, onOpenDetail, lang = "es" }) {
       {monthDates.length > 0 && (
         <div className="em-cal-kpi-grid">
           {[
-            { icon:"🥋", label:"Sesiones", value:monthSessAll.length },
-            { icon:"⏱", label:"Volumen",  value:monthMin>=60?`${Math.round(monthMin/60*10)/10}h`:`${monthMin}m` },
-            { icon:"💪", label:"RPE med",  value:monthRpeMed||"—" },
+            { icon:"🥋", label:t("nav_sessions",lang), value:monthSessAll.length },
+            { icon:"⏱", label:t("cal_vol",lang), value:monthMin>=60?`${Math.round(monthMin/60*10)/10}h`:`${monthMin}m` },
+            { icon:"💪", label:t("cal_rpe",lang), value:monthRpeMed||"—" },
           ].map(({ icon, label, value }) => (
             <div key={label} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"10px 0", textAlign:"center" }}>
               <div style={{ fontSize:16, marginBottom:2 }}>{icon}</div>
@@ -2995,7 +3097,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   const rpeMed    = rpeVals.length ? (rpeVals.reduce((a,b) => a+b,0)/rpeVals.length).toFixed(1) : null;
 
   const hora   = new Date().getHours();
-  const saludo = hora < 13 ? "Buenos días" : hora < 20 ? "Buenas tardes" : "Buenas noches";
+  const saludo = hora < 13 ? t("greet_morning",lang) : hora < 20 ? t("greet_afternoon",lang) : t("greet_night",lang);
   const nombre = profile?.nombre?.split(" ")[0] || "Atleta";
 
   const sessByDate = {};
@@ -3048,9 +3150,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         {/* Stats strip */}
         <div style={{ position:"relative", display:"flex", gap:0, marginTop:22, paddingTop:18, borderTop:`1px solid rgba(255,255,255,0.07)` }}>
           {[
-            { val: sesSemana.length, label:"sesiones", icon:"🥋", color:RED },
-            { val: minSemana ? `${minSemana}` : "—", unit:"min", label:"volumen", icon:"⏱️", color:BLUE },
-            { val: rpeMed || "—", label:"RPE medio", icon:"💪", color: rpeMed ? (parseFloat(rpeMed)>=8?"#ef4444":parseFloat(rpeMed)>=6?GOLD:GREEN) : "var(--text-faint)" },
+            { val: sesSemana.length, label:t("home_sessions_lbl",lang), icon:"🥋", color:RED },
+            { val: minSemana ? `${minSemana}` : "—", unit:"min", label:t("home_volume_lbl",lang), icon:"⏱️", color:BLUE },
+            { val: rpeMed || "—", label:t("wb_avg_rpe",lang), icon:"💪", color: rpeMed ? (parseFloat(rpeMed)>=8?"#ef4444":parseFloat(rpeMed)>=6?GOLD:GREEN) : "var(--text-faint)" },
           ].map((s, i) => (
             <div key={s.label} style={{ flex:1, display:"flex", flexDirection:"column", alignItems:"center", paddingTop:2, paddingBottom:2, borderRight: i < 2 ? "1px solid rgba(255,255,255,0.07)" : "none" }}>
               <div style={{ fontSize:11, marginBottom:4 }}>{s.icon}</div>
@@ -3331,10 +3433,10 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
           {[
-            { icon:"🥋", label:"Nueva sesión",    sub:"Registrar entreno", color:RED,    dest:"form" },
-            { icon:"⚖️", label:"Registrar peso",  sub:"Actualizar bio",    color:GOLD,   dest:"cuerpo" },
-            { icon:"💧", label:"+ Hidratación",   sub:"Añadir agua",       color:BLUE,   dest:"cuerpo" },
-            { icon:"🧘", label:"+ Recuperación",  sub:"Fisio / masaje",    color:PURPLE, dest:"cuerpo" },
+            { icon:"🥋", label:t("home_action_log",lang),    sub:t("home_action_log_sub",lang), color:RED,    dest:"form" },
+            { icon:"⚖️", label:t("home_action_weight",lang), sub:t("home_action_bio_sub",lang), color:GOLD, dest:"cuerpo" },
+            { icon:"💧", label:t("home_action_hydra",lang),  sub:t("home_action_water",lang),  color:BLUE,  dest:"cuerpo" },
+            { icon:"🧘", label:t("home_action_recov",lang),  sub:t("home_action_physio",lang), color:PURPLE, dest:"cuerpo" },
           ].map(a => (
             <button key={a.label} onClick={() => onNavigate(a.dest)}
               style={{ display:"flex", alignItems:"center", gap:12, padding:"14px 16px", borderRadius:16, border:`1px solid ${a.color}18`, background:`${a.color}06`, color:"var(--text)", cursor:"pointer", transition:"all 0.18s", textAlign:"left", width:"100%" }}
@@ -3775,11 +3877,11 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
       <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:6, marginBottom:20 }}>
         {[
-          { key:"peso",     label:"PESO",        val: latest ? `${latest.peso} kg` : "—",   icon:"⚖️", color: RED,     onClick: () => setBioTab("peso") },
-          { key:"hidra",    label:"AGUA",         val: aguaHoy ? `${aguaHoy} ml` : "—",      icon:"💧", color: BLUE,    onClick: () => setBioTab("hidra") },
-          { key:"nutricion",label:"CALORÍAS",     val: caloHoy ? `${caloHoy} kcal` : "—",   icon:"🥗", color: GREEN,   onClick: () => setBioTab("nutricion") },
-          { key:"lesiones", label:"LESIONES",     val: lesionesActivas ? `${lesionesActivas} activa${lesionesActivas>1?"s":""}` : "OK", icon:"🩹", color: lesionesActivas ? "#ef4444" : GREEN, onClick: () => setBioTab("lesiones") },
-          { key:"recup",    label:"RECUPERACIÓN", val: recupThisWeek.length ? `${recupThisWeek.length}/sem` : "—", icon:"🧘", color: PURPLE, onClick: () => setBioTab("recup") },
+          { key:"peso",     label:t("bio_tab_peso",lang), val: latest ? `${latest.peso} kg` : "—",   icon:"⚖️", color: RED,     onClick: () => setBioTab("peso") },
+          { key:"hidra",    label:t("bio_tab_agua",lang), val: aguaHoy ? `${aguaHoy} ml` : "—",      icon:"💧", color: BLUE,    onClick: () => setBioTab("hidra") },
+          { key:"nutricion",label:t("bio_tab_cal",lang),  val: caloHoy ? `${caloHoy} kcal` : "—",   icon:"🥗", color: GREEN,   onClick: () => setBioTab("nutricion") },
+          { key:"lesiones", label:t("bio_tab_inj",lang),  val: lesionesActivas ? `${lesionesActivas} activa${lesionesActivas>1?"s":""}` : "OK", icon:"🩹", color: lesionesActivas ? "#ef4444" : GREEN, onClick: () => setBioTab("lesiones") },
+          { key:"recup",    label:t("bio_tab_rec",lang),  val: recupThisWeek.length ? `${recupThisWeek.length}/sem` : "—", icon:"🧘", color: PURPLE, onClick: () => setBioTab("recup") },
         ].map(kpi => {
           const isActive = bioTab === kpi.key;
           return (
@@ -4852,7 +4954,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
               onMouseLeave={e => e.currentTarget.style.background = "none"}>
               <span style={{ fontSize: 16 }}>{darkMode ? "☀️" : "🌙"}</span>
-              <span style={{ flex: 1, textAlign: "left" }}>{darkMode ? "Modo claro" : "Modo oscuro"}</span>
+              <span style={{ flex: 1, textAlign: "left" }}>{darkMode ? t("settings_light",lang) : t("settings_dark",lang)}</span>
             </button>
             {/* Idioma */}
             {onLangChange && (
@@ -4878,7 +4980,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
                 onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
                 onMouseLeave={e => e.currentTarget.style.background = "none"}>
                 <span style={{ fontSize: 16 }}>📋</span>
-                <span style={{ flex: 1, textAlign: "left" }}>Novedades</span>
+                <span style={{ flex: 1, textAlign: "left" }}>{t("dropdown_updates",lang)}</span>
               </button>
             </div>
           )}
@@ -4890,25 +4992,25 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
               onMouseLeave={e => e.currentTarget.style.background = "none"}>
               <span style={{ fontSize: 16 }}>🔑</span>
-              <span style={{ flex: 1, textAlign: "left" }}>Cambiar contraseña</span>
+              <span style={{ flex: 1, textAlign: "left" }}>{t("dropdown_change_pass",lang)}</span>
               <span style={{ fontSize: 10, color: "var(--text-faint)" }}>{showPassChange ? "▲" : "▼"}</span>
             </button>
             {showPassChange && (
               <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
                 <input
                   type="password" value={newPass} onChange={e => setNewPass(e.target.value)}
-                  placeholder="Nueva contraseña" maxLength={128}
+                  placeholder={t("auth_new_password",lang)} maxLength={128}
                   style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }}
                 />
                 <input
                   type="password" value={confirmPass} onChange={e => setConfirmPass(e.target.value)}
-                  placeholder="Confirmar contraseña" maxLength={128}
+                  placeholder={t("auth_confirm_password",lang)} maxLength={128}
                   style={{ width: "100%", padding: "8px 10px", borderRadius: 8, border: `1px solid ${confirmPass && confirmPass !== newPass ? "#ef4444" : "var(--border)"}`, background: "var(--bg-input)", color: "var(--text)", fontSize: 16, boxSizing: "border-box" }}
                 />
                 {passMsg && <div style={{ fontSize: 12, color: passMsg.startsWith("✅") ? "#15803d" : "#ef4444", fontWeight: 600 }}>{passMsg}</div>}
                 <button onClick={handleChangePassword} disabled={passSaving || !newPass || !confirmPass}
                   style={{ padding: "8px", borderRadius: 8, border: "none", background: "#C41A1A", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", opacity: passSaving || !newPass || !confirmPass ? 0.5 : 1 }}>
-                  {passSaving ? "Guardando..." : "Actualizar contraseña"}
+                  {passSaving ? t("btn_saving",lang) : t("btn_update_pass",lang)}
                 </button>
               </div>
             )}
@@ -4929,7 +5031,7 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
               onMouseEnter={e => e.currentTarget.style.color = RED}
               onMouseLeave={e => e.currentTarget.style.color = "var(--text-faint)"}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-              Eliminar cuenta
+              {t("dropdown_delete",lang)}
             </button>
           </div>
 
@@ -6831,7 +6933,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
   const nombre = profile?.nombre || user?.email?.split("@")[0] || "Coach";
   const hora = new Date().getHours();
-  const saludo = hora < 13 ? "Buenos días" : hora < 20 ? "Buenas tardes" : "Buenas noches";
+  const saludo = hora < 13 ? t("greet_morning",lang) : hora < 20 ? t("greet_afternoon",lang) : t("greet_night",lang);
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)" }}>
@@ -13659,9 +13761,9 @@ function MainApp() {
               {/* ── Stats de carrera ── */}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:16 }}>
                 {[
-                  { icon:"📋", label:"SESIONES", value: sessions.length, color:"#e53e3e" },
-                  { icon:"⏱", label:"TIEMPO",    value: totalHrs,        color:"#3b82f6" },
-                  { icon:"🥋", label:"ARTES",     value: discSet.length || "—", color:"#f59e0b" },
+                  { icon:"📋", label:t("stats_sessions",lang).toUpperCase(), value: sessions.length, color:"#e53e3e" },
+                  { icon:"⏱", label:t("lbl_time_kpi",lang), value: totalHrs, color:"#3b82f6" },
+                  { icon:"🥋", label:t("lbl_arts",lang), value: discSet.length || "—", color:"#f59e0b" },
                 ].map(s => (
                   <div key={s.label} style={{ background:"var(--bg-card)", borderTop:"2px solid "+s.color, border:"1px solid var(--border)", borderRadius:12, padding:"12px 8px", textAlign:"center" }}>
                     <div style={{ fontSize:18, marginBottom:4 }}>{s.icon}</div>
@@ -13741,7 +13843,7 @@ function MainApp() {
 
               {/* ── Preferencias ── */}
               <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"16px 18px", marginBottom:16 }}>
-                <div style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14, display:"flex", alignItems:"center", gap:8 }}><span style={{ color:"#C41A1A" }}>//</span> Preferencias</div>
+                <div style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14, display:"flex", alignItems:"center", gap:8 }}><span style={{ color:"#C41A1A" }}>//</span> {t("lbl_preferences",lang)}</div>
                 <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
                   {/* Modo oscuro */}
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderBottom:"1px solid var(--border)" }}>
@@ -14143,9 +14245,9 @@ function MainApp() {
         {/* TÍTULO SESIONES */}
         {view === "sesiones" && (
           <div style={{ marginBottom: sessions.length ? 20 : 0 }}>
-            <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// Registro de entrenamiento</div>
+            <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// {t("page_sessions_sub",lang)}</div>
             <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between" }}>
-              <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>MIS SESIONES</h1>
+              <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>{t("my",lang).toUpperCase()} {t("sessions_title",lang).toUpperCase()}</h1>
               {sessions.length > 0 && (
                 <span style={{ fontSize:12, color:"var(--text-faint)", fontWeight:600, background:"var(--bg-card)", border:"1px solid var(--border)", padding:"4px 10px", borderRadius:20 }}>
                   {sessions.length} {sessions.length !== 1 ? tr("registered_pl") : tr("registered_s")}
@@ -14892,8 +14994,8 @@ function MainApp() {
           return (
             <>
               <div style={{ marginBottom:20 }}>
-                <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// Sistema de progreso</div>
-                <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>MI PROGRESO</h1>
+                <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// {t("page_progress_sub",lang)}</div>
+                <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>{t("my",lang).toUpperCase()} {t("pro_title",lang).toUpperCase()}</h1>
               </div>
 
               {/* ── RANGO / CINTURÓN ── */}
@@ -15258,9 +15360,9 @@ function MainApp() {
             <>
               {/* ── Header futurista ── */}
               <div style={{ marginBottom:20 }}>
-                <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// Análisis de rendimiento</div>
+                <div style={{ fontSize:11, fontWeight:800, color:"#C41A1A", letterSpacing:3, textTransform:"uppercase", marginBottom:4 }}>// {t("page_stats_sub",lang)}</div>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", flexWrap:"wrap", gap:8 }}>
-                  <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>ESTADÍSTICAS</h1>
+                  <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>{t("stats_title",lang).toUpperCase()}</h1>
                   <div style={{ display:"flex", gap:6 }}>
                     <button style={{ padding:"6px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text-faint)", fontSize:10, fontWeight:700, cursor:"pointer", letterSpacing:0.5 }} onClick={() => exportCSV(sessions)}>↓ CSV</button>
                     <button style={{ padding:"6px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text-faint)", fontSize:10, fontWeight:700, cursor:"pointer" }} onClick={() => exportJSON(sessions, goals)}>↓ JSON</button>
@@ -15274,10 +15376,10 @@ function MainApp() {
               {/* ── KPIs fila 1 ── */}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8, marginBottom:10 }}>
                 {[
-                  { val: sessions.length,                             label:"SESIONES",   icon:"📋", color:"#e53e3e" },
-                  { val: Math.round(totalMin/60*10)/10 + "h",        label:"TIEMPO",     icon:"⏱",  color:"#3b82f6" },
-                  { val: avgRpe || "—",                               label:"RPE MEDIO",  icon:"💪", color: avgRpeColor },
-                  { val: topDisc ? topDisc[0] : "—",                 label:"TOP DISC.",  icon:"🥋", color: topDisc ? getDiscColor(topDisc[0]) : "#555", small: !!topDisc },
+                  { val: sessions.length,                             label:t("stats_sessions",lang).toUpperCase(), icon:"📋", color:"#e53e3e" },
+                  { val: Math.round(totalMin/60*10)/10 + "h",        label:t("kpi_time",lang),     icon:"⏱",  color:"#3b82f6" },
+                  { val: avgRpe || "—",                               label:t("kpi_rpe",lang),  icon:"💪", color: avgRpeColor },
+                  { val: topDisc ? topDisc[0] : "—",                 label:t("kpi_top_disc",lang),  icon:"🥋", color: topDisc ? getDiscColor(topDisc[0]) : "#555", small: !!topDisc },
                 ].map(({ val, label, icon, color, small }) => (
                   <div key={label} style={{ background:"var(--bg-card)", borderTop:"2px solid "+color, border:"1px solid var(--border)", borderRadius:12, padding:"12px 8px", textAlign:"center" }}>
                     <div style={{ fontSize:16, marginBottom:4 }}>{icon}</div>
@@ -15290,9 +15392,9 @@ function MainApp() {
               {/* ── KPIs fila 2 — rachas ── */}
               <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8, marginBottom:14 }}>
                 {[
-                  { val: streaks.current, unit: streaks.current===1?"día":"días", label:"RACHA ACTIVA", color: streaks.current > 0 ? "#e53e3e" : "var(--text-faint)", icon: streaks.current >= 7 ? "🔥" : "⚡" },
-                  { val: streaks.best,    unit: streaks.best===1?"día":"días",    label:"MEJOR RACHA", color:"#f59e0b", icon:"🏆" },
-                  { val: thisMonth,       unit:"sesiones",                        label:"ESTE MES",    color:"#10b981", icon:"📅" },
+                  { val: streaks.current, unit: streaks.current===1?t("pro_day",lang):t("pro_days",lang), label:t("kpi_streak",lang), color: streaks.current > 0 ? "#e53e3e" : "var(--text-faint)", icon: streaks.current >= 7 ? "🔥" : "⚡" },
+                  { val: streaks.best,    unit: streaks.best===1?t("pro_day",lang):t("pro_days",lang), label:t("kpi_best_streak",lang), color:"#f59e0b", icon:"🏆" },
+                  { val: thisMonth,       unit:t("stats_sessions_kpi",lang),      label:t("kpi_this_month",lang), color:"#10b981", icon:"📅" },
                 ].map(({ val, unit, label, color, icon }) => (
                   <div key={label} style={{ background:"var(--bg-card)", border:"1px solid "+color+"25", borderRadius:12, padding:"12px 8px", textAlign:"center" }}>
                     <div style={{ fontSize:16, marginBottom:4 }}>{icon}</div>

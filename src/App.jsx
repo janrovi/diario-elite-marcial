@@ -64,12 +64,12 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 
-const DISCIPLINES = ["Boxeo", "MMA", "BJJ", "Muay Thai", "Taekwondo", "Karate", "Kung Fu", "Judo", "Kickboxing", "Krav Maga", "Grappling", "Lucha", "Sambo", "Capoeira", "Aikido", "Hapkido", "Kyokushin", "Savate", "Sanda", "Lethwei", "Catch Wrestling", "Shootfighting", "Ninjutsu", "Escrima", "Silat", "Systema", "Fuerza", "Movilidad", "Entrenamiento Aeróbico", "Pliometría", "Velocidad", "Cardio Kickboxing", "Defensa Personal", "Otra"];
+const DISCIPLINES = ["Boxeo", "MMA", "BJJ", "Muay Thai", "Taekwondo", "Karate", "Kung Fu", "Judo", "Kickboxing", "Krav Maga", "Grappling", "Lucha", "Sambo", "Capoeira", "Aikido", "Hapkido", "Kyokushin", "Savate", "Sanda", "Lethwei", "Catch Wrestling", "Shootfighting", "Ninjutsu", "Escrima", "Silat", "Systema", "Fuerza", "Hipertrofia", "Cardio", "Movilidad", "Calistenia", "CrossFit", "Funcional", "Entrenamiento Aeróbico", "Pliometría", "Velocidad", "Cardio Kickboxing", "Defensa Personal", "Otra"];
 
 const DISC_LABELS = {
-  en: { "Boxeo":"Boxing","Lucha":"Wrestling","Fuerza":"💪 Strength","Movilidad":"🧘 Mobility","Entrenamiento Aeróbico":"🏃 Aerobic Training","Pliometría":"⚡ Plyometrics","Velocidad":"💨 Speed","Defensa Personal":"Self-Defense","Otra":"Other" },
-  ca: { "Boxeo":"Boxa","Lucha":"Lluita","Fuerza":"💪 Força","Movilidad":"🧘 Mobilitat","Entrenamiento Aeróbico":"🏃 Entrenament Aeròbic","Pliometría":"⚡ Pliometria","Velocidad":"💨 Velocitat","Defensa Personal":"Defensa Personal","Otra":"Altra" },
-  es: { "Fuerza":"💪 Fuerza","Movilidad":"🧘 Movilidad","Entrenamiento Aeróbico":"🏃 Entren. Aeróbico","Pliometría":"⚡ Pliometría","Velocidad":"💨 Velocidad" },
+  en: { "Boxeo":"Boxing","Lucha":"Wrestling","Fuerza":"💪 Strength","Hipertrofia":"📈 Hypertrophy","Cardio":"🏃 Cardio","Movilidad":"🧘 Mobility","Calistenia":"🤸 Calisthenics","CrossFit":"🔥 CrossFit","Funcional":"⚙️ Functional","Entrenamiento Aeróbico":"🏃 Aerobic Training","Pliometría":"⚡ Plyometrics","Velocidad":"💨 Speed","Defensa Personal":"Self-Defense","Otra":"Other" },
+  ca: { "Boxeo":"Boxa","Lucha":"Lluita","Fuerza":"💪 Força","Hipertrofia":"📈 Hipertròfia","Cardio":"🏃 Cardio","Movilidad":"🧘 Mobilitat","Calistenia":"🤸 Calistènia","CrossFit":"🔥 CrossFit","Funcional":"⚙️ Funcional","Entrenamiento Aeróbico":"🏃 Entrenament Aeròbic","Pliometría":"⚡ Pliometria","Velocidad":"💨 Velocitat","Defensa Personal":"Defensa Personal","Otra":"Altra" },
+  es: { "Fuerza":"💪 Fuerza","Hipertrofia":"📈 Hipertrofia","Cardio":"🏃 Cardio","Movilidad":"🧘 Movilidad","Calistenia":"🤸 Calistenia","CrossFit":"🔥 CrossFit","Funcional":"⚙️ Funcional","Entrenamiento Aeróbico":"🏃 Entren. Aeróbico","Pliometría":"⚡ Pliometría","Velocidad":"💨 Velocidad" },
 };
 function discLabel(name, lang) { if (!name) return name; return (DISC_LABELS[lang] || {})[name] || name; }
 const DISC_COLORS = {
@@ -99,10 +99,15 @@ const DISC_COLORS = {
   "Silat":            "#f472b6",
   "Systema":          "#38bdf8",
   "Fuerza":           "#4ade80",
+  "Hipertrofia":      "#f97316",
+  "Cardio":            "#ef4444",
   "Movilidad":        "#93c5fd",
+  "Calistenia":       "#22d3ee",
+  "CrossFit":         "#eab308",
+  "Funcional":        "#6366f1",
   "Entrenamiento Aeróbico":"#fb923c",
   "Pliometría":       "#f59e0b",
-  "Velocidad":         "#a78bfa",
+  "Velocidad":        "#a78bfa",
   "Cardio Kickboxing":"#f472b6",
   "Defensa Personal": "#fbbf24",
   "Krav Maga":        "#22c55e",
@@ -197,7 +202,7 @@ const DISC_GROUPS = [
   { key:"striking",  label:"Striking",  discs:["Boxeo","Muay Thai","Kickboxing","Taekwondo","Karate","Kung Fu","Kyokushin","Savate","Sanda","Lethwei","Cardio Kickboxing","Capoeira"] },
   { key:"grappling", label:"Grappling", discs:["BJJ","Judo","Lucha","Grappling","Sambo","Aikido","Hapkido","Catch Wrestling","Shootfighting"] },
   { key:"mma",       label:"MMA",       discs:["MMA","Krav Maga","Defensa Personal","Ninjutsu","Escrima","Silat","Systema"] },
-  { key:"fisica",    label:"🏋️ Prep. Física",  discs:["Fuerza","Movilidad","Entrenamiento Aeróbico","Pliometría","Velocidad"] },
+  { key:"fisica",    label:"🏋️ Gym",             discs:["Fuerza","Hipertrofia","Cardio","Movilidad","Calistenia","CrossFit","Funcional","Pliometría","Velocidad"] },
   { key:"otra",      label:"Otra",      discs:["Otra"] },
 ];
 // Arts where submissions/finalizaciones make sense
@@ -5998,6 +6003,7 @@ function CoachFundadorPanel({ profile, user, cfTab, setCfTab, cfSuggForm, setCfS
 
 // ── ClubFundadorContent — componente standalone ─────────────────────────────
 function ClubFundadorContent({ user, profile }) {
+  const lang = localStorage.getItem("em_lang") || "es";
   const GOLD = "#f59e0b";
   const [fundTab, setFundTab] = React.useState("changelog");
   const [username, setUsername] = React.useState(profile?.username || "");

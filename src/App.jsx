@@ -5062,18 +5062,16 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             )}
           </div>
 
-          {/* Novedades — solo atletas y coaches no fundadores */}
-          {profile?.plan !== "fundador" && (
-            <div style={{ padding: "4px 10px", borderBottom: "1px solid var(--border)" }}>
-              <button onClick={() => { setShowNovedadesHistory(true); setOpen(false); }}
-                style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: "var(--text)", fontSize: 13, fontWeight: 500 }}
-                onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
-                onMouseLeave={e => e.currentTarget.style.background = "none"}>
-                <span style={{ fontSize: 16 }}>📋</span>
-                <span style={{ flex: 1, textAlign: "left" }}>{t("dropdown_updates",lang)}</span>
-              </button>
-            </div>
-          )}
+          {/* Novedades — visible para todos */}
+          <div style={{ padding: "4px 10px", borderBottom: "1px solid var(--border)" }}>
+            <button onClick={() => { setShowNovedadesHistory(true); setOpen(false); }}
+              style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", cursor: "pointer", padding: "8px 8px", borderRadius: 8, color: "var(--text)", fontSize: 13, fontWeight: 500 }}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--bg-input)"}
+              onMouseLeave={e => e.currentTarget.style.background = "none"}>
+              <span style={{ fontSize: 16 }}>📋</span>
+              <span style={{ flex: 1, textAlign: "left" }}>{t("dropdown_updates",lang)}</span>
+            </button>
+          </div>
 
           {/* Cambiar contraseña */}
           <div style={{ padding: "8px 10px", borderBottom: "1px solid var(--border)" }}>

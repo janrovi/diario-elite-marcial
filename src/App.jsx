@@ -177,6 +177,13 @@ const TIPO_CATS_SIMPLE = [
   { key: "Recuperación", icon: "🧘", color: "#8b5cf6" },
   { key: "Competición",  icon: "🏆", color: "#e97b0a" },
 ];
+// Auto-tipo: when discipline clearly implies session type, pre-fill it
+const DISC_TO_TIPO = {
+  "Fuerza":"Fuerza", "Hipertrofia":"Fuerza", "Calistenia":"Fuerza",
+  "CrossFit":"Fuerza", "Funcional":"Fuerza", "Pliometría":"Fuerza",
+  "Cardio":"Cardio", "Velocidad":"Cardio", "Entrenamiento Aeróbico":"Cardio",
+  "Movilidad":"Recuperación",
+};
 function getTipoColor(t) {
   if (!t) return "#3b82f6";
   if (["Fuerza","Fuerza máxima","Potencia","Hipertrofia","Fuerza-resistencia","Pliometría"].includes(t)) return "#f59e0b";
@@ -15865,7 +15872,7 @@ function MainApp() {
                               const color = getDiscColor(d);
                               return (
                                 <button key={d} type="button"
-                                  onClick={() => { setF("disciplina", active ? "" : d); if (!active) setFormDiscCat(""); }}
+                                  onClick={() => { setF("disciplina", active ? "" : d); if (!active && DISC_TO_TIPO[d]) setF("tipo_sesion", DISC_TO_TIPO[d]); if (!active) setFormDiscCat(""); }}
                                   style={{ fontSize:12, fontWeight: active ? 700 : 400, padding:"4px 12px", borderRadius:20, border: active ? `1px solid ${color}` : "1px solid var(--border)", background: active ? color+"22" : "var(--bg-input)", color: active ? color : "var(--text-muted)", cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap" }}
                                 >{discLabel(d, lang)}</button>
                               );

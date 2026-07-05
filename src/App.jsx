@@ -728,6 +728,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratación", home_action_water:"Añadir agua",
     home_action_recov:"+ Recuperación", home_action_physio:"Fisio / masaje",
     home_action_weight:"Registrar peso", home_action_bio_sub:"Actualizar bio",
+    coming_soon_badge:"Próximamente",
+    coming_soon_title:"Algo grande se acerca 🚀",
+    coming_soon_sub:"La actualización más importante de Élite Marcial",
+    coming_soon_body1:"📅 Periodización inteligente de 12 semanas adaptada a tu combate",
+    coming_soon_body2:"⚡ Alertas de sobrecarga basadas en metodología de élite",
+    coming_soon_body3:"🥊 Protocolo Fight Week con límites seguros de corte de peso",
+    coming_soon_body4:"🧠 Check-in diario de bienestar y fatiga acumulada",
+    coming_soon_note:"Basado en metodología universitaria de preparación física para MMA",
+    coming_soon_cta:"¡Lo espero!",
     recup_fisio:"Fisioterapia", recup_masaje:"Masaje", recup_estira:"Estiramiento", recup_hielo:"Hielo/Cryo",
     recup_stat_week:"Esta semana", recup_stat_fisio:"Fisio", lbl_total:"Total",
     lbl_since:"Desde", period_weeks_planned:"semanas planificadas",
@@ -1100,6 +1109,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hydration", home_action_water:"Add water",
     home_action_recov:"+ Recovery", home_action_physio:"Physio / massage",
     home_action_weight:"Log weight", home_action_bio_sub:"Update biometrics",
+    coming_soon_badge:"Coming soon",
+    coming_soon_title:"Something big is coming 🚀",
+    coming_soon_sub:"The biggest update in Élite Marcial history",
+    coming_soon_body1:"📅 12-week smart periodization adapted to your fight date",
+    coming_soon_body2:"⚡ Overload alerts based on elite methodology",
+    coming_soon_body3:"🥊 Fight Week protocol with safe weight cut limits",
+    coming_soon_body4:"🧠 Daily wellness & fatigue check-in",
+    coming_soon_note:"Based on university-level MMA physical preparation methodology",
+    coming_soon_cta:"Can't wait!",
     recup_fisio:"Physiotherapy", recup_masaje:"Massage", recup_estira:"Stretching", recup_hielo:"Ice/Cryo",
     recup_stat_week:"This week", recup_stat_fisio:"Physio", lbl_total:"Total",
     lbl_since:"Since", period_weeks_planned:"planned weeks",
@@ -1473,6 +1491,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratació", home_action_water:"Afegir aigua",
     home_action_recov:"+ Recuperació", home_action_physio:"Fisio / massatge",
     home_action_weight:"Registrar pes", home_action_bio_sub:"Actualitzar bio",
+    coming_soon_badge:"Pròximament",
+    coming_soon_title:"Alguna cosa gran s'acosta 🚀",
+    coming_soon_sub:"L'actualització més important d'Élite Marcial",
+    coming_soon_body1:"📅 Periodització intel·ligent de 12 setmanes adaptada al teu combat",
+    coming_soon_body2:"⚡ Alertes de sobrecàrrega basades en metodologia d'elit",
+    coming_soon_body3:"🥊 Protocol Fight Week amb límits segurs de tall de pes",
+    coming_soon_body4:"🧠 Check-in diari de benestar i fatiga acumulada",
+    coming_soon_note:"Basat en metodologia universitària de preparació física per a MMA",
+    coming_soon_cta:"Ho espero!",
     recup_fisio:"Fisioteràpia", recup_masaje:"Massatge", recup_estira:"Estirament", recup_hielo:"Gel/Cryo",
     recup_stat_week:"Aquesta setmana", recup_stat_fisio:"Fisio", lbl_total:"Total",
     lbl_since:"Des de", period_weeks_planned:"setmanes planificades",
@@ -11696,6 +11723,9 @@ function MainApp() {
   const [showNovedades, setShowNovedades] = useState(() =>
     !localStorage.getItem("em_novedades_jun2026_v3")
   );
+  const [showComingSoon, setShowComingSoon] = useState(() =>
+    !localStorage.getItem("em_coming_soon_jul2026_v1")
+  );
   const swRegistrationRef = useRef(null);
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
@@ -16171,6 +16201,31 @@ function MainApp() {
               onClick={() => { localStorage.setItem("em_novedades_jun2026_v3","1"); setShowNovedades(false); }}
               style={{ width:"100%", padding:"12px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
               Entendido
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showComingSoon && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4100, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+          onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoon(false); }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
+              <span style={{ background:"#C41A1A", color:"#fff", fontSize:10, fontWeight:800, padding:"3px 8px", borderRadius:20, letterSpacing:1, textTransform:"uppercase" }}>{t("coming_soon_badge", lang)}</span>
+            </div>
+            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:4 }}>{t("coming_soon_title", lang)}</div>
+            <div style={{ fontSize:12, color:"#C41A1A", fontWeight:700, marginBottom:16 }}>{t("coming_soon_sub", lang)}</div>
+            <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:2, marginBottom:12 }}>
+              {t("coming_soon_body1", lang)}<br/>
+              {t("coming_soon_body2", lang)}<br/>
+              {t("coming_soon_body3", lang)}<br/>
+              {t("coming_soon_body4", lang)}
+            </div>
+            <div style={{ fontSize:11, color:"var(--text-faint)", marginBottom:18, fontStyle:"italic" }}>{t("coming_soon_note", lang)}</div>
+            <button
+              onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoon(false); }}
+              style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+              {t("coming_soon_cta", lang)}
             </button>
           </div>
         </div>

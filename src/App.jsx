@@ -5177,18 +5177,22 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
+                { fecha:"Próximamente", icon:"🚀", titulo:"v2.8 — Periodización Inteligente", items:["📅 Periodización de 12 semanas adaptada a tu combate","⚡ Alertas de sobrecarga con metodología de élite","🥊 Protocolo Fight Week con control de corte de peso","🧠 Check-in diario de bienestar y fatiga acumulada"], badge:"next" },
                 { fecha:"28 Jun 2026", icon:"🛡️", titulo:"v2.7 — Seguridad reforzada & Email de bienvenida", items:["🛡️ Auditoría de seguridad completada — 12 puntos revisados","📧 Email de bienvenida al confirmar tu cuenta","💬 Mensajes coach↔atleta requieren conexión activa","⚡ Novedades accesibles desde el menú Más"] },
                 { fecha:"25 Jun 2026", icon:"⚡", titulo:"v2.6 — Portal, contraseña y Club", items:["🔑 Cambio de contraseña desde el perfil","💳 Portal de gestión de suscripción Stripe","🏅 Club Fundador en su propia pestaña","🔒 Cancelación de suscripción automática"] },
                 { fecha:"24 Jun 2026", icon:"🔒", titulo:"v2.0 — Seguridad y RGPD", items:["🛡 Headers de seguridad HTTP (CSP, HSTS)","⏱ Rate limiting en el login","🗑 Borrado de cuenta y datos (RGPD)","✉️ Prevención de enumeración de emails"] },
                 { fecha:"Jun 2026", icon:"📲", titulo:"v2.0 — Push nativas y módulo lesiones", items:["🔔 Notificaciones push nativas (Web Push)","🩹 Módulo de lesiones con 35 zonas","📱 Corrección zoom iOS en inputs"] },
                 { fecha:"Jun 2026", icon:"🏅", titulo:"v2.3-2.5 — Ecosistema Fundador", items:["@Username único por usuario","🗺 Roadmap con votación real","💬 Canal directo con Jan","🔖 Confirmación de email al registrarse"] },
               ].map((n, i) => (
-                <div key={i} style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 14, padding: "14px 16px" }}>
+                <div key={i} style={{ background: n.badge === "next" ? "rgba(196,26,26,0.06)" : "var(--bg-card)", border: n.badge === "next" ? "1px solid #C41A1A60" : "1px solid var(--border)", borderRadius: 14, padding: "14px 16px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                     <span style={{ fontSize: 20 }}>{n.icon}</span>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>{n.titulo}</div>
-                      <div style={{ fontSize: 10, color: "var(--text-faint)" }}>{n.fecha}</div>
+                    <div style={{ flex:1 }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>{n.titulo}</div>
+                        {n.badge === "next" && <span style={{ fontSize:9, fontWeight:800, color:"#C41A1A", background:"rgba(196,26,26,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Próx.</span>}
+                      </div>
+                      <div style={{ fontSize: 10, color: n.badge === "next" ? "#C41A1A" : "var(--text-faint)" }}>{n.fecha}</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
@@ -6391,6 +6395,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       .then(({ data }) => { if (data?.plan) setCoachPlanOverride(data.plan); });
   }, [user?.id]);
   const [coachView, setCoachView] = React.useState("equipo"); // "equipo" | "agenda" | "stats" | "periodo" | "perfil"
+  const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_coming_soon_jul2026_v1"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
   const [expandedAgendaAthletes, setExpandedAgendaAthletes] = React.useState({}); // atleta_id -> bool
@@ -10356,6 +10361,31 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           Mi diario
         </button>
       </nav>
+
+      {showComingSoonCoach && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4100, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+          onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoonCoach(false); }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
+              <span style={{ background:"#C41A1A", color:"#fff", fontSize:10, fontWeight:800, padding:"3px 8px", borderRadius:20, letterSpacing:1, textTransform:"uppercase" }}>Próximamente</span>
+            </div>
+            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:4 }}>Algo grande se acerca 🚀</div>
+            <div style={{ fontSize:12, color:"#C41A1A", fontWeight:700, marginBottom:16 }}>La actualización más importante de Élite Marcial</div>
+            <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:2, marginBottom:12 }}>
+              📅 Periodización inteligente de 12 semanas adaptada al combate<br/>
+              ⚡ Alertas de sobrecarga basadas en metodología de élite<br/>
+              🥊 Protocolo Fight Week con límites seguros de corte de peso<br/>
+              🧠 Check-in diario de bienestar y fatiga acumulada
+            </div>
+            <div style={{ fontSize:11, color:"var(--text-faint)", marginBottom:18, fontStyle:"italic" }}>Basado en metodología universitaria de preparación física para MMA</div>
+            <button
+              onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoonCoach(false); }}
+              style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
+              ¡Lo espero!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

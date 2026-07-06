@@ -10578,6 +10578,66 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       );
                     })()}
 
+                    {/* ── Periodización activa ── */}
+                    {(() => {
+                      if (!periodos || periodos.length === 0) return null;
+                      const today = new Date().toISOString().slice(0,10);
+                      // Buscar macrociclo activo (tipo macro con inicio/fin que cubra hoy)
+                      const activeMacro = periodos.find(p =>
+                        p.tipo !== "meso" && p.tipo !== "micro" && p.inicio && p.fin &&
+                        p.inicio <= today && p.fin >= today
+                      ) || periodos.find(p => p.tipo !== "meso" && p.tipo !== "micro");
+                      if (!activeMacro) return null;
+                      const isFuturo = activeMacro.inicio > today;
+                      const isPasado = activeMacro.fin < today;
+                      // Calcular mesociclo actual por semanas transcurridas desde inicio
+                      const mesos = activeMacro.mesociclos || [];
+                      let activeMeso = null;
+                      let semsUsed = 0;
+                      if (activeMacro.inicio && mesos.length > 0) {
+                        const startDate = new Date(activeMacro.inicio + "T12:00:00");
+                        const weeksElapsed = Math.floor((new Date() - startDate) / (7 * 86400000));
+                        for (const m of mesos) {
+                          semsUsed += (m.semanas || 0);
+                          if (weeksElapsed < semsUsed) { activeMeso = m; break; }
+                        }
+                        if (!activeMeso && mesos.length > 0) activeMeso = mesos[mesos.length - 1];
+                      }
+                      const faseColors = { base:"#3b82f6", especificidad:"#f59e0b", especifica:"#f59e0b", tapering:"#8b5cf6", tapering_cut:"#f43f5e", competicion:"#ef4444" };
+                      const faseColor = activeMeso ? (faseColors[activeMeso.fase?.toLowerCase()] || "#6b7280") : "#6b7280";
+                      const faseLabel = activeMeso?.fase ? activeMeso.fase.charAt(0).toUpperCase() + activeMeso.fase.slice(1) : null;
+                      return (
+                        <div style={{ background:"var(--bg-input)", borderRadius:14, padding:"12px 14px", marginBottom:16 }}>
+                          <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:8 }}>📅 Periodización activa</div>
+                          <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
+                            <div style={{ fontWeight:800, fontSize:13, color:"var(--text)", flex:1, minWidth:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
+                              {activeMacro.nombre || "Macrociclo"}
+                              {activeMacro.competicion && <span style={{ fontSize:11, color:"var(--text-faint)", fontWeight:400, marginLeft:5 }}>· {activeMacro.competicion}</span>}
+                            </div>
+                            {isFuturo && <span style={{ fontSize:9, fontWeight:800, color:"#6b7280", background:"#6b728018", borderRadius:6, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>Futuro</span>}
+                            {isPasado && <span style={{ fontSize:9, fontWeight:800, color:"#6b7280", background:"#6b728018", borderRadius:6, padding:"2px 8px", textTransform:"uppercase", letterSpacing:0.5 }}>Finalizado</span>}
+                          </div>
+                          {activeMeso && (
+                            <div style={{ marginTop:8, display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
+                              <span style={{ fontSize:11, color:faseColor, fontWeight:700, background:faseColor+"18", borderRadius:6, padding:"2px 8px" }}>{faseLabel}</span>
+                              <span style={{ fontSize:11, color:"var(--text-muted)", fontWeight:600 }}>{activeMeso.nombre}</span>
+                              {activeMeso.semanas && <span style={{ fontSize:10, color:"var(--text-faint)" }}>· {activeMeso.semanas} sem</span>}
+                              {activeMeso.objetivo && <span style={{ fontSize:10, color:"var(--text-faint)", fontStyle:"italic", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", maxWidth:180 }}>· {activeMeso.objetivo}</span>}
+                            </div>
+                          )}
+                          {mesos.length > 0 && (
+                            <div style={{ marginTop:8, display:"flex", gap:3 }}>
+                              {mesos.map((m, i) => {
+                                const mc = faseColors[m.fase?.toLowerCase()] || "#6b7280";
+                                const isActive = activeMeso?.id === m.id;
+                                return <div key={m.id || i} title={m.nombre + (m.fase ? " · " + m.fase : "")} style={{ flex: m.semanas || 1, height:5, borderRadius:3, background: isActive ? mc : mc+"40", boxShadow: isActive ? `0 0 6px ${mc}80` : "none" }} />;
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
                     {/* Agenda del atleta: próximas sesiones programadas */}
                     {(() => {
                       const today = new Date().toISOString().slice(0,10);
@@ -10693,6 +10753,22 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                                   {s.fatiga && <span style={{ fontSize: 10, color: "var(--text-faint)", background: "var(--bg-elevated)", borderRadius: 4, padding: "0px 5px" }}>💤 {s.fatiga}</span>}
                                   {hasNotes && <span style={{ fontSize: 10, color: "var(--text-faint)" }}>📝</span>}
                                 </div>
+                                {/* Técnica del día + notas */}
+                                {(s.tecnica?.nombre || s.notas) && (
+                                  <div style={{ marginTop: 5, display: "flex", flexDirection: "column", gap: 3 }}>
+                                    {s.tecnica?.nombre && (
+                                      <div style={{ fontSize: 11, color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                                        <span style={{ flexShrink: 0 }}>🎯</span>
+                                        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontStyle: "italic" }}>{s.tecnica.nombre}</span>
+                                      </div>
+                                    )}
+                                    {s.notas && (
+                                      <div style={{ fontSize: 10, color: "var(--text-faint)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                        📝 {s.notas.slice(0, 60)}{s.notas.length > 60 ? "…" : ""}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
                               </div>
                               {/* Panel RPE derecho */}
                               {s.rpe && (

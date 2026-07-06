@@ -3504,6 +3504,21 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   const [showFightSetup, setShowFightSetup] = React.useState(false);
   const [showPlanModal, setShowPlanModal] = React.useState(false);
   const [fightDateInput, setFightDateInput] = React.useState("");
+  const [pesajeEntries, setPesajeEntries] = React.useState([]);
+  const [pesajeInput, setPesajeInput] = React.useState("");
+  const [pesajeSaving, setPesajeSaving] = React.useState(false);
+
+  const savePesaje = async () => {
+    const kg = parseFloat(pesajeInput);
+    if (!kg || !profile?.id) return;
+    setPesajeSaving(true);
+    const row = { atleta_id: profile.id, fecha: today, peso_kg: kg, fecha_pesaje: fightDate || null };
+    const { data } = await supabase.from("pesaje_tracking")
+      .upsert(row, { onConflict: "atleta_id,fecha" }).select().maybeSingle();
+    if (data) setPesajeEntries(prev => [data, ...prev.filter(e => e.fecha !== today)]);
+    setPesajeInput("");
+    setPesajeSaving(false);
+  };
 
   const daysToFight = React.useMemo(() => {
     if (!fightDate) return null;
@@ -3511,6 +3526,14 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     return Math.round(diff / 86400000);
   }, [fightDate, today]);
   const isFightWeek = daysToFight !== null && daysToFight >= 0 && daysToFight <= 7;
+
+  React.useEffect(() => {
+    if (!profile?.id || !isFightWeek) return;
+    supabase.from("pesaje_tracking")
+      .select("*").eq("atleta_id", profile.id)
+      .order("fecha", { ascending: false }).limit(10)
+      .then(({ data }) => setPesajeEntries(data || []));
+  }, [profile?.id, isFightWeek]);
 
   // Periodization: 12-week plan calculated from fight date
   const planWeek = (daysToFight !== null && daysToFight >= 0 && daysToFight <= 84)
@@ -3833,6 +3856,47 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               </div>
             ) : (
               <div style={{ fontSize:11, color:"var(--text-faint)", textAlign:"center", padding:"4px 0" }}>{t("fw_no_weight",lang)}</div>
+            )}
+
+            {/* ── Fight Week pesaje diario ── */}
+            {isFightWeek && (
+              <div style={{ marginTop:10, padding:"10px 12px", background:"var(--bg-elevated)", borderRadius:10, border:`1px solid ${RED}20` }}>
+                <div style={{ fontSize:10, fontWeight:900, color:RED, textTransform:"uppercase", letterSpacing:1.5, marginBottom:8 }}>⚖️ Pesaje diario</div>
+                {(() => {
+                  const todayEntry = pesajeEntries.find(e => e.fecha === today);
+                  const baseline = pesajeEntries.length > 0 ? pesajeEntries[pesajeEntries.length-1].peso_kg : currentPeso;
+                  return todayEntry ? (
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:6 }}>
+                      <div>
+                        <span style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>{todayEntry.peso_kg}</span>
+                        <span style={{ fontSize:10, color:"var(--text-faint)" }}>kg hoy</span>
+                      </div>
+                      {baseline && baseline !== todayEntry.peso_kg && (
+                        <div style={{ fontSize:11, fontWeight:700, color: ((baseline - todayEntry.peso_kg) / baseline) > 0.05 ? "#f43f5e" : GOLD }}>
+                          -{((baseline - todayEntry.peso_kg) / baseline * 100).toFixed(1)}% desde inicio
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ display:"flex", gap:6, marginBottom:6 }}>
+                      <input type="number" step="0.1" min="30" max="200" placeholder="kg esta mañana" value={pesajeInput}
+                        onChange={e => setPesajeInput(e.target.value)}
+                        onKeyDown={e => e.key==="Enter" && savePesaje()}
+                        style={{ flex:1, background:"var(--bg-input)", border:"1px solid var(--border)", borderRadius:8, padding:"7px 10px", color:"var(--text)", fontSize:13 }} />
+                      <button onClick={savePesaje} disabled={pesajeSaving || !pesajeInput}
+                        style={{ padding:"7px 12px", borderRadius:8, background:pesajeInput?RED:"var(--bg-input)", color:pesajeInput?"#fff":"var(--text-faint)", border:"none", fontSize:12, fontWeight:800, cursor:pesajeInput?"pointer":"default", transition:"all 0.2s" }}>
+                        {pesajeSaving ? "…" : "Log"}
+                      </button>
+                    </div>
+                  );
+                })()}
+                {pesajeEntries.slice(0,5).map((e, i) => (
+                  <div key={e.id||e.fecha} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", fontSize:11, color:"var(--text-faint)", borderTop: i>0?"1px solid var(--border)":"none", paddingTop: i>0?3:0, marginTop: i>0?3:0 }}>
+                    <span>{e.fecha.slice(5).replace("-","/")} {e.fecha === today ? <strong style={{ color:"var(--text)" }}>· Hoy</strong> : ""}</span>
+                    <span style={{ fontWeight:700, color:"var(--text)" }}>{e.peso_kg} kg</span>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -7205,6 +7269,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [athleteWellness, setAthleteWellness] = React.useState({});
   const [athleteWellnessHistory, setAthleteWellnessHistory] = React.useState([]);
   const [athleteLesiones, setAthleteLesiones] = React.useState([]);
+  const [athletePesaje, setAthletePesaje] = React.useState([]);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7679,6 +7744,13 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .eq("atleta_id", selectedAthlete.atleta_id)
         .order("fecha_inicio", { ascending: false });
       setAthleteLesiones(lesionesData || []);
+      // Fetch pesaje tracking (Fight Week)
+      const { data: pesajeData } = await supabase.from("pesaje_tracking")
+        .select("*")
+        .eq("atleta_id", selectedAthlete.atleta_id)
+        .order("fecha", { ascending: false })
+        .limit(14);
+      setAthletePesaje(pesajeData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);
@@ -10423,6 +10495,47 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           <div style={{ textAlign:"center", flexShrink:0 }}>
                             <div style={{ fontSize:32, fontWeight:900, color:ph.color, lineHeight:1 }}>{dtf}</div>
                             <div style={{ fontSize:9, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.4 }}>días</div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+
+                    {/* ── Fight Week: recorte de peso ── */}
+                    {(() => {
+                      const fd = selectedAthlete.profiles?.proxima_pelea;
+                      if (!fd) return null;
+                      const dtf = Math.ceil((new Date(fd+"T12:00:00") - new Date()) / 86400000);
+                      if (dtf < 0 || dtf > 7 || athletePesaje.length === 0) return null;
+                      const sorted = [...athletePesaje].sort((a,b) => a.fecha.localeCompare(b.fecha));
+                      const first = sorted[0];
+                      const last  = sorted[sorted.length - 1];
+                      const pctCut = first ? ((first.peso_kg - last.peso_kg) / first.peso_kg * 100) : 0;
+                      const isAlert = pctCut > 5;
+                      return (
+                        <div style={{ background: isAlert ? "rgba(244,63,94,0.10)" : "rgba(245,158,11,0.08)", border: `1px solid ${isAlert ? "rgba(244,63,94,0.35)" : "rgba(245,158,11,0.30)"}`, borderRadius:12, padding:"10px 14px", marginBottom:14 }}>
+                          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:8 }}>
+                            <div style={{ fontSize:10, fontWeight:900, color: isAlert ? "#f43f5e" : "#f59e0b", textTransform:"uppercase", letterSpacing:1 }}>
+                              ⚖️ Recorte Fight Week {isAlert ? "⚠️ >5%" : ""}
+                            </div>
+                            <div style={{ fontSize:12, fontWeight:800, color:"var(--text)" }}>
+                              {last.peso_kg} kg <span style={{ fontSize:10, color: isAlert ? "#f43f5e" : "#f59e0b" }}>(-{pctCut.toFixed(1)}%)</span>
+                            </div>
+                          </div>
+                          <div style={{ display:"flex", gap:4, alignItems:"flex-end" }}>
+                            {sorted.map((e, i) => {
+                              const prev = i > 0 ? sorted[i-1].peso_kg : e.peso_kg;
+                              const isDown = e.peso_kg < prev;
+                              const today2 = new Date().toISOString().slice(0,10);
+                              return (
+                                <div key={e.fecha} style={{ flex:1, textAlign:"center" }}>
+                                  <div style={{ fontSize:10, fontWeight:700, color: e.fecha === today2 ? "#f59e0b" : "var(--text-muted)" }}>{e.peso_kg}</div>
+                                  <div style={{ height:18, background: e.fecha === today2 ? "#f59e0b" : "rgba(245,158,11,0.4)", borderRadius:"3px 3px 0 0", width:"100%", display:"flex", alignItems:"center", justifyContent:"center", fontSize:9 }}>
+                                    {isDown ? "↓" : i===0 ? "" : "→"}
+                                  </div>
+                                  <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:2 }}>{e.fecha.slice(8)}</div>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       );

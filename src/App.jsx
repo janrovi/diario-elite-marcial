@@ -124,6 +124,22 @@ const GOALS_KEY = uid => `elite_marcial_goals_${uid||"anon"}`;
 const DRAFT_KEY = uid => `elite_marcial_draft_${uid||"anon"}`;
 const BODY_KEY = uid => `elite_marcial_cuerpo_${uid||"anon"}`;
 const INJURIES_KEY = uid => `elite_marcial_injuries_${uid||"anon"}`;
+const TEST_TYPES = [
+  { tipo:"VO2max",               unidad:"ml/kg/min" },
+  { tipo:"CMJ – Salto vertical", unidad:"cm" },
+  { tipo:"Velocidad 10m",        unidad:"s" },
+  { tipo:"Velocidad 30m",        unidad:"s" },
+  { tipo:"Grip strength",        unidad:"kg" },
+  { tipo:"Press banca 1RM",      unidad:"kg" },
+  { tipo:"Sentadilla 1RM",       unidad:"kg" },
+  { tipo:"Peso muerto 1RM",      unidad:"kg" },
+  { tipo:"Flexibilidad sit-reach", unidad:"cm" },
+  { tipo:"Test Cooper 12min",    unidad:"m" },
+  { tipo:"Yo-Yo test",           unidad:"m" },
+  { tipo:"FC reposo",            unidad:"bpm" },
+  { tipo:"% grasa corporal",     unidad:"%" },
+  { tipo:"Otro",                 unidad:"" },
+];
 const RANGO_KEY = uid => `elite_marcial_rango_${uid||"anon"}`;
 const ALTURA_KEY = uid => `elite_marcial_altura_${uid||"anon"}`;
 const PESOOBJ_KEY = uid => `elite_marcial_peso_obj_${uid||"anon"}`;
@@ -7388,6 +7404,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [athleteLesiones, setAthleteLesiones] = React.useState([]);
   const [athletePesaje, setAthletePesaje] = React.useState([]);
   const [athleteDolor, setAthleteDolor] = React.useState([]);
+  const [athleteTests, setAthleteTests] = React.useState([]);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7877,6 +7894,13 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .gte("fecha", new Date(Date.now() - 14*24*60*60*1000).toISOString().slice(0,10))
         .order("fecha", { ascending: false });
       setAthleteDolor(dolorData || []);
+      // Fetch tests físicos del atleta
+      const { data: testsData } = await supabase.from("tests_fisicos")
+        .select("*")
+        .eq("atleta_id", selectedAthlete.atleta_id)
+        .order("fecha", { ascending: false })
+        .limit(50);
+      setAthleteTests(testsData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);
@@ -10747,6 +10771,31 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       </div>
                     )}
 
+                    {/* ── Tests Físicos del atleta ── */}
+                    {athleteTests.length > 0 && (() => {
+                      const byTipo = {};
+                      athleteTests.forEach(t => { if (!byTipo[t.tipo_test]) byTipo[t.tipo_test] = []; byTipo[t.tipo_test].push(t); });
+                      const tipoKeys = Object.keys(byTipo);
+                      return (
+                        <div style={{ background:"var(--bg-input)", borderRadius:14, padding:"12px 14px", marginBottom:14 }}>
+                          <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:8 }}>🧪 Tests Físicos</div>
+                          <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
+                            {tipoKeys.map(tipo => {
+                              const sorted = [...byTipo[tipo]].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+                              const last = sorted[0];
+                              return (
+                                <div key={tipo} style={{ background:"var(--bg-card)", borderRadius:8, padding:"6px 10px", minWidth:90 }}>
+                                  <div style={{ fontSize:9, color:"var(--text-faint)", fontWeight:600, textTransform:"uppercase", letterSpacing:0.4, marginBottom:2 }}>{tipo}</div>
+                                  <div style={{ fontSize:15, fontWeight:800, color:"var(--text)" }}>{last.valor}<span style={{ fontSize:9, color:"var(--text-faint)", marginLeft:2 }}>{last.unidad}</span></div>
+                                  <div style={{ fontSize:9, color:"var(--text-faint)" }}>{last.fecha}</div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* ── Bienestar HRW (últimos 7 días) ── */}
                     {(() => {
                       const today7 = Array.from({length:7}, (_,i) => { const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toISOString().slice(0,10); });
@@ -13297,6 +13346,10 @@ function MainApp() {
   const [goals, setGoals] = useState([]);
   const [bodyEntries, setBodyEntries] = useState([]);
   const [injuries, setInjuries] = useState([]);
+  const [testsF, setTestsF] = useState([]);
+  const [showTestForm, setShowTestForm] = useState(false);
+  const [testForm, setTestForm] = useState({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
+  const [testSaving, setTestSaving] = useState(false);
   const [rango, setRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
   const [editRango, setEditRango] = useState(false);
   const [tmpRango, setTmpRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
@@ -13524,6 +13577,12 @@ function MainApp() {
           setInjuries(mapped);
           try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(mapped)); } catch {}
         }
+      } catch { /* silently ignore */ }
+      // Load tests físicos
+      try {
+        const { data: testsDb } = await supabase.from("tests_fisicos")
+          .select("*").eq("atleta_id", user.id).order("fecha", { ascending: false });
+        if (testsDb) setTestsF(testsDb);
       } catch { /* silently ignore */ }
       setSyncing(false);
     };
@@ -17339,6 +17398,111 @@ function MainApp() {
                 </div>
               )}
             </>
+
+        {/* ── 🧪 Tests Físicos ── */}
+        {(() => {
+          const saveTest = async () => {
+            if (!testForm.tipo || !testForm.valor || !user?.id) return;
+            setTestSaving(true);
+            const row = { atleta_id: user.id, fecha: testForm.fecha, tipo_test: testForm.tipo,
+              valor: parseFloat(testForm.valor), unidad: TEST_TYPES.find(t => t.tipo === testForm.tipo)?.unidad || "",
+              notas: testForm.notas || null };
+            const { data } = await supabase.from("tests_fisicos").insert(row).select().maybeSingle();
+            if (data) setTestsF(prev => [data, ...prev]);
+            setTestForm({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
+            setShowTestForm(false);
+            setTestSaving(false);
+          };
+          const deleteTest = async (id) => {
+            await supabase.from("tests_fisicos").delete().eq("id", id);
+            setTestsF(prev => prev.filter(t => t.id !== id));
+          };
+          // Group by tipo_test, show only last result per type as summary
+          const byTipo = {};
+          testsF.forEach(t => { if (!byTipo[t.tipo_test]) byTipo[t.tipo_test] = []; byTipo[t.tipo_test].push(t); });
+          const RED = "#e53e3e";
+          return (
+            <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
+                <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2 }}>🧪 Tests Físicos</div>
+                <button onClick={() => setShowTestForm(v=>!v)}
+                  style={{ fontSize:12, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", cursor:"pointer" }}>
+                  {showTestForm ? "✕ Cancelar" : "+ Añadir resultado"}
+                </button>
+              </div>
+
+              {showTestForm && (
+                <div style={{ background:"var(--bg-input)", borderRadius:12, padding:14, marginBottom:14 }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
+                    <div>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Test</label>
+                      <select value={testForm.tipo} onChange={e=>setTestForm(f=>({...f,tipo:e.target.value}))}
+                        style={{ width:"100%", padding:"8px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:13 }}>
+                        <option value="">Seleccionar…</option>
+                        {TEST_TYPES.map(t=><option key={t.tipo} value={t.tipo}>{t.tipo}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>
+                        Valor {testForm.tipo ? `(${TEST_TYPES.find(t=>t.tipo===testForm.tipo)?.unidad||""})` : ""}
+                      </label>
+                      <input type="number" step="0.01" value={testForm.valor} onChange={e=>setTestForm(f=>({...f,valor:e.target.value}))}
+                        placeholder="0.00"
+                        style={{ width:"100%", padding:"8px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:13, boxSizing:"border-box" }} />
+                    </div>
+                  </div>
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:10 }}>
+                    <div>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                      <input type="date" value={testForm.fecha} onChange={e=>setTestForm(f=>({...f,fecha:e.target.value}))}
+                        style={{ width:"100%", padding:"8px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:13, boxSizing:"border-box" }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Notas</label>
+                      <input value={testForm.notas} onChange={e=>setTestForm(f=>({...f,notas:e.target.value}))}
+                        placeholder="Condiciones, obs…"
+                        style={{ width:"100%", padding:"8px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:13, boxSizing:"border-box" }} />
+                    </div>
+                  </div>
+                  <button onClick={saveTest} disabled={testSaving || !testForm.tipo || !testForm.valor}
+                    style={{ width:"100%", padding:"11px", borderRadius:10, border:"none", background:"linear-gradient(135deg,#6366f1,#4f46e5)", color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer", opacity: testSaving||!testForm.tipo||!testForm.valor ? 0.55 : 1 }}>
+                    {testSaving ? "Guardando…" : "Guardar resultado"}
+                  </button>
+                </div>
+              )}
+
+              {testsF.length === 0 && !showTestForm ? (
+                <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"24px 0" }}>Sin resultados aún — añade tu primer test</div>
+              ) : (
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(155px,1fr))", gap:8 }}>
+                  {Object.entries(byTipo).map(([tipo, entries]) => {
+                    const sorted = [...entries].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+                    const last = sorted[0];
+                    const prev = sorted[1];
+                    const trend = prev ? (last.valor > prev.valor ? "▲" : last.valor < prev.valor ? "▼" : "—") : null;
+                    const trendColor = prev ? (last.valor > prev.valor ? "#4ade80" : last.valor < prev.valor ? "#f87171" : "var(--text-faint)") : "var(--text-faint)";
+                    return (
+                      <div key={tipo} style={{ background:"var(--bg-input)", borderRadius:12, padding:"12px 14px", position:"relative" }}>
+                        <div style={{ fontSize:10, color:"var(--text-faint)", marginBottom:4, fontWeight:600, textTransform:"uppercase", letterSpacing:0.5 }}>{tipo}</div>
+                        <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
+                          <span style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>{last.valor}</span>
+                          <span style={{ fontSize:11, color:"var(--text-faint)" }}>{last.unidad}</span>
+                          {trend && <span style={{ fontSize:12, fontWeight:800, color:trendColor }}>{trend}</span>}
+                        </div>
+                        <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:3 }}>{last.fecha}</div>
+                        {sorted.length > 1 && (
+                          <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:2 }}>{sorted.length} registros</div>
+                        )}
+                        <button onClick={() => deleteTest(last.id)}
+                          style={{ position:"absolute", top:8, right:8, background:"transparent", border:"none", color:"var(--text-faint)", cursor:"pointer", fontSize:12, opacity:0.5, padding:2 }}>✕</button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })()}
           );
         })()}
 

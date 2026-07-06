@@ -3617,11 +3617,21 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           </div>
         </div>
       ) : (
-        <div style={{ marginBottom:14, display:"flex", justifyContent:"flex-end" }}>
-          <button onClick={() => { setFightDateInput(""); setShowFightSetup(true); }}
-            style={{ fontSize:11, fontWeight:700, color:`${RED}99`, background:"none", border:`1px solid ${RED}20`, borderRadius:8, padding:"5px 12px", cursor:"pointer", display:"flex", alignItems:"center", gap:5 }}>
-            <span>🥊</span> {t("fw_setup",lang)}
-          </button>
+        <div style={{ marginBottom:18 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// FIGHT WEEK</div>
+            <div style={{ flex:1, height:1, background:"var(--border)" }} />
+          </div>
+          <div onClick={() => { setFightDateInput(""); setShowFightSetup(true); }}
+            style={{ background:`${RED}06`, border:`1.5px dashed ${RED}30`, borderRadius:14, padding:"16px 18px", cursor:"pointer", display:"flex", alignItems:"center", gap:16, transition:"all 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.background=`${RED}10`; e.currentTarget.style.borderColor=`${RED}60`; }}
+            onMouseLeave={e => { e.currentTarget.style.background=`${RED}06`; e.currentTarget.style.borderColor=`${RED}30`; }}>
+            <div style={{ width:52, height:52, borderRadius:14, background:`${RED}15`, border:`1.5px solid ${RED}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0 }}>🥊</div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("fw_setup",lang)}</div>
+              <div style={{ fontSize:12, color:RED, fontWeight:700 }}>{t("fw_date_label",lang)} →</div>
+            </div>
+          </div>
         </div>
       )}
 

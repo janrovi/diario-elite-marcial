@@ -784,6 +784,12 @@ const TRANSLATIONS = {
     fw_guide_2:"Solo recuperación activa. Sin entrenamiento intenso.",
     fw_guide_1:"Calentamiento ligero únicamente. Descansa la mente.",
     fw_guide_0:"Todo lo que podías hacer, ya lo hiciste. ¡A por ello! 🏆",
+    fw_phase_general:"Preparación General",
+    fw_phase_specific:"Preparación Específica",
+    fw_phase_precomp:"Pre-competición",
+    fw_phase_hint_general:"Construye la base. Volumen alto, intensidad moderada.",
+    fw_phase_hint_specific:"Aumenta intensidad. Técnica específica y sparring.",
+    fw_phase_hint_precomp:"Afila el hacha. Intensidad máxima, volumen bajo.",
     insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
     insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
     insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
@@ -1200,6 +1206,12 @@ const TRANSLATIONS = {
     fw_guide_2:"Active recovery only. No intense training.",
     fw_guide_1:"Light warm-up only. Rest your mind.",
     fw_guide_0:"You've done everything you could. Go get it! 🏆",
+    fw_phase_general:"General Preparation",
+    fw_phase_specific:"Specific Preparation",
+    fw_phase_precomp:"Pre-competition",
+    fw_phase_hint_general:"Build your base. High volume, moderate intensity.",
+    fw_phase_hint_specific:"Raise intensity. Specific technique and sparring.",
+    fw_phase_hint_precomp:"Sharpen the blade. Max intensity, low volume.",
     insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
     insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
     insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
@@ -1618,6 +1630,12 @@ const TRANSLATIONS = {
     fw_guide_2:"Sols recuperació activa. Sense entrenament intens.",
     fw_guide_1:"Sol escalfament lleuger. Descansa la ment.",
     fw_guide_0:"Has fet tot el que podies. A per ell! 🏆",
+    fw_phase_general:"Preparació General",
+    fw_phase_specific:"Preparació Específica",
+    fw_phase_precomp:"Pre-competició",
+    fw_phase_hint_general:"Construeix la base. Volum alt, intensitat moderada.",
+    fw_phase_hint_specific:"Augmenta intensitat. Tècnica específica i sparring.",
+    fw_phase_hint_precomp:"Afila el llapis. Intensitat màxima, volum baix.",
     insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
     insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
     insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
@@ -3562,7 +3580,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
       )}
 
       {/* ── FIGHT WEEK ── */}
-      {(daysToFight !== null && daysToFight >= 0 && daysToFight <= 30) ? (
+      {(daysToFight !== null && daysToFight >= 0) ? (
         <div style={{ marginBottom:18 }}>
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
             <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// FIGHT WEEK</div>
@@ -3588,13 +3606,25 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
                 style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"1px solid var(--border)", borderRadius:8, padding:"5px 10px", cursor:"pointer", flexShrink:0 }}>{t("fw_edit",lang)}</button>
             </div>
 
-            {isFightWeek && (
+            {isFightWeek ? (
               <div style={{ background:"var(--bg-elevated)", borderRadius:10, padding:"10px 12px", marginBottom:12, border:`1px solid ${RED}15` }}>
                 <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", lineHeight:1.5 }}>
                   📋 {t(`fw_guide_${daysToFight}`,lang)}
                 </div>
               </div>
-            )}
+            ) : (() => {
+              const phase = daysToFight > 49 ? "general" : daysToFight > 21 ? "specific" : "precomp";
+              const phaseColor = phase === "general" ? BLUE : phase === "specific" ? GOLD : RED;
+              return (
+                <div style={{ background:"var(--bg-elevated)", borderRadius:10, padding:"10px 12px", marginBottom:12, border:`1px solid var(--border)`, display:"flex", alignItems:"center", gap:10 }}>
+                  <div style={{ width:8, height:8, borderRadius:"50%", background:phaseColor, flexShrink:0 }} />
+                  <div>
+                    <div style={{ fontSize:11, fontWeight:900, color:phaseColor, letterSpacing:1 }}>{t(`fw_phase_${phase}`,lang)}</div>
+                    <div style={{ fontSize:11, color:"var(--text-muted)", marginTop:1 }}>{t(`fw_phase_hint_${phase}`,lang)}</div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {currentPeso ? (
               <div style={{ display:"flex", gap:8 }}>

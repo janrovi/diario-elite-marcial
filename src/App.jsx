@@ -3225,7 +3225,6 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
           })}
         </div>
       )}
-    </div>
 
       {activeTab === "coach" && (
         <div>

@@ -5569,6 +5569,87 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
           )}
         </div>
       )}
+
+      {bioTab === "dolor" && (
+        <div>
+          <button onClick={() => setShowDolorForm(v=>!v)}
+            style={{ width:"100%", padding:"12px", borderRadius:12, border:"1px dashed rgba(249,115,22,0.4)", background:"rgba(249,115,22,0.05)", color:"#f97316", fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16 }}>
+            {showDolorForm ? "✕ Cancelar" : "+ Registrar dolor / molestia"}
+          </button>
+
+          {showDolorForm && (
+            <div style={{ background:"var(--bg-card)", border:"1px solid rgba(249,115,22,0.2)", borderRadius:14, padding:16, marginBottom:16 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
+                <div>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Zona</label>
+                  <input value={dolorForm.zona} onChange={e=>setDolorForm(f=>({...f,zona:e.target.value}))}
+                    placeholder="ej. rodilla derecha" style={inputSt} />
+                </div>
+                <div>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Tipo</label>
+                  <select value={dolorForm.tipo} onChange={e=>setDolorForm(f=>({...f,tipo:e.target.value}))} style={inputSt}>
+                    <option value="agudo">Agudo</option>
+                    <option value="cronico">Crónico</option>
+                    <option value="difuso">Difuso</option>
+                  </select>
+                </div>
+              </div>
+              <div style={{ marginBottom:8 }}>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>
+                  Intensidad: <span style={{ color: dolorColor(dolorForm.intensidad), fontWeight:800 }}>{dolorForm.intensidad}/10</span>
+                </label>
+                <input type="range" min={1} max={10} value={dolorForm.intensidad}
+                  onChange={e=>setDolorForm(f=>({...f,intensidad:+e.target.value}))}
+                  style={{ width:"100%", accentColor:"#f97316" }} />
+              </div>
+              <div style={{ marginBottom:8 }}>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                <input type="date" value={dolorForm.fecha} onChange={e=>setDolorForm(f=>({...f,fecha:e.target.value}))} style={inputSt} />
+              </div>
+              <div style={{ marginBottom:12 }}>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Notas (opcional)</label>
+                <textarea value={dolorForm.notas} onChange={e=>setDolorForm(f=>({...f,notas:e.target.value}))}
+                  placeholder="Describe cuándo aparece, qué lo mejora..." rows={2}
+                  style={{ ...inputSt, resize:"none", lineHeight:"1.4" }} />
+              </div>
+              <button onClick={saveDolor} disabled={dolorSaving || !dolorForm.zona}
+                style={{ width:"100%", padding:"11px", borderRadius:10, border:"none", background:"#f97316", color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer", opacity: dolorSaving || !dolorForm.zona ? 0.6 : 1 }}>
+                {dolorSaving ? "Guardando…" : "Guardar"}
+              </button>
+            </div>
+          )}
+
+          {dolorEntries.length === 0 ? (
+            <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"32px 0" }}>Sin dolores registrados 🟢</div>
+          ) : (
+            <div>
+              {dolorEntries.map(e => (
+                <div key={e.id} style={{ background:"var(--bg-card)", border:`1px solid ${dolorColor(e.intensidad)}30`, borderRadius:14, padding:14, marginBottom:8, borderLeft:`3px solid ${dolorColor(e.intensidad)}` }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                    <div style={{ flex:1 }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
+                        <span style={{ fontSize:13, fontWeight:800, color:dolorColor(e.intensidad) }}>🔴 {e.zona}</span>
+                        <span style={{ fontSize:10, background:`${dolorColor(e.intensidad)}20`, color:dolorColor(e.intensidad), padding:"2px 7px", borderRadius:20, fontWeight:700 }}>{e.intensidad}/10</span>
+                        <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-input)", padding:"2px 7px", borderRadius:20 }}>{e.tipo}</span>
+                      </div>
+                      {e.notas && <div style={{ fontSize:11, color:"var(--text-muted)", marginBottom:4, fontStyle:"italic" }}>{e.notas}</div>}
+                      <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                        <span style={{ fontSize:10, color:"var(--text-faint)" }}>{e.fecha}</span>
+                        <button onClick={() => cycleDolorEstado(e.id, e.estado)}
+                          style={{ fontSize:10, background: e.estado === "activo" ? "#ef444420" : e.estado === "mejorado" ? "#f59e0b20" : "#10b98120",
+                            color: e.estado === "activo" ? "#ef4444" : e.estado === "mejorado" ? "#f59e0b" : "#10b981",
+                            border:"none", borderRadius:20, padding:"2px 8px", cursor:"pointer", fontWeight:700 }}>
+                          {e.estado === "activo" ? "Activo" : e.estado === "mejorado" ? "Mejorado" : "Resuelto"} →
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -7306,6 +7387,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [athleteWellnessHistory, setAthleteWellnessHistory] = React.useState([]);
   const [athleteLesiones, setAthleteLesiones] = React.useState([]);
   const [athletePesaje, setAthletePesaje] = React.useState([]);
+  const [athleteDolor, setAthleteDolor] = React.useState([]);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7787,6 +7869,14 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .order("fecha", { ascending: false })
         .limit(14);
       setAthletePesaje(pesajeData || []);
+      // Fetch dolor check-ins (últimos 14 días, no resueltos)
+      const { data: dolorData } = await supabase.from("checkins_dolor")
+        .select("*")
+        .eq("atleta_id", selectedAthlete.atleta_id)
+        .neq("estado", "resuelto")
+        .gte("fecha", new Date(Date.now() - 14*24*60*60*1000).toISOString().slice(0,10))
+        .order("fecha", { ascending: false });
+      setAthleteDolor(dolorData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);

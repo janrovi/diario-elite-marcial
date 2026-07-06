@@ -10862,7 +10862,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       const addTecnica = async () => {
                         if (!newTecnicaForm.nombre || !selectedAthlete?.atleta_id) return;
                         setSavingTecnica(true);
-                        const row = { atleta_id: selectedAthlete.atleta_id, coach_id: coachProfile?.id,
+                        const row = { atleta_id: selectedAthlete.atleta_id, coach_id: user?.id,
                           nombre: newTecnicaForm.nombre, disciplina: newTecnicaForm.disciplina || null,
                           descripcion: newTecnicaForm.descripcion || null, estado: "pendiente" };
                         const { data } = await supabase.from("tecnicas_asignadas").insert(row).select().maybeSingle();

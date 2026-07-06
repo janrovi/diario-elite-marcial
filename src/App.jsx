@@ -749,6 +749,9 @@ const TRANSLATIONS = {
     period_edit_session:"✏️ Editar sesión", period_schedule_session:"Programar sesión",
     period_for:"Para", lbl_the_athlete:"el atleta",
     insight_rpe_up:"Tu intensidad subió esta semana (RPE {0} vs {1} la semana pasada).",
+    srpe_alert_red:"Sobrecarga crítica — tu carga semanal (sRPE {0}) subió un {1}% vs la semana pasada. Reduce volumen o intensidad.",
+    srpe_alert_yellow:"Carga elevada — tu sRPE subió un {1}% esta semana ({0}). Vigila la fatiga acumulada.",
+    srpe_label:"sRPE semanal",
     insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
     insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
     insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
@@ -1130,6 +1133,9 @@ const TRANSLATIONS = {
     period_edit_session:"✏️ Edit session", period_schedule_session:"Schedule session",
     period_for:"For", lbl_the_athlete:"the athlete",
     insight_rpe_up:"Your intensity went up this week (RPE {0} vs {1} last week).",
+    srpe_alert_red:"Critical overload — your weekly load (sRPE {0}) is up {1}% from last week. Consider reducing volume or intensity.",
+    srpe_alert_yellow:"High load — sRPE up {1}% this week ({0}). Monitor cumulative fatigue.",
+    srpe_label:"Weekly sRPE",
     insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
     insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
     insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
@@ -1513,6 +1519,9 @@ const TRANSLATIONS = {
     period_for:"Per a", lbl_the_athlete:"l\'atleta",
     insight_rpe_up:"La teva intensitat ha pujat aquesta setmana (RPE {0} vs {1} la setmana passada).",
     insight_rpe_down:"El teu cos descansa millor: RPE va baixar a {0} vs {1} la setmana passada.",
+    srpe_alert_red:"Sobrecàrrega crítica — la teva càrrega setmanal (sRPE {0}) va pujar un {1}% vs la setmana passada. Redueix volum o intensitat.",
+    srpe_alert_yellow:"Càrrega elevada — sRPE +{1}% aquesta setmana ({0}). Vigila la fatiga acumulada.",
+    srpe_label:"sRPE setmanal",
     insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
     insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
     insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
@@ -3186,6 +3195,27 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   const rpeVals   = sesSemana.map(s => parseFloat(s.rpe)).filter(Boolean);
   const rpeMed    = rpeVals.length ? (rpeVals.reduce((a,b) => a+b,0)/rpeVals.length).toFixed(1) : null;
 
+  // sRPE: carga total semanal (RPE × duración en minutos)
+  const sRPEthisWk = sesSemana.reduce((t,s) => {
+    const r = parseFloat(s.rpe), d = parseInt(s.duracionMin);
+    return (r && d) ? t + r * d : t;
+  }, 0);
+  const prevWeekStart = new Date(today + "T12:00:00");
+  prevWeekStart.setDate(prevWeekStart.getDate() - prevWeekStart.getDay() - 7);
+  const prevWeekEnd = new Date(today + "T12:00:00");
+  prevWeekEnd.setDate(prevWeekEnd.getDate() - prevWeekEnd.getDay() - 1);
+  const sesPrevWk = sessions.filter(s => {
+    const d = new Date(s.fecha + "T12:00:00");
+    return d >= prevWeekStart && d <= prevWeekEnd;
+  });
+  const sRPEprevWk = sesPrevWk.reduce((t,s) => {
+    const r = parseFloat(s.rpe), d = parseInt(s.duracionMin);
+    return (r && d) ? t + r * d : t;
+  }, 0);
+  const sRPEpct = (sRPEthisWk > 0 && sRPEprevWk > 0)
+    ? Math.round((sRPEthisWk / sRPEprevWk - 1) * 100)
+    : null;
+
   const hora   = new Date().getHours();
   const saludo = hora < 13 ? t("greet_morning",lang) : hora < 20 ? t("greet_afternoon",lang) : t("greet_night",lang);
   const nombre = profile?.nombre?.split(" ")[0] || "Atleta";
@@ -3303,6 +3333,15 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
         const today = new Date().toISOString().slice(0,10);
         const insights = [];
 
+        // 0. Alerta de sobrecarga sRPE
+        if (sRPEpct !== null && sRPEpct > 10) {
+          if (sRPEpct > 20) {
+            insights.push({ icon:"🚨", text:t("srpe_alert_red",lang).replace("{0}",Math.round(sRPEthisWk)).replace("{1}",sRPEpct), alert:"red" });
+          } else {
+            insights.push({ icon:"⚡", text:t("srpe_alert_yellow",lang).replace("{0}",Math.round(sRPEthisWk)).replace("{1}",sRPEpct), alert:"yellow" });
+          }
+        }
+
         // 1. RPE esta semana vs semana pasada
         const weekAgo  = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
         const twoWkAgo = new Date(); twoWkAgo.setDate(twoWkAgo.getDate()-14);
@@ -3389,9 +3428,14 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               {shown.map((ins, i) => (
-                <div key={i} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 16px", display:"flex", alignItems:"flex-start", gap:12 }}>
+                <div key={i} style={{
+                  background: ins.alert === "red" ? "rgba(239,68,68,0.08)" : ins.alert === "yellow" ? "rgba(245,158,11,0.08)" : "var(--bg-card)",
+                  border: ins.alert === "red" ? "1px solid #ef444440" : ins.alert === "yellow" ? "1px solid #f59e0b40" : "1px solid var(--border)",
+                  borderLeft: ins.alert === "red" ? "4px solid #ef4444" : ins.alert === "yellow" ? "4px solid #f59e0b" : "1px solid var(--border)",
+                  borderRadius:14, padding:"14px 16px", display:"flex", alignItems:"flex-start", gap:12
+                }}>
                   <div style={{ fontSize:22, lineHeight:1, flexShrink:0, marginTop:1 }}>{ins.icon}</div>
-                  <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:1.6 }}>{ins.text}</div>
+                  <div style={{ fontSize:13, color: ins.alert ? "var(--text)" : "var(--text-muted)", lineHeight:1.6, fontWeight: ins.alert ? 600 : 400 }}>{ins.text}</div>
                 </div>
               ))}
             </div>

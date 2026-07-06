@@ -12507,6 +12507,7 @@ function MainApp() {
   const [showNovedades, setShowNovedades] = useState(() =>
     !localStorage.getItem("em_novedades_jun2026_v3")
   );
+  const [showNovedadesHistAth, setShowNovedadesHistAth] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(() =>
     !localStorage.getItem("em_v28_launch_jul2026")
   );
@@ -16990,6 +16991,47 @@ function MainApp() {
         </div>
       )}
 
+      {showNovedadesHistAth && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4050, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+          onClick={() => setShowNovedadesHistAth(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"20px 20px 28px", maxWidth:420, width:"100%", maxHeight:"80vh", overflowY:"auto", boxShadow:"0 -8px 40px rgba(0,0,0,0.4)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:18 }}>
+              <div style={{ fontSize:15, fontWeight:900, color:"var(--text)" }}>📋 Historial de novedades</div>
+              <button onClick={() => setShowNovedadesHistAth(false)} style={{ background:"none", border:"none", color:"var(--text-faint)", fontSize:20, cursor:"pointer", lineHeight:1 }}>×</button>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+              {[
+                { fecha:"6 Jul 2026", icon:"🚀", titulo:"v2.8 — Preparación Inteligente", items:["📅 Plan de periodización de 12 semanas adaptado a tu combate","⚡ Alertas de sobrecarga sRPE con metodología de élite","🥊 Protocolo Fight Week — guía día a día + calculador de corte de peso","🧠 Check-in diario de bienestar (Hooper Wellness Index)","🌸 Protocolo hormonal — entrena según tu ciclo menstrual"], badge:"new" },
+                { fecha:"28 Jun 2026", icon:"🛡️", titulo:"v2.7 — Seguridad reforzada & Email de bienvenida", items:["🛡️ Auditoría de seguridad completada — 12 puntos revisados","📧 Email de bienvenida al confirmar tu cuenta","💬 Mensajes coach↔atleta requieren conexión activa","⚡ Novedades accesibles desde el menú Más"] },
+                { fecha:"25 Jun 2026", icon:"⚡", titulo:"v2.6 — Portal, contraseña y Club", items:["🔑 Cambio de contraseña desde el perfil","💳 Portal de gestión de suscripción Stripe","🏅 Club Fundador en su propia pestaña","🔒 Cancelación de suscripción automática"] },
+                { fecha:"24 Jun 2026", icon:"🔒", titulo:"v2.0 — Seguridad y RGPD", items:["🛡 Headers de seguridad HTTP (CSP, HSTS)","⏱ Rate limiting en el login","🗑 Borrado de cuenta y datos (RGPD)","✉️ Prevención de enumeración de emails"] },
+                { fecha:"Jun 2026", icon:"📲", titulo:"v2.0 — Push nativas y módulo lesiones", items:["🔔 Notificaciones push nativas (Web Push)","🩹 Módulo de lesiones con 35 zonas","📱 Corrección zoom iOS en inputs"] },
+                { fecha:"Jun 2026", icon:"🏅", titulo:"v2.3-2.5 — Ecosistema Fundador", items:["@Username único por usuario","🗺 Roadmap con votación real","💬 Canal directo con Jan","🔖 Confirmación de email al registrarse"] },
+              ].map((n, i) => (
+                <div key={i} style={{ background: n.badge === "new" ? "rgba(16,185,129,0.06)" : n.badge === "next" ? "rgba(196,26,26,0.06)" : "var(--bg-card)", border: n.badge === "new" ? "1px solid #10b98160" : n.badge === "next" ? "1px solid #C41A1A60" : "1px solid var(--border)", borderRadius:14, padding:"14px 16px" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+                    <span style={{ fontSize:20 }}>{n.icon}</span>
+                    <div style={{ flex:1 }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                        <div style={{ fontSize:13, fontWeight:800, color:"var(--text)" }}>{n.titulo}</div>
+                        {n.badge === "new" && <span style={{ fontSize:9, fontWeight:800, color:"#10b981", background:"rgba(16,185,129,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Nuevo</span>}
+                        {n.badge === "next" && <span style={{ fontSize:9, fontWeight:800, color:"#C41A1A", background:"rgba(196,26,26,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Próx.</span>}
+                      </div>
+                      <div style={{ fontSize:10, color: n.badge === "new" ? "#10b981" : n.badge === "next" ? "#C41A1A" : "var(--text-faint)" }}>{n.fecha}</div>
+                    </div>
+                  </div>
+                  <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+                    {n.items.map((item, j) => (
+                      <div key={j} style={{ fontSize:12, color:"var(--text-muted)", paddingLeft:4 }}>{item}</div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {showComingSoon && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4100, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
           onClick={() => { localStorage.setItem("em_v28_launch_jul2026","1"); setShowComingSoon(false); }}>
@@ -17198,8 +17240,7 @@ function MainApp() {
                   <button key={key}
                     onClick={() => {
                       if (isNovedades) {
-                        setShowNovedades(true);
-                        localStorage.removeItem("em_novedades_jun2026_v3");
+                        setShowNovedadesHistAth(true);
                       } else {
                         setView(key);
                       }

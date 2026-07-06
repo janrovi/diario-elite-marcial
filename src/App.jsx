@@ -764,6 +764,26 @@ const TRANSLATIONS = {
     wellness_hrw_red:"Recuperación — no entrenes fuerte hoy 😴",
     wellness_tap:"Toca para hacer tu check-in",
     wellness_edit:"Editar",
+    fw_title:"🥊 Fight Week",
+    fw_days_left:"días para el combate",
+    fw_fight_day:"¡Día del combate! 🏆",
+    fw_max_cut:"Bajada máx. segura",
+    fw_current_weight:"Peso actual",
+    fw_target_floor:"No bajar de",
+    fw_setup:"Configurar combate",
+    fw_edit:"Cambiar fecha",
+    fw_date_label:"Fecha del combate",
+    fw_save:"Guardar",
+    fw_cancel:"Cancelar",
+    fw_no_weight:"Sin peso reciente",
+    fw_guide_7:"Última semana. Sigue tu plan habitual. Empieza a monitorear el peso a diario.",
+    fw_guide_6:"Intensidad moderada. Técnica y táctica. Nada nuevo hoy.",
+    fw_guide_5:"Entrenamiento ligero. Recuperación activa. Hidratación máxima.",
+    fw_guide_4:"Solo técnica. Sparring suave opcional. Descansa bien esta noche.",
+    fw_guide_3:"Sesión muy ligera. Visualización y preparación mental.",
+    fw_guide_2:"Solo recuperación activa. Sin entrenamiento intenso.",
+    fw_guide_1:"Calentamiento ligero únicamente. Descansa la mente.",
+    fw_guide_0:"Todo lo que podías hacer, ya lo hiciste. ¡A por ello! 🏆",
     insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
     insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
     insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
@@ -1160,6 +1180,26 @@ const TRANSLATIONS = {
     wellness_hrw_red:"Recovery day — avoid high-intensity training today 😴",
     wellness_tap:"Tap to do your check-in",
     wellness_edit:"Edit",
+    fw_title:"🥊 Fight Week",
+    fw_days_left:"days to fight",
+    fw_fight_day:"Fight Day! 🏆",
+    fw_max_cut:"Max safe cut",
+    fw_current_weight:"Current weight",
+    fw_target_floor:"Don't go below",
+    fw_setup:"Set fight date",
+    fw_edit:"Change date",
+    fw_date_label:"Fight date",
+    fw_save:"Save",
+    fw_cancel:"Cancel",
+    fw_no_weight:"No recent weight logged",
+    fw_guide_7:"Last week. Follow your normal plan. Start tracking weight daily.",
+    fw_guide_6:"Moderate intensity. Technique & tactics. Nothing new today.",
+    fw_guide_5:"Light training. Active recovery. Max hydration.",
+    fw_guide_4:"Technique only. Light sparring optional. Rest well tonight.",
+    fw_guide_3:"Very light session. Visualization & mental prep.",
+    fw_guide_2:"Active recovery only. No intense training.",
+    fw_guide_1:"Light warm-up only. Rest your mind.",
+    fw_guide_0:"You've done everything you could. Go get it! 🏆",
     insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
     insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
     insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
@@ -1558,6 +1598,26 @@ const TRANSLATIONS = {
     wellness_hrw_red:"Recuperació — no entreneu fort avui 😴",
     wellness_tap:"Toca per fer el teu check-in",
     wellness_edit:"Editar",
+    fw_title:"🥊 Fight Week",
+    fw_days_left:"dies per al combat",
+    fw_fight_day:"Dia del combat! 🏆",
+    fw_max_cut:"Baixada màx. segura",
+    fw_current_weight:"Pes actual",
+    fw_target_floor:"No baixar de",
+    fw_setup:"Configurar combat",
+    fw_edit:"Canviar data",
+    fw_date_label:"Data del combat",
+    fw_save:"Desar",
+    fw_cancel:"Cancel·lar",
+    fw_no_weight:"Sense pes recent",
+    fw_guide_7:"Última setmana. Segueix el teu pla. Comença a monitorar el pes diàriament.",
+    fw_guide_6:"Intensitat moderada. Tècnica i tàctica. Res nou avui.",
+    fw_guide_5:"Entrenament lleuger. Recuperació activa. Màxima hidratació.",
+    fw_guide_4:"Sols tècnica. Sparring suau opcional. Descansa bé aquesta nit.",
+    fw_guide_3:"Sessió molt lleugera. Visualització i preparació mental.",
+    fw_guide_2:"Sols recuperació activa. Sense entrenament intens.",
+    fw_guide_1:"Sol escalfament lleuger. Descansa la ment.",
+    fw_guide_0:"Has fet tot el que podies. A per ell! 🏆",
     insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
     insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
     insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
@@ -3277,6 +3337,31 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     setWellnessSaving(false);
   };
 
+  // ── Fight Week ──
+  const FIGHT_DATE_KEY = profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest";
+  const [fightDate, setFightDate] = React.useState(() => {
+    try { return localStorage.getItem(profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest") || ""; } catch { return ""; }
+  });
+  const [showFightSetup, setShowFightSetup] = React.useState(false);
+  const [fightDateInput, setFightDateInput] = React.useState("");
+
+  const daysToFight = React.useMemo(() => {
+    if (!fightDate) return null;
+    const diff = new Date(fightDate + "T12:00:00") - new Date(today + "T12:00:00");
+    return Math.round(diff / 86400000);
+  }, [fightDate, today]);
+  const isFightWeek = daysToFight !== null && daysToFight >= 0 && daysToFight <= 7;
+  const currentPeso = latestPeso?.peso || null;
+  const maxCutKg = currentPeso ? Math.round(currentPeso * 0.05 * 10) / 10 : null;
+  const minSafeWeight = (currentPeso && maxCutKg) ? Math.round((currentPeso - maxCutKg) * 10) / 10 : null;
+
+  const saveFightDate = (d) => {
+    const key = profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest";
+    try { if (d) localStorage.setItem(key, d); else localStorage.removeItem(key); } catch {}
+    setFightDate(d);
+    setShowFightSetup(false);
+  };
+
   const hrw = wellnessToday ? wellnessToday.sueno + wellnessToday.fisico + wellnessToday.mental : null;
   const hrwColor = hrw === null ? null : hrw >= 11 ? "#10b981" : hrw >= 7 ? "#f59e0b" : "#ef4444";
   const hrwKey   = hrw === null ? null : hrw >= 11 ? "wellness_hrw_green" : hrw >= 7 ? "wellness_hrw_yellow" : "wellness_hrw_red";
@@ -3472,6 +3557,99 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "var(--bg-input)" : "#6366f1", color: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "var(--text-faint)" : "#fff", fontSize:14, fontWeight:700, cursor: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "not-allowed" : "pointer", transition:"all 0.2s" }}>
               {wellnessSaving ? "..." : t("wellness_save",lang)}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── FIGHT WEEK ── */}
+      {(daysToFight !== null && daysToFight >= 0 && daysToFight <= 30) ? (
+        <div style={{ marginBottom:18 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// FIGHT WEEK</div>
+            <div style={{ flex:1, height:1, background:"var(--border)" }} />
+          </div>
+
+          <div style={{ background: isFightWeek ? `${RED}08` : "var(--bg-card)", border: isFightWeek ? `1px solid ${RED}40` : "1px solid var(--border)", borderLeft: isFightWeek ? `4px solid ${RED}` : `4px solid ${RED}40`, borderRadius:14, padding:"16px 16px 14px", overflow:"hidden", position:"relative" }}>
+            {isFightWeek && <div style={{ position:"absolute", top:-40, right:-40, width:150, height:150, background:`radial-gradient(circle,${RED}15 0%,transparent 70%)`, pointerEvents:"none" }} />}
+
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom: isFightWeek ? 12 : 4, position:"relative" }}>
+              <div>
+                <div style={{ fontSize:11, fontWeight:900, color: isFightWeek ? RED : "var(--text-muted)", textTransform:"uppercase", letterSpacing:2, marginBottom:2 }}>{t("fw_title",lang)}</div>
+                {daysToFight === 0 ? (
+                  <div style={{ fontSize:22, fontWeight:900, color:RED }}>{t("fw_fight_day",lang)}</div>
+                ) : (
+                  <div style={{ display:"flex", alignItems:"baseline", gap:6 }}>
+                    <span style={{ fontSize: isFightWeek ? 40 : 28, fontWeight:900, color: isFightWeek ? RED : "var(--text)", lineHeight:1 }}>{daysToFight}</span>
+                    <span style={{ fontSize:13, fontWeight:700, color: isFightWeek ? RED : "var(--text-muted)" }}>{t("fw_days_left",lang)}</span>
+                  </div>
+                )}
+              </div>
+              <button onClick={() => { setFightDateInput(fightDate); setShowFightSetup(true); }}
+                style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"1px solid var(--border)", borderRadius:8, padding:"5px 10px", cursor:"pointer", flexShrink:0 }}>{t("fw_edit",lang)}</button>
+            </div>
+
+            {isFightWeek && (
+              <div style={{ background:"var(--bg-elevated)", borderRadius:10, padding:"10px 12px", marginBottom:12, border:`1px solid ${RED}15` }}>
+                <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", lineHeight:1.5 }}>
+                  📋 {t(`fw_guide_${daysToFight}`,lang)}
+                </div>
+              </div>
+            )}
+
+            {currentPeso ? (
+              <div style={{ display:"flex", gap:8 }}>
+                <div style={{ flex:1, background:"var(--bg-input)", borderRadius:10, padding:"8px 8px", textAlign:"center" }}>
+                  <div style={{ fontSize:9, color:"var(--text-faint)", marginBottom:2, lineHeight:1.2 }}>{t("fw_current_weight",lang)}</div>
+                  <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{currentPeso}<span style={{ fontSize:10, color:"var(--text-faint)" }}>kg</span></div>
+                </div>
+                <div style={{ flex:1, background:"var(--bg-input)", borderRadius:10, padding:"8px 8px", textAlign:"center" }}>
+                  <div style={{ fontSize:9, color:"var(--text-faint)", marginBottom:2, lineHeight:1.2 }}>{t("fw_max_cut",lang)}</div>
+                  <div style={{ fontSize:16, fontWeight:900, color:GOLD, lineHeight:1 }}>-{maxCutKg}<span style={{ fontSize:10, color:"var(--text-faint)" }}>kg</span></div>
+                </div>
+                <div style={{ flex:1, background:"var(--bg-input)", borderRadius:10, padding:"8px 8px", textAlign:"center" }}>
+                  <div style={{ fontSize:9, color:"var(--text-faint)", marginBottom:2, lineHeight:1.2 }}>{t("fw_target_floor",lang)}</div>
+                  <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{minSafeWeight}<span style={{ fontSize:10, color:"var(--text-faint)" }}>kg</span></div>
+                </div>
+              </div>
+            ) : (
+              <div style={{ fontSize:11, color:"var(--text-faint)", textAlign:"center", padding:"4px 0" }}>{t("fw_no_weight",lang)}</div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div style={{ marginBottom:14, display:"flex", justifyContent:"flex-end" }}>
+          <button onClick={() => { setFightDateInput(""); setShowFightSetup(true); }}
+            style={{ fontSize:11, fontWeight:700, color:`${RED}99`, background:"none", border:`1px solid ${RED}20`, borderRadius:8, padding:"5px 12px", cursor:"pointer", display:"flex", alignItems:"center", gap:5 }}>
+            <span>🥊</span> {t("fw_setup",lang)}
+          </button>
+        </div>
+      )}
+
+      {/* ── Fight date setup modal ── */}
+      {showFightSetup && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"flex-start", justifyContent:"center", padding:"70px 16px 16px" }}
+          onClick={() => setShowFightSetup(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 20px 20px", maxWidth:420, width:"100%", boxShadow:"0 8px 60px rgba(0,0,0,0.6)" }}>
+            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:4 }}>🥊 {t("fw_title",lang)}</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:20 }}>{t("fw_date_label",lang)}</div>
+            <input type="date" value={fightDateInput} onChange={e => setFightDateInput(e.target.value)} min={today}
+              style={{ width:"100%", padding:"12px 14px", borderRadius:12, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:15, fontWeight:700, marginBottom:20, boxSizing:"border-box" }} />
+            <div style={{ display:"flex", gap:10 }}>
+              {fightDate && (
+                <button onClick={() => saveFightDate("")}
+                  style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+                  🗑
+                </button>
+              )}
+              <button onClick={() => setShowFightSetup(false)}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+                {t("fw_cancel",lang)}
+              </button>
+              <button onClick={() => saveFightDate(fightDateInput)} disabled={!fightDateInput}
+                style={{ flex:2, padding:"12px", borderRadius:12, border:"none", background: fightDateInput ? RED : "var(--bg-input)", color: fightDateInput ? "#fff" : "var(--text-faint)", fontSize:14, fontWeight:700, cursor: fightDateInput ? "pointer" : "not-allowed", transition:"all 0.2s" }}>
+                {t("fw_save",lang)}
+              </button>
+            </div>
           </div>
         </div>
       )}

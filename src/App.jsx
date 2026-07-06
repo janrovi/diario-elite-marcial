@@ -17546,7 +17546,6 @@ function MainApp() {
           // Group by tipo_test, show only last result per type as summary
           const byTipo = {};
           testsF.forEach(t => { if (!byTipo[t.tipo_test]) byTipo[t.tipo_test] = []; byTipo[t.tipo_test].push(t); });
-          const RED = "#e53e3e";
           return (
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>

@@ -3425,8 +3425,16 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   });
   const [showFightSetup, setShowFightSetup] = React.useState(false);
   const [showPlanModal, setShowPlanModal] = React.useState(false);
+  const [fightDateInput, setFightDateInput] = React.useState("");
 
-  // Periodization: which week (1-12) are we in, counting back from fight date?
+  const daysToFight = React.useMemo(() => {
+    if (!fightDate) return null;
+    const diff = new Date(fightDate + "T12:00:00") - new Date(today + "T12:00:00");
+    return Math.round(diff / 86400000);
+  }, [fightDate, today]);
+  const isFightWeek = daysToFight !== null && daysToFight >= 0 && daysToFight <= 7;
+
+  // Periodization: 12-week plan calculated from fight date
   const planWeek = (daysToFight !== null && daysToFight >= 0 && daysToFight <= 84)
     ? Math.max(1, 12 - Math.ceil(daysToFight / 7) + 1)
     : null;
@@ -3436,14 +3444,6 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     : planWeek <= 4 ? planWeek : planWeek <= 8 ? planWeek - 4 : planWeek - 8;
   const planFocusKey = planWeek !== null
     ? `plan_${planPhase}_w${planWeekInPhase}` : null;
-  const [fightDateInput, setFightDateInput] = React.useState("");
-
-  const daysToFight = React.useMemo(() => {
-    if (!fightDate) return null;
-    const diff = new Date(fightDate + "T12:00:00") - new Date(today + "T12:00:00");
-    return Math.round(diff / 86400000);
-  }, [fightDate, today]);
-  const isFightWeek = daysToFight !== null && daysToFight >= 0 && daysToFight <= 7;
   const currentPeso = latestPeso?.peso || null;
   const maxCutKg = currentPeso ? Math.round(currentPeso * 0.05 * 10) / 10 : null;
   const minSafeWeight = (currentPeso && maxCutKg) ? Math.round((currentPeso - maxCutKg) * 10) / 10 : null;

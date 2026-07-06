@@ -3338,9 +3338,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   };
 
   // ── Fight Week ──
-  const FIGHT_DATE_KEY = profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest";
+  const FIGHT_DATE_KEY = profile?.id ? `em_fight_${profile.id}` : "em_fight_guest";
   const [fightDate, setFightDate] = React.useState(() => {
-    try { return localStorage.getItem(profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest") || ""; } catch { return ""; }
+    try { return localStorage.getItem(profile?.id ? `em_fight_${profile.id}` : "em_fight_guest") || ""; } catch { return ""; }
   });
   const [showFightSetup, setShowFightSetup] = React.useState(false);
   const [fightDateInput, setFightDateInput] = React.useState("");
@@ -3356,7 +3356,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   const minSafeWeight = (currentPeso && maxCutKg) ? Math.round((currentPeso - maxCutKg) * 10) / 10 : null;
 
   const saveFightDate = (d) => {
-    const key = profile?.id ? \`em_fight_\${profile.id}\` : "em_fight_guest";
+    const key = profile?.id ? `em_fight_${profile.id}` : "em_fight_guest";
     try { if (d) localStorage.setItem(key, d); else localStorage.removeItem(key); } catch {}
     setFightDate(d);
     setShowFightSetup(false);

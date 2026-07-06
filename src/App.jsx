@@ -798,6 +798,32 @@ const TRANSLATIONS = {
     plan_of:"de",
     plan_current:"Semana actual",
     plan_close_btn:"Cerrar",
+    ciclo_section:"CICLO",
+    ciclo_setup_title:"Protocolo Hormonal",
+    ciclo_setup_sub:"Adapta tu entrenamiento a tu ciclo menstrual.",
+    ciclo_activate:"Activar",
+    ciclo_deactivate:"Desactivar",
+    ciclo_last_period:"Inicio de tu último período",
+    ciclo_cycle_length:"Duración media del ciclo (días)",
+    ciclo_save:"Guardar",
+    ciclo_cancel:"Cancelar",
+    ciclo_day:"Día",
+    ciclo_of_cycle:"del ciclo",
+    ciclo_edit:"Editar",
+    ciclo_setup_cta:"Activar protocolo hormonal",
+    ciclo_setup_hint:"Adapta tu entrenamiento a tu ciclo",
+    ciclo_phase_menstrual:"Menstrual",
+    ciclo_phase_folicular:"Folicular",
+    ciclo_phase_ovulatoria:"Ovulatoria",
+    ciclo_phase_lutea:"Lútea",
+    ciclo_rec_menstrual:"Volumen bajo. Prioriza movilidad articular, yoga y recuperación activa. Escucha a tu cuerpo.",
+    ciclo_rec_folicular:"Fase de máxima energía. Entrena duro — fuerza máxima, técnica nueva, alta intensidad.",
+    ciclo_rec_ovulatoria:"Pico hormonal. Día ideal para competir, sparring intenso o marcar máximos personales.",
+    ciclo_rec_lutea:"Mantén intensidad moderada. Más cardio, menos fuerza máxima. Pon atención a la fatiga.",
+    ciclo_badge_menstrual:"🩸 Fase Menstrual",
+    ciclo_badge_folicular:"⚡ Fase Folicular",
+    ciclo_badge_ovulatoria:"🌟 Ovulación",
+    ciclo_badge_lutea:"🌙 Fase Lútea",
     plan_week_focus:"Enfoque de esta semana",
     plan_g_w1:"Base cardiovascular. Rodajes largos a ritmo cómodo. Fuerza general (sentadillas, peso muerto, press).",
     plan_g_w2:"Aumenta volumen 10%. Movilidad articular diaria. Introduce técnica básica de tu disciplina.",
@@ -1241,6 +1267,32 @@ const TRANSLATIONS = {
     plan_of:"of",
     plan_current:"Current week",
     plan_close_btn:"Close",
+    ciclo_section:"CYCLE",
+    ciclo_setup_title:"Hormonal Protocol",
+    ciclo_setup_sub:"Adapt your training to your menstrual cycle.",
+    ciclo_activate:"Activate",
+    ciclo_deactivate:"Deactivate",
+    ciclo_last_period:"Start of your last period",
+    ciclo_cycle_length:"Average cycle length (days)",
+    ciclo_save:"Save",
+    ciclo_cancel:"Cancel",
+    ciclo_day:"Day",
+    ciclo_of_cycle:"of cycle",
+    ciclo_edit:"Edit",
+    ciclo_setup_cta:"Activate hormonal protocol",
+    ciclo_setup_hint:"Adapt your training to your cycle",
+    ciclo_phase_menstrual:"Menstrual",
+    ciclo_phase_folicular:"Follicular",
+    ciclo_phase_ovulatoria:"Ovulation",
+    ciclo_phase_lutea:"Luteal",
+    ciclo_rec_menstrual:"Low volume. Prioritize joint mobility, yoga and active recovery. Listen to your body.",
+    ciclo_rec_folicular:"Peak energy phase. Train hard — max strength, new technique, high intensity.",
+    ciclo_rec_ovulatoria:"Hormonal peak. Ideal day for competing, intense sparring or setting personal records.",
+    ciclo_rec_lutea:"Keep moderate intensity. More cardio, less max strength. Pay attention to fatigue.",
+    ciclo_badge_menstrual:"🩸 Menstrual Phase",
+    ciclo_badge_folicular:"⚡ Follicular Phase",
+    ciclo_badge_ovulatoria:"🌟 Ovulation",
+    ciclo_badge_lutea:"🌙 Luteal Phase",
     plan_week_focus:"This week's focus",
     plan_g_w1:"Cardiovascular base. Long runs at comfortable pace. General strength (squats, deadlifts, press).",
     plan_g_w2:"Increase volume 10%. Daily joint mobility. Introduce basic technique of your discipline.",
@@ -1686,6 +1738,32 @@ const TRANSLATIONS = {
     plan_of:"de",
     plan_current:"Setmana actual",
     plan_close_btn:"Tancar",
+    ciclo_section:"CICLE",
+    ciclo_setup_title:"Protocol Hormonal",
+    ciclo_setup_sub:"Adapta el teu entrenament al teu cicle menstrual.",
+    ciclo_activate:"Activar",
+    ciclo_deactivate:"Desactivar",
+    ciclo_last_period:"Inici del teu últim període",
+    ciclo_cycle_length:"Durada mitjana del cicle (dies)",
+    ciclo_save:"Desar",
+    ciclo_cancel:"Cancel·lar",
+    ciclo_day:"Dia",
+    ciclo_of_cycle:"del cicle",
+    ciclo_edit:"Editar",
+    ciclo_setup_cta:"Activar protocol hormonal",
+    ciclo_setup_hint:"Adapta el teu entrenament al teu cicle",
+    ciclo_phase_menstrual:"Menstrual",
+    ciclo_phase_folicular:"Fol·licular",
+    ciclo_phase_ovulatoria:"Ovulació",
+    ciclo_phase_lutea:"Lútia",
+    ciclo_rec_menstrual:"Volum baix. Prioritza mobilitat articular, ioga i recuperació activa. Escolta el teu cos.",
+    ciclo_rec_folicular:"Fase d'energia màxima. Entrena dur — força màxima, tècnica nova, alta intensitat.",
+    ciclo_rec_ovulatoria:"Pic hormonal. Dia ideal per competir, sparring intens o marcar màxims personals.",
+    ciclo_rec_lutea:"Mantén intensitat moderada. Més cardio, menys força màxima. Atén a la fatiga.",
+    ciclo_badge_menstrual:"🩸 Fase Menstrual",
+    ciclo_badge_folicular:"⚡ Fase Fol·licular",
+    ciclo_badge_ovulatoria:"🌟 Ovulació",
+    ciclo_badge_lutea:"🌙 Fase Lútia",
     plan_week_focus:"Enfocament d'aquesta setmana",
     plan_g_w1:"Base cardiovascular. Rodatges llargs a ritme còmode. Força general (sentadilles, pes mort, press).",
     plan_g_w2:"Augmenta volum 10%. Mobilitat articular diària. Introdueix tècnica bàsica de la teva disciplina.",
@@ -3444,6 +3522,34 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     : planWeek <= 4 ? planWeek : planWeek <= 8 ? planWeek - 4 : planWeek - 8;
   const planFocusKey = planWeek !== null
     ? `plan_${planPhase}_w${planWeekInPhase}` : null;
+
+  // ── Protocolo Hormonal ──
+  const CICLO_KEY = profile?.id ? `em_ciclo_${profile.id}` : "em_ciclo_guest";
+  const [cicloConfig, setCicloConfig] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem(profile?.id ? `em_ciclo_${profile.id}` : "em_ciclo_guest")) || null; } catch { return null; }
+  });
+  const [showCicloSetup, setShowCicloSetup] = React.useState(false);
+  const [cicloForm, setCicloForm] = React.useState({ lastPeriod: "", cycleDays: 28 });
+
+  const cicloPhaseData = React.useMemo(() => {
+    if (!cicloConfig?.lastPeriod) return null;
+    const daysSince = Math.floor((new Date(today + "T12:00:00") - new Date(cicloConfig.lastPeriod + "T12:00:00")) / 86400000);
+    const cd = cicloConfig.cycleDays || 28;
+    const dayInCycle = (daysSince % cd) + 1;
+    let phase, color;
+    if (dayInCycle <= 5)      { phase = "menstrual";  color = "#f43f5e"; }
+    else if (dayInCycle <= 13) { phase = "folicular";  color = "#3b82f6"; }
+    else if (dayInCycle === 14){ phase = "ovulatoria"; color = "#f59e0b"; }
+    else                       { phase = "lutea";      color = "#8b5cf6"; }
+    return { dayInCycle, phase, color, cd };
+  }, [cicloConfig, today]);
+
+  const saveCicloConfig = (cfg) => {
+    const key = profile?.id ? `em_ciclo_${profile.id}` : "em_ciclo_guest";
+    try { if (cfg) localStorage.setItem(key, JSON.stringify(cfg)); else localStorage.removeItem(key); } catch {}
+    setCicloConfig(cfg);
+    setShowCicloSetup(false);
+  };
   const currentPeso = latestPeso?.peso || null;
   const maxCutKg = currentPeso ? Math.round(currentPeso * 0.05 * 10) / 10 : null;
   const minSafeWeight = (currentPeso && maxCutKg) ? Math.round((currentPeso - maxCutKg) * 10) / 10 : null;
@@ -3844,6 +3950,89 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               <button onClick={() => saveFightDate(fightDateInput)} disabled={!fightDateInput}
                 style={{ flex:2, padding:"12px", borderRadius:12, border:"none", background: fightDateInput ? RED : "var(--bg-input)", color: fightDateInput ? "#fff" : "var(--text-faint)", fontSize:14, fontWeight:700, cursor: fightDateInput ? "pointer" : "not-allowed", transition:"all 0.2s" }}>
                 {t("fw_save",lang)}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── PROTOCOLO HORMONAL ── */}
+      <div style={{ marginBottom:18 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+          <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// {t("ciclo_section",lang)}</div>
+          <div style={{ flex:1, height:1, background:"var(--border)" }} />
+        </div>
+
+        {cicloConfig && cicloPhaseData ? (
+          <div style={{ background:`${cicloPhaseData.color}08`, border:`1px solid ${cicloPhaseData.color}30`, borderLeft:`4px solid ${cicloPhaseData.color}`, borderRadius:14, padding:"14px 16px" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
+              <div>
+                <div style={{ fontSize:12, fontWeight:900, color:cicloPhaseData.color }}>{t(`ciclo_badge_${cicloPhaseData.phase}`,lang)}</div>
+                <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:1 }}>{t("ciclo_day",lang)} {cicloPhaseData.dayInCycle} {t("ciclo_of_cycle",lang)} {cicloPhaseData.cd}</div>
+              </div>
+              <button onClick={() => { setCicloForm({ lastPeriod: cicloConfig.lastPeriod, cycleDays: cicloConfig.cycleDays }); setShowCicloSetup(true); }}
+                style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"1px solid var(--border)", borderRadius:8, padding:"4px 10px", cursor:"pointer" }}>{t("ciclo_edit",lang)}</button>
+            </div>
+            <div style={{ fontSize:12, color:"var(--text)", lineHeight:1.5, background:"var(--bg-elevated)", borderRadius:10, padding:"9px 12px" }}>
+              {t(`ciclo_rec_${cicloPhaseData.phase}`,lang)}
+            </div>
+          </div>
+        ) : (
+          <div onClick={() => { setCicloForm({ lastPeriod:"", cycleDays:28 }); setShowCicloSetup(true); }}
+            style={{ background:"rgba(244,63,94,0.05)", border:"1.5px dashed rgba(244,63,94,0.25)", borderRadius:14, padding:"16px 18px", cursor:"pointer", display:"flex", alignItems:"center", gap:16, transition:"all 0.2s" }}
+            onMouseEnter={e => { e.currentTarget.style.background="rgba(244,63,94,0.09)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background="rgba(244,63,94,0.05)"; }}>
+            <div style={{ width:52, height:52, borderRadius:14, background:"rgba(244,63,94,0.12)", border:"1.5px solid rgba(244,63,94,0.25)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0 }}>🌸</div>
+            <div style={{ flex:1 }}>
+              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("ciclo_setup_cta",lang)}</div>
+              <div style={{ fontSize:12, color:"#f43f5e", fontWeight:600 }}>{t("ciclo_setup_hint",lang)}</div>
+            </div>
+            <div style={{ marginLeft:"auto", fontSize:20, color:"rgba(244,63,94,0.3)" }}>›</div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Ciclo setup modal ── */}
+      {showCicloSetup && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.78)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"flex-start", justifyContent:"center", padding:"70px 16px 16px" }}
+          onClick={() => setShowCicloSetup(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 20px 20px", maxWidth:420, width:"100%", boxShadow:"0 8px 60px rgba(0,0,0,0.6)" }}>
+            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:4 }}>🌸 {t("ciclo_setup_title",lang)}</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:22 }}>{t("ciclo_setup_sub",lang)}</div>
+
+            <div style={{ marginBottom:16 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", marginBottom:8 }}>{t("ciclo_last_period",lang)}</div>
+              <input type="date" value={cicloForm.lastPeriod} onChange={e => setCicloForm(f => ({ ...f, lastPeriod: e.target.value }))} max={today}
+                style={{ width:"100%", padding:"11px 14px", borderRadius:11, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, fontWeight:700, boxSizing:"border-box" }} />
+            </div>
+
+            <div style={{ marginBottom:22 }}>
+              <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", marginBottom:8 }}>{t("ciclo_cycle_length",lang)}</div>
+              <div style={{ display:"flex", gap:8 }}>
+                {[21,24,26,28,30,32,35].map(d => (
+                  <button key={d} onClick={() => setCicloForm(f => ({ ...f, cycleDays:d }))}
+                    style={{ flex:1, padding:"9px 2px", borderRadius:9, border:`2px solid ${cicloForm.cycleDays===d?"#f43f5e":"var(--border)"}`, background: cicloForm.cycleDays===d ? "rgba(244,63,94,0.15)" : "var(--bg-input)", color: cicloForm.cycleDays===d ? "#f43f5e" : "var(--text-muted)", fontSize:12, fontWeight:800, cursor:"pointer" }}>
+                    {d}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display:"flex", gap:10 }}>
+              {cicloConfig && (
+                <button onClick={() => saveCicloConfig(null)}
+                  style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+                  🗑
+                </button>
+              )}
+              <button onClick={() => setShowCicloSetup(false)}
+                style={{ flex:1, padding:"12px", borderRadius:12, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+                {t("ciclo_cancel",lang)}
+              </button>
+              <button onClick={() => saveCicloConfig({ lastPeriod: cicloForm.lastPeriod, cycleDays: cicloForm.cycleDays })}
+                disabled={!cicloForm.lastPeriod}
+                style={{ flex:2, padding:"12px", borderRadius:12, border:"none", background: cicloForm.lastPeriod ? "#f43f5e" : "var(--bg-input)", color: cicloForm.lastPeriod ? "#fff" : "var(--text-faint)", fontSize:14, fontWeight:700, cursor: cicloForm.lastPeriod ? "pointer" : "not-allowed", transition:"all 0.2s" }}>
+                {t("ciclo_save",lang)}
               </button>
             </div>
           </div>

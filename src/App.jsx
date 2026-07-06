@@ -728,15 +728,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratación", home_action_water:"Añadir agua",
     home_action_recov:"+ Recuperación", home_action_physio:"Fisio / masaje",
     home_action_weight:"Registrar peso", home_action_bio_sub:"Actualizar bio",
-    coming_soon_badge:"Próximamente",
-    coming_soon_title:"Algo grande se acerca 🚀",
+    coming_soon_badge:"🎉 ¡Nuevo!",
+    coming_soon_title:"v2.8 ya está aquí 🚀",
     coming_soon_sub:"La actualización más importante de Élite Marcial",
-    coming_soon_body1:"📅 Periodización inteligente de 12 semanas adaptada a tu combate",
-    coming_soon_body2:"⚡ Alertas de sobrecarga basadas en metodología de élite",
-    coming_soon_body3:"🥊 Protocolo Fight Week con límites seguros de corte de peso",
-    coming_soon_body4:"🧠 Check-in diario de bienestar y fatiga acumulada",
+    coming_soon_body1:"📅 Plan de periodización de 12 semanas adaptado a tu combate",
+    coming_soon_body2:"⚡ Alertas de sobrecarga sRPE — metodología de élite",
+    coming_soon_body3:"🥊 Protocolo Fight Week con guía día a día y calculador de corte de peso",
+    coming_soon_body4:"🧠 Check-in de bienestar diario + 🌸 Protocolo hormonal",
     coming_soon_note:"Basado en metodología universitaria de preparación física para MMA",
-    coming_soon_cta:"¡Lo espero!",
+    coming_soon_cta:"¡Ver novedades!",
     recup_fisio:"Fisioterapia", recup_masaje:"Masaje", recup_estira:"Estiramiento", recup_hielo:"Hielo/Cryo",
     recup_stat_week:"Esta semana", recup_stat_fisio:"Fisio", lbl_total:"Total",
     lbl_since:"Desde", period_weeks_planned:"semanas planificadas",
@@ -1197,15 +1197,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hydration", home_action_water:"Add water",
     home_action_recov:"+ Recovery", home_action_physio:"Physio / massage",
     home_action_weight:"Log weight", home_action_bio_sub:"Update biometrics",
-    coming_soon_badge:"Coming soon",
-    coming_soon_title:"Something big is coming 🚀",
+    coming_soon_badge:"🎉 New!",
+    coming_soon_title:"v2.8 is here 🚀",
     coming_soon_sub:"The biggest update in Élite Marcial history",
-    coming_soon_body1:"📅 12-week smart periodization adapted to your fight date",
-    coming_soon_body2:"⚡ Overload alerts based on elite methodology",
-    coming_soon_body3:"🥊 Fight Week protocol with safe weight cut limits",
-    coming_soon_body4:"🧠 Daily wellness & fatigue check-in",
+    coming_soon_body1:"📅 12-week periodization plan adapted to your fight date",
+    coming_soon_body2:"⚡ sRPE overload alerts — elite methodology",
+    coming_soon_body3:"🥊 Fight Week protocol with day-by-day guide & weight cut calculator",
+    coming_soon_body4:"🧠 Daily wellness check-in + 🌸 Hormonal protocol",
     coming_soon_note:"Based on university-level MMA physical preparation methodology",
-    coming_soon_cta:"Can't wait!",
+    coming_soon_cta:"See what's new!",
     recup_fisio:"Physiotherapy", recup_masaje:"Massage", recup_estira:"Stretching", recup_hielo:"Ice/Cryo",
     recup_stat_week:"This week", recup_stat_fisio:"Physio", lbl_total:"Total",
     lbl_since:"Since", period_weeks_planned:"planned weeks",
@@ -1667,15 +1667,15 @@ const TRANSLATIONS = {
     home_action_hydra:"+ Hidratació", home_action_water:"Afegir aigua",
     home_action_recov:"+ Recuperació", home_action_physio:"Fisio / massatge",
     home_action_weight:"Registrar pes", home_action_bio_sub:"Actualitzar bio",
-    coming_soon_badge:"Pròximament",
-    coming_soon_title:"Alguna cosa gran s'acosta 🚀",
+    coming_soon_badge:"🎉 Nou!",
+    coming_soon_title:"v2.8 ja és aquí 🚀",
     coming_soon_sub:"L'actualització més important d'Élite Marcial",
     coming_soon_body1:"📅 Periodització intel·ligent de 12 setmanes adaptada al teu combat",
     coming_soon_body2:"⚡ Alertes de sobrecàrrega basades en metodologia d'elit",
     coming_soon_body3:"🥊 Protocol Fight Week amb límits segurs de tall de pes",
     coming_soon_body4:"🧠 Check-in diari de benestar i fatiga acumulada",
     coming_soon_note:"Basat en metodologia universitària de preparació física per a MMA",
-    coming_soon_cta:"Ho espero!",
+    coming_soon_cta:"Veure novetats!",
     recup_fisio:"Fisioteràpia", recup_masaje:"Massatge", recup_estira:"Estirament", recup_hielo:"Gel/Cryo",
     recup_stat_week:"Aquesta setmana", recup_stat_fisio:"Fisio", lbl_total:"Total",
     lbl_since:"Des de", period_weeks_planned:"setmanes planificades",
@@ -5931,22 +5931,22 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {[
-                { fecha:"Próximamente", icon:"🚀", titulo:"v2.8 — Periodización Inteligente", items:["📅 Periodización de 12 semanas adaptada a tu combate","⚡ Alertas de sobrecarga con metodología de élite","🥊 Protocolo Fight Week con control de corte de peso","🧠 Check-in diario de bienestar y fatiga acumulada"], badge:"next" },
+                { fecha:"6 Jul 2026", icon:"🚀", titulo:"v2.8 — Preparación Inteligente", items:["📅 Plan de periodización de 12 semanas adaptado a tu combate","⚡ Alertas de sobrecarga sRPE con metodología de élite","🥊 Protocolo Fight Week — guía día a día + calculador de corte de peso","🧠 Check-in diario de bienestar (Hooper Wellness Index)","🌸 Protocolo hormonal — entrena según tu ciclo menstrual"], badge:"new" },
                 { fecha:"28 Jun 2026", icon:"🛡️", titulo:"v2.7 — Seguridad reforzada & Email de bienvenida", items:["🛡️ Auditoría de seguridad completada — 12 puntos revisados","📧 Email de bienvenida al confirmar tu cuenta","💬 Mensajes coach↔atleta requieren conexión activa","⚡ Novedades accesibles desde el menú Más"] },
                 { fecha:"25 Jun 2026", icon:"⚡", titulo:"v2.6 — Portal, contraseña y Club", items:["🔑 Cambio de contraseña desde el perfil","💳 Portal de gestión de suscripción Stripe","🏅 Club Fundador en su propia pestaña","🔒 Cancelación de suscripción automática"] },
                 { fecha:"24 Jun 2026", icon:"🔒", titulo:"v2.0 — Seguridad y RGPD", items:["🛡 Headers de seguridad HTTP (CSP, HSTS)","⏱ Rate limiting en el login","🗑 Borrado de cuenta y datos (RGPD)","✉️ Prevención de enumeración de emails"] },
                 { fecha:"Jun 2026", icon:"📲", titulo:"v2.0 — Push nativas y módulo lesiones", items:["🔔 Notificaciones push nativas (Web Push)","🩹 Módulo de lesiones con 35 zonas","📱 Corrección zoom iOS en inputs"] },
                 { fecha:"Jun 2026", icon:"🏅", titulo:"v2.3-2.5 — Ecosistema Fundador", items:["@Username único por usuario","🗺 Roadmap con votación real","💬 Canal directo con Jan","🔖 Confirmación de email al registrarse"] },
               ].map((n, i) => (
-                <div key={i} style={{ background: n.badge === "next" ? "rgba(196,26,26,0.06)" : "var(--bg-card)", border: n.badge === "next" ? "1px solid #C41A1A60" : "1px solid var(--border)", borderRadius: 14, padding: "14px 16px" }}>
+                <div key={i} style={{ background: n.badge === "new" ? "rgba(16,185,129,0.06)" : n.badge === "next" ? "rgba(196,26,26,0.06)" : "var(--bg-card)", border: n.badge === "new" ? "1px solid #10b98160" : n.badge === "next" ? "1px solid #C41A1A60" : "1px solid var(--border)", borderRadius: 14, padding: "14px 16px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
                     <span style={{ fontSize: 20 }}>{n.icon}</span>
                     <div style={{ flex:1 }}>
                       <div style={{ display:"flex", alignItems:"center", gap:6 }}>
                         <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>{n.titulo}</div>
-                        {n.badge === "next" && <span style={{ fontSize:9, fontWeight:800, color:"#C41A1A", background:"rgba(196,26,26,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Próx.</span>}
+                        {n.badge === "new" && <span style={{ fontSize:9, fontWeight:800, color:"#10b981", background:"rgba(16,185,129,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Nuevo</span>}{n.badge === "next" && <span style={{ fontSize:9, fontWeight:800, color:"#C41A1A", background:"rgba(196,26,26,0.12)", padding:"2px 6px", borderRadius:10, textTransform:"uppercase", letterSpacing:1 }}>Próx.</span>}
                       </div>
-                      <div style={{ fontSize: 10, color: n.badge === "next" ? "#C41A1A" : "var(--text-faint)" }}>{n.fecha}</div>
+                      <div style={{ fontSize: 10, color: n.badge === "new" ? "#10b981" : n.badge === "next" ? "#C41A1A" : "var(--text-faint)" }}>{n.fecha}</div>
                     </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
@@ -7149,7 +7149,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       .then(({ data }) => { if (data?.plan) setCoachPlanOverride(data.plan); });
   }, [user?.id]);
   const [coachView, setCoachView] = React.useState("equipo"); // "equipo" | "agenda" | "stats" | "periodo" | "perfil"
-  const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_coming_soon_jul2026_v1"));
+  const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
   const [expandedAgendaAthletes, setExpandedAgendaAthletes] = React.useState({}); // atleta_id -> bool
@@ -11118,24 +11118,24 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
 
       {showComingSoonCoach && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4100, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
-          onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoonCoach(false); }}>
+          onClick={() => { localStorage.setItem("em_v28_launch_jul2026","1"); setShowComingSoonCoach(false); }}>
           <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
-              <span style={{ background:"#C41A1A", color:"#fff", fontSize:10, fontWeight:800, padding:"3px 8px", borderRadius:20, letterSpacing:1, textTransform:"uppercase" }}>Próximamente</span>
+              <span style={{ background:"#C41A1A", color:"#fff", fontSize:10, fontWeight:800, padding:"3px 8px", borderRadius:20, letterSpacing:1, textTransform:"uppercase" }}>🎉 ¡Nuevo!</span>
             </div>
-            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:4 }}>Algo grande se acerca 🚀</div>
+            <div style={{ fontSize:20, fontWeight:900, color:"var(--text)", marginBottom:4 }}>v2.8 ya está aquí 🚀</div>
             <div style={{ fontSize:12, color:"#C41A1A", fontWeight:700, marginBottom:16 }}>La actualización más importante de Élite Marcial</div>
             <div style={{ fontSize:13, color:"var(--text-muted)", lineHeight:2, marginBottom:12 }}>
-              📅 Periodización inteligente de 12 semanas adaptada al combate<br/>
-              ⚡ Alertas de sobrecarga basadas en metodología de élite<br/>
-              🥊 Protocolo Fight Week con límites seguros de corte de peso<br/>
-              🧠 Check-in diario de bienestar y fatiga acumulada
+              📅 Plan de periodización de 12 semanas adaptado a tu combate<br/>
+              ⚡ Alertas de sobrecarga sRPE — metodología de élite<br/>
+              🥊 Fight Week — guía día a día + calculador de corte de peso<br/>
+              🧠 Check-in de bienestar + 🌸 Protocolo hormonal
             </div>
             <div style={{ fontSize:11, color:"var(--text-faint)", marginBottom:18, fontStyle:"italic" }}>Basado en metodología universitaria de preparación física para MMA</div>
             <button
-              onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoonCoach(false); }}
+              onClick={() => { localStorage.setItem("em_v28_launch_jul2026","1"); setShowComingSoonCoach(false); }}
               style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
-              ¡Lo espero!
+              ¡Ver novedades!
             </button>
           </div>
         </div>
@@ -12508,7 +12508,7 @@ function MainApp() {
     !localStorage.getItem("em_novedades_jun2026_v3")
   );
   const [showComingSoon, setShowComingSoon] = useState(() =>
-    !localStorage.getItem("em_coming_soon_jul2026_v1")
+    !localStorage.getItem("em_v28_launch_jul2026")
   );
   const swRegistrationRef = useRef(null);
   useEffect(() => {
@@ -16992,7 +16992,7 @@ function MainApp() {
 
       {showComingSoon && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:4100, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
-          onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoon(false); }}>
+          onClick={() => { localStorage.setItem("em_v28_launch_jul2026","1"); setShowComingSoon(false); }}>
           <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 22px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
             <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:6 }}>
               <span style={{ background:"#C41A1A", color:"#fff", fontSize:10, fontWeight:800, padding:"3px 8px", borderRadius:20, letterSpacing:1, textTransform:"uppercase" }}>{t("coming_soon_badge", lang)}</span>
@@ -17007,7 +17007,7 @@ function MainApp() {
             </div>
             <div style={{ fontSize:11, color:"var(--text-faint)", marginBottom:18, fontStyle:"italic" }}>{t("coming_soon_note", lang)}</div>
             <button
-              onClick={() => { localStorage.setItem("em_coming_soon_jul2026_v1","1"); setShowComingSoon(false); }}
+              onClick={() => { localStorage.setItem("em_v28_launch_jul2026","1"); setShowComingSoon(false); }}
               style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background:"#C41A1A", color:"#fff", fontSize:14, fontWeight:700, cursor:"pointer" }}>
               {t("coming_soon_cta", lang)}
             </button>

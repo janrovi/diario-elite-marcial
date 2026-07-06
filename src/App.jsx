@@ -4647,15 +4647,42 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
     setForm({ ...EMPTY_BODY, fecha: new Date().toISOString().slice(0,10) });
     setShowForm(false);
   };
-  const saveInjury = () => {
+  const saveInjury = async () => {
     if (!injForm.zona) return;
-    setInjuries(arr => [{ ...injForm, id: Date.now() }, ...arr]);
+    // Intentar guardar en Supabase si hay userId
+    if (userId) {
+      const { data: saved, error } = await supabase.from("lesiones").insert({
+        atleta_id: userId,
+        fecha_inicio: injForm.fecha,
+        zona: injForm.zona,
+        tipo: injForm.tipo || null,
+        estado: injForm.estado,
+        notas: injForm.notas || null,
+        reportado_por: "atleta",
+      }).select().single();
+      if (!error && saved) {
+        // Usar el ID de Supabase para poder sincronizar después
+        setInjuries(arr => [{ ...injForm, id: saved.id, fecha: saved.fecha_inicio }, ...arr]);
+      } else {
+        setInjuries(arr => [{ ...injForm, id: Date.now() }, ...arr]);
+      }
+    } else {
+      setInjuries(arr => [{ ...injForm, id: Date.now() }, ...arr]);
+    }
     setInjForm({ zona:"", tipo:"", fecha:new Date().toISOString().slice(0,10), estado:"activa", notas:"" });
     setShowInjForm(false);
   };
   const injStatusColor = st => st === "activa" ? "#e53e3e" : st === "recuperando" ? "#f6ad55" : GREEN;
   const injStatusLabel = st => t(st === "activa" ? "inj_activa" : st === "recuperando" ? "inj_recuperando" : "inj_curada", lang);
-  const cycleInjStatus = id => setInjuries(arr => arr.map(inj => inj.id !== id ? inj : { ...inj, estado: inj.estado === "activa" ? "recuperando" : inj.estado === "recuperando" ? "curada" : "activa" }));
+  const cycleInjStatus = id => {
+    const nextEstado = (e) => e === "activa" ? "recuperando" : e === "recuperando" ? "curada" : "activa";
+    setInjuries(arr => arr.map(inj => inj.id !== id ? inj : { ...inj, estado: nextEstado(inj.estado) }));
+    const inj = injuries.find(i => i.id === id);
+    if (inj && userId && typeof id === "string" && id.includes("-")) {
+      supabase.from("lesiones").update({ estado: nextEstado(inj.estado) }).eq("id", id).eq("atleta_id", userId)
+        .then(({ error }) => { if (error) console.warn("lesiones update:", error); });
+    }
+  };
   const daysSince = fecha => Math.floor((new Date(new Date().toISOString().slice(0,10)) - new Date(fecha + "T12:00:00")) / 86400000);
   const INJ_ZONES = [
     "Rodilla derecha","Rodilla izquierda",
@@ -5298,7 +5325,13 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                     style={{ padding:"4px 8px", borderRadius:20, border:`1px solid ${injStatusColor(inj.estado)}50`, background:`${injStatusColor(inj.estado)}15`, color:injStatusColor(inj.estado), fontSize:10, fontWeight:700, cursor:"pointer", whiteSpace:"nowrap" }}>
                     {injStatusLabel(inj.estado)}
                   </button>
-                  <button onClick={() => setInjuries(arr => arr.filter(i => i.id !== inj.id))}
+                  <button onClick={() => {
+                    setInjuries(arr => arr.filter(i => i.id !== inj.id));
+                    if (userId && typeof inj.id === "string" && inj.id.includes("-")) {
+                      supabase.from("lesiones").delete().eq("id", inj.id).eq("atleta_id", userId)
+                        .then(({ error }) => { if (error) console.warn("lesiones delete:", error); });
+                    }
+                  }}
                     style={{ background:"transparent", border:"none", color:"var(--text-faint)", cursor:"pointer", fontSize:14 }}>✕</button>
                 </div>
               </div>
@@ -7171,6 +7204,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [equipoTab, setEquipoTab] = React.useState("dashboard"); // "dashboard" | "atletas"
   const [athleteWellness, setAthleteWellness] = React.useState({});
   const [athleteWellnessHistory, setAthleteWellnessHistory] = React.useState([]);
+  const [athleteLesiones, setAthleteLesiones] = React.useState([]);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7639,6 +7673,12 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .gte("fecha", sevenDaysAgo.toISOString().slice(0,10))
         .order("fecha", { ascending: true });
       setAthleteWellnessHistory(wHistory || []);
+      // Fetch lesiones del atleta
+      const { data: lesionesData } = await supabase.from("lesiones")
+        .select("*")
+        .eq("atleta_id", selectedAthlete.atleta_id)
+        .order("fecha_inicio", { ascending: false });
+      setAthleteLesiones(lesionesData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);
@@ -10425,6 +10465,28 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     </div>
                       ); })()}
 
+                    {/* ── Banner lesiones activas ── */}
+                    {athleteLesiones.filter(l => l.estado === "activa" || l.estado === "recuperando").length > 0 && (
+                      <div style={{ background:"rgba(239,68,68,0.07)", border:"1px solid rgba(239,68,68,0.28)", borderRadius:14, padding:"10px 14px", marginBottom:14 }}>
+                        <div style={{ fontSize:10, fontWeight:800, color:"#ef4444", textTransform:"uppercase", letterSpacing:0.8, marginBottom:7 }}>🩹 Lesiones activas</div>
+                        <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+                          {athleteLesiones.filter(l => l.estado !== "curada").map(l => (
+                            <div key={l.id} style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
+                              <span style={{ fontSize:9, fontWeight:800, textTransform:"uppercase", letterSpacing:0.5,
+                                color: l.estado === "activa" ? "#ef4444" : "#f59e0b",
+                                background: l.estado === "activa" ? "rgba(239,68,68,0.12)" : "rgba(245,158,11,0.12)",
+                                borderRadius:4, padding:"1px 6px" }}>
+                                {l.estado === "activa" ? "Activa" : "Recuperando"}
+                              </span>
+                              <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{l.zona}</span>
+                              {l.tipo && <span style={{ fontSize:11, color:"var(--text-faint)" }}>· {l.tipo}</span>}
+                              <span style={{ fontSize:10, color:"var(--text-faint)", marginLeft:"auto" }}>{l.fecha_inicio}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* ── Bienestar HRW (últimos 7 días) ── */}
                     {(() => {
                       const today7 = Array.from({length:7}, (_,i) => { const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toISOString().slice(0,10); });
@@ -13193,6 +13255,16 @@ function MainApp() {
         if (local.length > 0) setSessions(local);
         else setShowTutorial(true);
       }
+      // Sync lesiones from Supabase
+      try {
+        const { data: lesDb } = await supabase.from("lesiones")
+          .select("*").eq("atleta_id", user.id).order("fecha_inicio", { ascending: false });
+        if (lesDb && lesDb.length > 0) {
+          const mapped = lesDb.map(l => ({ id: l.id, zona: l.zona, tipo: l.tipo || "", fecha: l.fecha_inicio, estado: l.estado, notas: l.notas || "" }));
+          setInjuries(mapped);
+          try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(mapped)); } catch {}
+        }
+      } catch { /* silently ignore */ }
       setSyncing(false);
     };
     sync();

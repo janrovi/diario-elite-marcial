@@ -2981,7 +2981,7 @@ function exportCSV(sessions) {
 }
 
 // ── Técnicas View ─────────────────────────────────────────
-function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
+function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecnicasAsig = [], setTecnicasAsig = ()=>{}, supabase }) {
   const [search, setSearch] = useState("");
   const [filterDisc, setFilterDisc] = useState("");
   const [activeTab, setActiveTab] = useState("biblioteca"); // "biblioteca" | "ranking"
@@ -3083,7 +3083,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
 
       {/* ── Tabs ── */}
       <div style={{ display:"flex", gap:6, marginBottom:16, background:"var(--bg-elevated)", borderRadius:12, padding:4 }}>
-        {[["biblioteca","📂 Biblioteca"],["ranking","🏆 Ranking"]].map(([tab, label]) => (
+        {[["biblioteca","📂 Biblioteca"],["ranking","🏆 Ranking"],["coach","📋 Coach"]].map(([tab, label]) => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             flex:1, border:"none", borderRadius:9, padding:"9px 0", fontSize:12, fontWeight:700, cursor:"pointer",
             background: activeTab===tab ? "var(--bg-card)" : "transparent",
@@ -3223,6 +3223,59 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession }) {
               </div>
             );
           })}
+        </div>
+      )}
+    </div>
+
+      {activeTab === "coach" && (
+        <div>
+          {tecnicasAsig.length === 0 ? (
+            <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)" }}>
+              <div style={{ fontSize:40, marginBottom:12 }}>🥋</div>
+              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:6 }}>Sin técnicas asignadas</div>
+              <div style={{ fontSize:13 }}>Tu coach puede asignarte técnicas específicas a trabajar.</div>
+            </div>
+          ) : (
+            <div>
+              {[
+                { estado:"pendiente", label:"⏳ Pendientes", color:"#6366f1" },
+                { estado:"practicando", label:"🔄 Practicando", color:"#f59e0b" },
+                { estado:"dominada", label:"✅ Dominadas", color:"#10b981" },
+              ].map(({ estado, label, color }) => {
+                const items = tecnicasAsig.filter(t => t.estado === estado);
+                if (!items.length) return null;
+                return (
+                  <div key={estado} style={{ marginBottom:16 }}>
+                    <div style={{ fontSize:10, fontWeight:800, color, textTransform:"uppercase", letterSpacing:1.2, marginBottom:8 }}>{label} ({items.length})</div>
+                    {items.map(t => (
+                      <div key={t.id} style={{ background:"var(--bg-card)", border:`1px solid ${color}30`, borderLeft:`3px solid ${color}`, borderRadius:12, padding:"12px 14px", marginBottom:8 }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
+                          <div>
+                            <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:2 }}>{t.nombre}</div>
+                            {t.disciplina && <div style={{ fontSize:11, color:color, fontWeight:600, marginBottom:3 }}>{t.disciplina}</div>}
+                            {t.descripcion && <div style={{ fontSize:11, color:"var(--text-muted)", fontStyle:"italic" }}>{t.descripcion}</div>}
+                          </div>
+                          <div style={{ display:"flex", gap:4, flexShrink:0 }}>
+                            {["pendiente","practicando","dominada"].map((s,i) => (
+                              <button key={s} onClick={async () => {
+                                await supabase.from("tecnicas_asignadas").update({ estado: s }).eq("id", t.id);
+                                setTecnicasAsig(prev => prev.map(x => x.id===t.id ? {...x, estado:s} : x));
+                              }} style={{ fontSize:10, padding:"3px 7px", borderRadius:20, border:"none", cursor:"pointer",
+                                background: t.estado===s ? color : "var(--bg-input)",
+                                color: t.estado===s ? "#fff" : "var(--text-faint)",
+                                fontWeight: t.estado===s ? 700 : 400 }}>
+                                {["⏳","🔄","✅"][i]}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -7405,6 +7458,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [athletePesaje, setAthletePesaje] = React.useState([]);
   const [athleteDolor, setAthleteDolor] = React.useState([]);
   const [athleteTests, setAthleteTests] = React.useState([]);
+  const [athleteTecnicas, setAthleteTecnicas] = React.useState([]);
+  const [newTecnicaForm, setNewTecnicaForm] = React.useState({ nombre:"", disciplina:"", descripcion:"" });
+  const [savingTecnica, setSavingTecnica] = React.useState(false);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7901,6 +7957,11 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .order("fecha", { ascending: false })
         .limit(50);
       setAthleteTests(testsData || []);
+      // Fetch técnicas asignadas
+      const { data: tecAsigData } = await supabase.from("tecnicas_asignadas")
+        .select("*").eq("atleta_id", selectedAthlete.atleta_id)
+        .order("created_at", { ascending: false });
+      setAthleteTecnicas(tecAsigData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);
@@ -10796,6 +10857,66 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       );
                     })()}
 
+                    {/* ── Técnicas Asignadas ── */}
+                    {(() => {
+                      const addTecnica = async () => {
+                        if (!newTecnicaForm.nombre || !selectedAthlete?.atleta_id) return;
+                        setSavingTecnica(true);
+                        const row = { atleta_id: selectedAthlete.atleta_id, coach_id: coachProfile?.id,
+                          nombre: newTecnicaForm.nombre, disciplina: newTecnicaForm.disciplina || null,
+                          descripcion: newTecnicaForm.descripcion || null, estado: "pendiente" };
+                        const { data } = await supabase.from("tecnicas_asignadas").insert(row).select().maybeSingle();
+                        if (data) setAthleteTecnicas(prev => [data, ...prev]);
+                        setNewTecnicaForm({ nombre:"", disciplina:"", descripcion:"" });
+                        setSavingTecnica(false);
+                      };
+                      const removeTecnica = async (id) => {
+                        await supabase.from("tecnicas_asignadas").delete().eq("id", id);
+                        setAthleteTecnicas(prev => prev.filter(t => t.id !== id));
+                      };
+                      const pendientes = athleteTecnicas.filter(t => t.estado !== "dominada");
+                      const dominadas = athleteTecnicas.filter(t => t.estado === "dominada");
+                      return (
+                        <div style={{ background:"var(--bg-input)", borderRadius:14, padding:"12px 14px", marginBottom:14 }}>
+                          <div style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8, marginBottom:10 }}>🥋 Técnicas Asignadas</div>
+                          {/* Form para nueva técnica */}
+                          <div style={{ display:"flex", gap:6, marginBottom:10 }}>
+                            <input value={newTecnicaForm.nombre} onChange={e=>setNewTecnicaForm(f=>({...f,nombre:e.target.value}))}
+                              placeholder="Nombre de la técnica…"
+                              onKeyDown={e=>e.key==="Enter"&&addTecnica()}
+                              style={{ flex:1, padding:"7px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:12 }} />
+                            <input value={newTecnicaForm.disciplina} onChange={e=>setNewTecnicaForm(f=>({...f,disciplina:e.target.value}))}
+                              placeholder="BJJ, Boxeo…"
+                              style={{ width:80, padding:"7px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:12 }} />
+                            <button onClick={addTecnica} disabled={savingTecnica||!newTecnicaForm.nombre}
+                              style={{ padding:"7px 12px", borderRadius:8, border:"none", background:"#6366f1", color:"#fff", fontSize:12, fontWeight:700, cursor:"pointer", opacity:!newTecnicaForm.nombre?0.5:1 }}>
+                              +
+                            </button>
+                          </div>
+                          {/* Lista */}
+                          {athleteTecnicas.length === 0 ? (
+                            <div style={{ fontSize:11, color:"var(--text-faint)", textAlign:"center", padding:"8px 0" }}>Sin técnicas asignadas</div>
+                          ) : (
+                            <div>
+                              {pendientes.map(t => (
+                                <div key={t.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"6px 0", borderBottom:"1px solid var(--border)" }}>
+                                  <div style={{ flex:1, minWidth:0 }}>
+                                    <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{t.nombre}</span>
+                                    {t.disciplina && <span style={{ fontSize:10, color:"#6366f1", marginLeft:6 }}>{t.disciplina}</span>}
+                                    <span style={{ fontSize:10, marginLeft:6, color: t.estado==="practicando" ? "#f59e0b" : "#6366f1" }}>{t.estado==="practicando"?"🔄":"⏳"}</span>
+                                  </div>
+                                  <button onClick={() => removeTecnica(t.id)} style={{ background:"transparent", border:"none", color:"var(--text-faint)", cursor:"pointer", fontSize:13, flexShrink:0 }}>✕</button>
+                                </div>
+                              ))}
+                              {dominadas.length > 0 && (
+                                <div style={{ fontSize:10, color:"#10b981", marginTop:6, fontWeight:600 }}>✅ {dominadas.length} dominada{dominadas.length>1?"s":""}</div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
                     {/* ── Bienestar HRW (últimos 7 días) ── */}
                     {(() => {
                       const today7 = Array.from({length:7}, (_,i) => { const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toISOString().slice(0,10); });
@@ -13347,6 +13468,7 @@ function MainApp() {
   const [bodyEntries, setBodyEntries] = useState([]);
   const [injuries, setInjuries] = useState([]);
   const [testsF, setTestsF] = useState([]);
+  const [tecnicasAsig, setTecnicasAsig] = useState([]);
   const [showTestForm, setShowTestForm] = useState(false);
   const [testForm, setTestForm] = useState({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
   const [testSaving, setTestSaving] = useState(false);
@@ -13577,6 +13699,12 @@ function MainApp() {
           setInjuries(mapped);
           try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(mapped)); } catch {}
         }
+      } catch { /* silently ignore */ }
+      // Load técnicas asignadas por coach
+      try {
+        const { data: tecAsigDb } = await supabase.from("tecnicas_asignadas")
+          .select("*").eq("atleta_id", user.id).order("created_at", { ascending: false });
+        if (tecAsigDb) setTecnicasAsig(tecAsigDb);
       } catch { /* silently ignore */ }
       // Load tests físicos
       try {
@@ -14481,7 +14609,7 @@ function MainApp() {
 
         {/* TÉCNICAS */}
         {view === "tecnicas" && (
-          <TecnicasView sessions={sessions} onOpenDetail={openDetail} lang={lang} onNewSession={() => setView("form")} />
+          <TecnicasView sessions={sessions} onOpenDetail={openDetail} lang={lang} onNewSession={() => setView("form")} tecnicasAsig={tecnicasAsig} setTecnicasAsig={setTecnicasAsig} supabase={supabase} />
         )}
 
         {/* ── PANEL ENTRENADOR ─────────────────────────────────────────── */}

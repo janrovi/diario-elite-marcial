@@ -7460,6 +7460,10 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   const [athleteTecnicas, setAthleteTecnicas] = React.useState([]);
   const [newTecnicaForm, setNewTecnicaForm] = React.useState({ nombre:"", disciplina:"", descripcion:"" });
   const [savingTecnica, setSavingTecnica] = React.useState(false);
+  const [athleteEvals, setAthleteEvals] = React.useState([]);
+  const [evalForm, setEvalForm] = React.useState({ tecnica:7, fisico:7, mental:7, tactica:7, comentario:"", fecha: new Date().toISOString().slice(0,10) });
+  const [evalSaving, setEvalSaving] = React.useState(false);
+  const [showEvalForm, setShowEvalForm] = React.useState(false);
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7961,6 +7965,11 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         .select("*").eq("atleta_id", selectedAthlete.atleta_id)
         .order("created_at", { ascending: false });
       setAthleteTecnicas(tecAsigData || []);
+      // Fetch evaluaciones del coach
+      const { data: evalsData } = await supabase.from("evaluaciones_coach")
+        .select("*").eq("atleta_id", selectedAthlete.atleta_id)
+        .order("fecha", { ascending: false }).limit(20);
+      setAthleteEvals(evalsData || []);
     };
     fetch();
     fetchCoachNote(selectedAthlete.atleta_id);
@@ -10603,6 +10612,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                     {[
                       { id:"info", label:"📊 Info" },
                       { id:"chat", label:`💬 Chat${chatUnread[selectedAthlete.atleta_id] > 0 ? ` (${chatUnread[selectedAthlete.atleta_id]})` : ""}` },
+                      { id:"eval", label:"📋 Eval" },
                     ].map(tab => (
                       <button key={tab.id} onClick={() => {
                         setAthletePanel(tab.id);
@@ -11275,6 +11285,104 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                       </div>
                     )}
                   </div>}{/* fin info panel */}
+
+                  {athletePanel === "eval" && (
+                    <div style={{ padding:"18px 22px", overflowY:"auto", maxHeight:"calc(100vh - 310px)" }}>
+                      {/* ── Nueva evaluación ── */}
+                      <button onClick={() => setShowEvalForm(v=>!v)}
+                        style={{ width:"100%", padding:"11px", borderRadius:12, border:"1px dashed rgba(99,102,241,0.4)", background:"rgba(99,102,241,0.05)", color:"#6366f1", fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16 }}>
+                        {showEvalForm ? "✕ Cancelar" : "+ Nueva evaluación"}
+                      </button>
+
+                      {showEvalForm && (() => {
+                        const saveEval = async () => {
+                          if (!selectedAthlete?.atleta_id) return;
+                          setEvalSaving(true);
+                          const row = {
+                            atleta_id: selectedAthlete.atleta_id,
+                            coach_id: user?.id,
+                            fecha: evalForm.fecha,
+                            tecnica: evalForm.tecnica,
+                            fisico: evalForm.fisico,
+                            mental: evalForm.mental,
+                            tactica: evalForm.tactica,
+                            comentario: evalForm.comentario || null,
+                          };
+                          const { data } = await supabase.from("evaluaciones_coach").insert(row).select().maybeSingle();
+                          if (data) setAthleteEvals(prev => [data, ...prev]);
+                          setEvalForm({ tecnica:7, fisico:7, mental:7, tactica:7, comentario:"", fecha: new Date().toISOString().slice(0,10) });
+                          setShowEvalForm(false);
+                          setEvalSaving(false);
+                        };
+                        const sliders = [
+                          { key:"tecnica", label:"🥋 Técnica", color:"#6366f1" },
+                          { key:"fisico",  label:"💪 Físico",  color:"#10b981" },
+                          { key:"mental",  label:"🧠 Mental",  color:"#f59e0b" },
+                          { key:"tactica", label:"♟️ Táctica", color:"#3b82f6" },
+                        ];
+                        return (
+                          <div style={{ background:"var(--bg-input)", borderRadius:14, padding:16, marginBottom:16 }}>
+                            <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1.5, marginBottom:12 }}>Evaluación periódica</div>
+                            <div style={{ marginBottom:8 }}>
+                              <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                              <input type="date" value={evalForm.fecha} onChange={e=>setEvalForm(f=>({...f,fecha:e.target.value}))}
+                                style={{ padding:"7px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:13 }} />
+                            </div>
+                            {sliders.map(({key,label,color}) => (
+                              <div key={key} style={{ marginBottom:10 }}>
+                                <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
+                                  <label style={{ fontSize:11, fontWeight:700, color:"var(--text-muted)" }}>{label}</label>
+                                  <span style={{ fontSize:13, fontWeight:900, color }}>{evalForm[key]}/10</span>
+                                </div>
+                                <input type="range" min={1} max={10} value={evalForm[key]}
+                                  onChange={e=>setEvalForm(f=>({...f,[key]:+e.target.value}))}
+                                  style={{ width:"100%", accentColor:color }} />
+                              </div>
+                            ))}
+                            <div style={{ marginBottom:12 }}>
+                              <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Comentario (opcional)</label>
+                              <textarea value={evalForm.comentario} onChange={e=>setEvalForm(f=>({...f,comentario:e.target.value}))}
+                                placeholder="Observaciones, puntos clave, objetivos para próximo periodo..."
+                                rows={3} style={{ width:"100%", padding:"8px 10px", borderRadius:8, border:"1px solid var(--border)", background:"var(--bg-card)", color:"var(--text)", fontSize:12, resize:"none", lineHeight:"1.4", boxSizing:"border-box" }} />
+                            </div>
+                            <button onClick={saveEval} disabled={evalSaving}
+                              style={{ width:"100%", padding:"11px", borderRadius:10, border:"none", background:"#6366f1", color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer", opacity:evalSaving?0.6:1 }}>
+                              {evalSaving ? "Guardando…" : "💾 Guardar evaluación"}
+                            </button>
+                          </div>
+                        );
+                      })()}
+
+                      {/* ── Historial ── */}
+                      {athleteEvals.length === 0 ? (
+                        <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"32px 0" }}>Sin evaluaciones aún</div>
+                      ) : (
+                        <div>
+                          {athleteEvals.map(ev => {
+                            const avg = ((ev.tecnica+ev.fisico+ev.mental+ev.tactica)/4).toFixed(1);
+                            const avgColor = avg >= 8 ? "#4ade80" : avg >= 6 ? "#f59e0b" : "#f87171";
+                            return (
+                              <div key={ev.id} style={{ background:"var(--bg-input)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 16px", marginBottom:10 }}>
+                                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+                                  <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{ev.fecha}</span>
+                                  <span style={{ fontSize:16, fontWeight:900, color:avgColor, background:avgColor+"18", borderRadius:8, padding:"2px 10px" }}>{avg}</span>
+                                </div>
+                                <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6, marginBottom: ev.comentario ? 10 : 0 }}>
+                                  {[["🥋 Técnica",ev.tecnica,"#6366f1"],["💪 Físico",ev.fisico,"#10b981"],["🧠 Mental",ev.mental,"#f59e0b"],["♟️ Táctica",ev.tactica,"#3b82f6"]].map(([label,val,color]) => (
+                                    <div key={label} style={{ background:"var(--bg-card)", borderRadius:8, padding:"6px 10px" }}>
+                                      <div style={{ fontSize:9, color:"var(--text-faint)", fontWeight:600, marginBottom:2 }}>{label}</div>
+                                      <div style={{ fontSize:15, fontWeight:900, color }}>{val}<span style={{ fontSize:9, color:"var(--text-faint)", fontWeight:400 }}>/10</span></div>
+                                    </div>
+                                  ))}
+                                </div>
+                                {ev.comentario && <div style={{ fontSize:11, color:"var(--text-muted)", fontStyle:"italic", lineHeight:1.5 }}>"{ev.comentario}"</div>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 );
               })()}
@@ -13468,6 +13576,7 @@ function MainApp() {
   const [injuries, setInjuries] = useState([]);
   const [testsF, setTestsF] = useState([]);
   const [tecnicasAsig, setTecnicasAsig] = useState([]);
+  const [evalsC, setEvalsC] = useState([]);
   const [showTestForm, setShowTestForm] = useState(false);
   const [testForm, setTestForm] = useState({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
   const [testSaving, setTestSaving] = useState(false);
@@ -13698,6 +13807,12 @@ function MainApp() {
           setInjuries(mapped);
           try { localStorage.setItem(INJURIES_KEY(user.id), JSON.stringify(mapped)); } catch {}
         }
+      } catch { /* silently ignore */ }
+      // Load evaluaciones del coach
+      try {
+        const { data: evalsDb } = await supabase.from("evaluaciones_coach")
+          .select("*").eq("atleta_id", user.id).order("fecha", { ascending: false }).limit(20);
+        if (evalsDb) setEvalsC(evalsDb);
       } catch { /* silently ignore */ }
       // Load técnicas asignadas por coach
       try {
@@ -17627,6 +17742,31 @@ function MainApp() {
             </div>
           );
         })()}
+
+        {/* ── 📋 Evaluaciones del Coach ── */}
+        {evalsC.length > 0 && (
+          <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
+            <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14 }}>📋 Evaluaciones del Coach</div>
+            {evalsC.map(ev => {
+              const avg = ((ev.tecnica+ev.fisico+ev.mental+ev.tactica)/4).toFixed(1);
+              const avgColor = avg >= 8 ? "#4ade80" : avg >= 6 ? "#f59e0b" : "#f87171";
+              return (
+                <div key={ev.id} style={{ background:"var(--bg-input)", borderRadius:12, padding:"12px 14px", marginBottom:10 }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+                    <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{ev.fecha}</span>
+                    <span style={{ fontSize:15, fontWeight:900, color:avgColor }}>⭐ {avg}/10</span>
+                  </div>
+                  <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom: ev.comentario ? 8 : 0 }}>
+                    {[["🥋",ev.tecnica,"#6366f1"],["💪",ev.fisico,"#10b981"],["🧠",ev.mental,"#f59e0b"],["♟️",ev.tactica,"#3b82f6"]].map(([icon,val,color]) => (
+                      <span key={icon} style={{ fontSize:11, fontWeight:700, color, background:color+"18", borderRadius:20, padding:"2px 8px" }}>{icon} {val}</span>
+                    ))}
+                  </div>
+                  {ev.comentario && <div style={{ fontSize:11, color:"var(--text-muted)", fontStyle:"italic", lineHeight:1.5 }}>"{ev.comentario}"</div>}
+                </div>
+              );
+            })}
+          </div>
+        )}
             </>
           );
         })()}

@@ -3559,6 +3559,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     try { if (d) localStorage.setItem(key, d); else localStorage.removeItem(key); } catch {}
     setFightDate(d);
     setShowFightSetup(false);
+    if (profile?.id) {
+      supabase.from("profiles").update({ proxima_pelea: d || null }).eq("id", profile.id).then(() => {});
+    }
   };
 
   const hrw = wellnessToday ? wellnessToday.sueno + wellnessToday.fisico + wellnessToday.mental : null;
@@ -7228,8 +7231,18 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
   React.useEffect(() => {
     if (!selectedAthlete || !user?.id) { setPeriodos([]); return; }
     const key = `em_perio_${user.id}_${selectedAthlete.atleta_id}`;
-    try { const d = JSON.parse(localStorage.getItem(key) || "[]"); setPeriodos(Array.isArray(d) ? d : []); } catch { setPeriodos([]); }
     setPeriodoView("list"); setSelectedMacro(null); setSelectedMeso(null);
+    supabase.from("periodizaciones")
+      .select("data").eq("coach_id", user.id).eq("atleta_id", selectedAthlete.atleta_id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.data && Array.isArray(data.data)) {
+          setPeriodos(data.data);
+          try { localStorage.setItem(key, JSON.stringify(data.data)); } catch {}
+        } else {
+          try { const d = JSON.parse(localStorage.getItem(key) || "[]"); setPeriodos(Array.isArray(d) ? d : []); } catch { setPeriodos([]); }
+        }
+      });
   }, [selectedAthlete?.atleta_id, user?.id]);
 
   React.useEffect(() => {
@@ -7533,7 +7546,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
     setLoading(true);
     const { data: rel } = await supabase
       .from("coach_atleta")
-      .select("*, profiles!atleta_id(id, nombre, email, disciplina_principal, avatar_url)")
+      .select("*, profiles!atleta_id(id, nombre, email, disciplina_principal, avatar_url, proxima_pelea)")
       .eq("coach_id", user.id)
       .order("created_at", { ascending: false });
     const activeRel = (rel || []).filter(r => r.estado === "activo");
@@ -9210,7 +9223,12 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           const savePeriodos = (next) => {
             setPeriodos(next);
             if (selectedAthlete && user?.id) {
-              localStorage.setItem(`em_perio_${user.id}_${selectedAthlete.atleta_id}`, JSON.stringify(next));
+              const key = `em_perio_${user.id}_${selectedAthlete.atleta_id}`;
+              try { localStorage.setItem(key, JSON.stringify(next)); } catch {}
+              supabase.from("periodizaciones").upsert({
+                coach_id: user.id, atleta_id: selectedAthlete.atleta_id,
+                data: next, updated_at: new Date().toISOString()
+              }, { onConflict: "coach_id,atleta_id" }).then(() => {});
             }
           };
 
@@ -9730,7 +9748,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 const w = athleteWellness[a.atleta_id];
                 const hrw = w ? w.total : null;
                 const srpe = calcSRPE(a.atleta_id);
-                return (hrw !== null && hrw < 7) || srpe > 2500;
+                const fd = a.profiles?.proxima_pelea;
+                const dtf = fd ? Math.ceil((new Date(fd+"T12:00:00") - new Date()) / 86400000) : null;
+                return (hrw !== null && hrw < 7) || srpe > 2500 || (dtf !== null && dtf >= 0 && dtf <= 7);
               });
 
               const totalSRPE = activeAthletes.reduce((s,a) => s + calcSRPE(a.atleta_id), 0);
@@ -9766,6 +9786,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                           const reasons = [];
                           if (hrw !== null && hrw < 7) reasons.push(`Bienestar bajo (${hrw}/15)`);
                           if (srpe > 2500) reasons.push(`Carga alta (${Math.round(srpe)} AU)`);
+                          const fdA = a.profiles?.proxima_pelea;
+                          const dtfA = fdA ? Math.ceil((new Date(fdA+"T12:00:00") - new Date()) / 86400000) : null;
+                          if (dtfA !== null && dtfA >= 0 && dtfA <= 7) reasons.push(`⚡ Fight Week — combate en ${dtfA === 0 ? "¡HOY!" : dtfA+"d"}`);
                           return (
                             <div key={a.id} onClick={() => { setEquipoTab("atletas"); setSelectedAthlete(a); }}
                               style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }}>
@@ -9785,8 +9808,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   {/* Command table */}
                   <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, overflow:"hidden" }}>
                     {/* Table header */}
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px 60px 80px 32px", gap:8, padding:"10px 16px", borderBottom:"1px solid var(--border)", background:"var(--bg-elevated)" }}>
-                      {["Atleta","Bienestar","Carga sRPE","Ses","Último",""].map((h,i) => (
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 75px 85px 48px 68px 80px 82px 28px", gap:8, padding:"10px 16px", borderBottom:"1px solid var(--border)", background:"var(--bg-elevated)" }}>
+                      {["Atleta","Bienestar","Carga sRPE","Ses","Último","Combate","Fase",""].map((h,i) => (
                         <div key={i} style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8 }}>{h}</div>
                       ))}
                     </div>
@@ -9815,7 +9838,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                         return (
                           <div key={a.id}
                             onClick={() => { setEquipoTab("atletas"); setSelectedAthlete(a); }}
-                            style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px 60px 80px 32px", gap:8, padding:"12px 16px",
+                            style={{ display:"grid", gridTemplateColumns:"1fr 75px 85px 48px 68px 80px 82px 28px", gap:8, padding:"12px 16px",
                               borderBottom: idx < activeAthletes.length-1 ? "1px solid var(--border)" : "none",
                               cursor:"pointer", transition:"background 0.15s" }}
                             onMouseEnter={e => e.currentTarget.style.background="var(--bg-elevated)"}
@@ -9850,6 +9873,37 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                               <div style={{ fontSize:12, fontWeight:700, color: daysSince === null ? "var(--text-faint)" : daysSince <= 1 ? "#4ade80" : daysSince <= 3 ? "#f59e0b" : "#f43f5e" }}>{lastLabel}</div>
                               {lastSes && <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:1 }}>{lastSes.slice(5)}</div>}
                             </div>
+                            {/* Combate */}
+                            {(() => {
+                              const fd = a.profiles?.proxima_pelea;
+                              const dtf = fd ? Math.ceil((new Date(fd+"T12:00:00") - new Date()) / 86400000) : null;
+                              const fLabel = dtf === null ? "—" : dtf < 0 ? "Pasado" : dtf === 0 ? "¡HOY!" : `${dtf}d`;
+                              const fColor = dtf === null ? "var(--text-faint)" : dtf <= 7 ? "#f43f5e" : dtf <= 28 ? "#f59e0b" : "#4ade80";
+                              return (
+                                <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
+                                  <div style={{ fontSize:13, fontWeight:900, color:fColor, lineHeight:1 }}>{fLabel}</div>
+                                  {fd && dtf !== null && dtf >= 0 && <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:1 }}>{fd.slice(5)}</div>}
+                                </div>
+                              );
+                            })()}
+                            {/* Fase */}
+                            {(() => {
+                              const fd = a.profiles?.proxima_pelea;
+                              const dtf = fd ? Math.ceil((new Date(fd+"T12:00:00") - new Date()) / 86400000) : null;
+                              const phases = [
+                                { max:7,  label:"Fight Week", color:"#f43f5e", bg:"rgba(244,63,94,0.12)" },
+                                { max:28, label:"Pre-Comp",   color:"#f97316", bg:"rgba(249,115,22,0.12)" },
+                                { max:56, label:"Específica", color:"#f59e0b", bg:"rgba(245,158,11,0.12)" },
+                                { max:84, label:"General",    color:"#3b82f6", bg:"rgba(59,130,246,0.12)" },
+                                { max:Infinity, label:"Pre-Camp", color:"#6b7280", bg:"rgba(107,114,128,0.12)" },
+                              ];
+                              const ph = dtf !== null && dtf >= 0 ? phases.find(p => dtf <= p.max) : null;
+                              return ph ? (
+                                <div style={{ display:"flex", alignItems:"center" }}>
+                                  <span style={{ fontSize:9, fontWeight:800, color:ph.color, background:ph.bg, borderRadius:6, padding:"3px 7px", whiteSpace:"nowrap" }}>{ph.label}</span>
+                                </div>
+                              ) : <div style={{ color:"var(--text-faint)", fontSize:12 }}>—</div>;
+                            })()}
                             {/* Arrow */}
                             <div style={{ display:"flex", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", fontSize:16 }}>›</div>
                           </div>

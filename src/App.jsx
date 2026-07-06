@@ -3591,7 +3591,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   const maxCount = Math.max(...last7.map(d => d.count), 1);
 
   return (
-    <div style={{ paddingBottom:40, maxWidth:760, margin:"0 auto" }}>
+    <div style={{ paddingBottom:"calc(env(safe-area-inset-bottom,0px) + 88px)", maxWidth:760, margin:"0 auto" }}>
 
       {/* ── HERO ── */}
       <div style={{ position:"relative", marginBottom:20, overflow:"hidden", borderRadius:24, background:`linear-gradient(135deg,${RED}20 0%,${RED}08 40%,transparent 70%)`, border:`1px solid ${RED}20`, padding:"20px 16px 18px" }}>
@@ -3783,7 +3783,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
                   </div>
                 )}
               </div>
-              <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+              <div style={{ display:"flex", gap:6, flexShrink:0, flexWrap:"wrap", justifyContent:"flex-end" }}>
                 {!isFightWeek && daysToFight !== null && daysToFight > 7 && (
                   <button onClick={() => setShowPlanModal(true)}
                     style={{ fontSize:11, fontWeight:700, color:BLUE, background:"rgba(59,130,246,0.1)", border:"1px solid rgba(59,130,246,0.3)", borderRadius:8, padding:"5px 10px", cursor:"pointer" }}>📅 Plan</button>
@@ -3903,14 +3903,14 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             {planWeek && (
               <div style={{ marginTop:14 }}>
                 <div style={{ fontSize:10, color:"var(--text-faint)", marginBottom:8, textTransform:"uppercase", letterSpacing:1 }}>{t("plan_week",lang)} 1 → 12</div>
-                <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+                <div style={{ display:"flex", gap:6, flexWrap:"wrap" }}>
                   {Array.from({length:12}, (_,i) => {
                     const w = i+1;
                     const ph = w<=4 ? BLUE : w<=8 ? GOLD : RED;
                     const isNow = w === planWeek;
                     const isDone = w < planWeek;
                     return (
-                      <div key={w} style={{ flex:"0 0 calc(8.33% - 4px)", aspectRatio:"1", borderRadius:6, background: isNow ? ph : isDone ? `${ph}40` : "var(--bg-input)", border:`2px solid ${isNow ? ph : isDone ? `${ph}30` : "var(--border)"}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:900, color: isNow ? "#fff" : isDone ? ph : "var(--text-faint)" }}>
+                      <div key={w} style={{ width:36, height:36, flexShrink:0, borderRadius:8, background: isNow ? ph : isDone ? `${ph}40` : "var(--bg-input)", border:`2px solid ${isNow ? ph : isDone ? `${ph}30` : "var(--border)"}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:900, color: isNow ? "#fff" : isDone ? ph : "var(--text-faint)" }}>
                         {w}
                       </div>
                     );
@@ -3935,7 +3935,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:4 }}>🥊 {t("fw_title",lang)}</div>
             <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:20 }}>{t("fw_date_label",lang)}</div>
             <input type="date" value={fightDateInput} onChange={e => setFightDateInput(e.target.value)} min={today}
-              style={{ width:"100%", padding:"12px 14px", borderRadius:12, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:15, fontWeight:700, marginBottom:20, boxSizing:"border-box" }} />
+              style={{ width:"100%", padding:"12px 14px", borderRadius:12, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:16, fontWeight:700, marginBottom:20, boxSizing:"border-box" }} />
             <div style={{ display:"flex", gap:10 }}>
               {fightDate && (
                 <button onClick={() => saveFightDate("")}
@@ -4003,15 +4003,15 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", marginBottom:8 }}>{t("ciclo_last_period",lang)}</div>
               <input type="date" value={cicloForm.lastPeriod} onChange={e => setCicloForm(f => ({ ...f, lastPeriod: e.target.value }))} max={today}
-                style={{ width:"100%", padding:"11px 14px", borderRadius:11, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, fontWeight:700, boxSizing:"border-box" }} />
+                style={{ width:"100%", padding:"11px 14px", borderRadius:11, border:"1.5px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:16, fontWeight:700, boxSizing:"border-box" }} />
             </div>
 
             <div style={{ marginBottom:22 }}>
               <div style={{ fontSize:12, fontWeight:700, color:"var(--text)", marginBottom:8 }}>{t("ciclo_cycle_length",lang)}</div>
-              <div style={{ display:"flex", gap:8 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
                 {[21,24,26,28,30,32,35].map(d => (
                   <button key={d} onClick={() => setCicloForm(f => ({ ...f, cycleDays:d }))}
-                    style={{ flex:1, padding:"9px 2px", borderRadius:9, border:`2px solid ${cicloForm.cycleDays===d?"#f43f5e":"var(--border)"}`, background: cicloForm.cycleDays===d ? "rgba(244,63,94,0.15)" : "var(--bg-input)", color: cicloForm.cycleDays===d ? "#f43f5e" : "var(--text-muted)", fontSize:12, fontWeight:800, cursor:"pointer" }}>
+                    style={{ padding:"11px 4px", borderRadius:10, border:`2px solid ${cicloForm.cycleDays===d?"#f43f5e":"var(--border)"}`, background: cicloForm.cycleDays===d ? "rgba(244,63,94,0.15)" : "var(--bg-input)", color: cicloForm.cycleDays===d ? "#f43f5e" : "var(--text-muted)", fontSize:14, fontWeight:800, cursor:"pointer", minHeight:44, textAlign:"center" }}>
                     {d}
                   </button>
                 ))}

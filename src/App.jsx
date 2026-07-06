@@ -9942,9 +9942,9 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
             })()}
 
             {/* ══ ATLETAS TAB ══ */}
-            {equipoTab === "atletas" && <div className="em-coach-layout" style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
-              {/* ══ Panel izquierdo: equipo ══ */}
-              {(() => {
+            {equipoTab === "atletas" && <div className="em-coach-layout">
+              {/* ══ Panel equipo (full width, oculto cuando hay atleta seleccionado) ══ */}
+              {!selectedAthlete && (() => {
                 const nivelesCount = { profesional: 0, amateur: 0, fitness: 0 };
                 activeAthletes.forEach(a => {
                   const n = athleteNiveles[a.atleta_id] || "fitness";
@@ -9952,7 +9952,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 });
                 const DAYS = ["L","M","X","J","V","S","D"];
                 return (
-              <div className={`em-coach-sidebar${selectedAthlete ? " em-coach-sidebar--collapsed" : ""}`} style={{ flex: "0 0 440px", minWidth: 320, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 20, overflow: "hidden" }}>
+              <div className="em-coach-sidebar" style={{ width: "100%", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 20, overflow: "hidden" }}>
 
                 {/* ── TEAM BANNER ── */}
                 <div style={{ position: "relative", overflow: "hidden", padding: "22px 20px 18px",
@@ -10021,7 +10021,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                 </div>
 
                 {/* ── LISTA DE ATLETAS ── */}
-                <div style={{ overflowY:"auto", maxHeight:"calc(100vh - 430px)", padding:"14px" }}>
+                <div style={{ overflowY:"auto", maxHeight:"calc(100vh - 260px)", padding:"14px" }}>
 
                   {/* Empty state */}
                   {athletes.length === 0 && (
@@ -10072,6 +10072,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                             Ningún atleta en esta categoría
                           </div>
                         )}
+                        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(340px,1fr))", gap:8 }}>
                         {grupo.map(a => {
                           const st = athleteStatus(a.atleta_id);
                           const sessions = recentSessions[a.atleta_id] || [];
@@ -10170,7 +10171,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                               </div>
                             </div>
                           );
-                        })}
+                        })}</div>{/* fin grid */}
                       </div>
                     );
                   })}
@@ -10180,19 +10181,19 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
               );
               })()}{/* fin panel izquierdo */}
 
-              {/* Panel detalle atleta */}
-              {selectedAthlete ? (() => {
+              {/* Panel detalle atleta (full width) */}
+              {selectedAthlete && (() => {
                 const rpeData = athleteSessions.filter(s => s.rpe).slice(0, 14).reverse();
                 const maxRpe = 10;
                 const avgRpeNum = (() => { const r = athleteSessions.filter(s=>s.rpe).map(s=>Number(s.rpe)); return r.length ? (r.reduce((a,b)=>a+b,0)/r.length) : null; })();
                 const avgRpeStr = avgRpeNum ? avgRpeNum.toFixed(1) : "—";
                 const avgRpeColor = avgRpeNum >= 8 ? "#f87171" : avgRpeNum >= 6 ? "#f6ad55" : "#4ade80";
                 return (
-                <div className="em-coach-panel em-coach-panel--fullscreen em-coach-athlete-detail" style={{ flex: 1, minWidth: 280, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 20, overflow: "hidden" }}>
+                <div className="em-coach-panel em-coach-panel--fullscreen em-coach-athlete-detail" style={{ width: "100%", background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 20, overflow: "hidden" }}>
 
-                  {/* Botón volver (solo mobile) */}
+                  {/* Botón volver */}
                   <button onClick={() => setSelectedAthlete(null)}
-                    style={{ display: "none", width: "100%", padding: "12px 18px", background: "var(--bg-elevated)", border: "none", borderBottom: "1px solid var(--border)", textAlign: "left", color: RED, fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+                    style={{ display: "flex", alignItems: "center", gap: 8, width: "100%", padding: "10px 18px", background: "var(--bg-elevated)", border: "none", borderBottom: `1px solid ${RED}30`, color: RED, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
                     className="em-coach-back-btn">
                     ← Volver al equipo
                   </button>
@@ -10693,7 +10694,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   </div>}{/* fin info panel */}
                 </div>
                 );
-              })() : (
+              })()}
+              {false && (
                 <div className="em-coach-panel" style={{ flex: 1, minWidth: 280, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: 20, overflow: "hidden" }}>
                   {/* Cabecera */}
                   <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", background: darkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)" }}>

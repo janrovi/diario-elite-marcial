@@ -752,6 +752,18 @@ const TRANSLATIONS = {
     srpe_alert_red:"Sobrecarga crítica — tu carga semanal (sRPE {0}) subió un {1}% vs la semana pasada. Reduce volumen o intensidad.",
     srpe_alert_yellow:"Carga elevada — tu sRPE subió un {1}% esta semana ({0}). Vigila la fatiga acumulada.",
     srpe_label:"sRPE semanal",
+    wellness_title:"¿Cómo estás hoy?",
+    wellness_sub:"Check-in diario de bienestar (30 seg)",
+    wellness_sleep:"¿Cómo dormiste?",
+    wellness_body:"¿Cómo te sientes físicamente?",
+    wellness_mind:"¿Cómo estás mentalmente?",
+    wellness_save:"Guardar check-in",
+    wellness_done:"Check-in completado",
+    wellness_hrw_green:"Óptimo — listo para entrenar al máximo 💪",
+    wellness_hrw_yellow:"Moderado — entrenamiento técnico recomendado 🎯",
+    wellness_hrw_red:"Recuperación — no entrenes fuerte hoy 😴",
+    wellness_tap:"Toca para hacer tu check-in",
+    wellness_edit:"Editar",
     insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
     insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
     insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
@@ -1136,6 +1148,18 @@ const TRANSLATIONS = {
     srpe_alert_red:"Critical overload — your weekly load (sRPE {0}) is up {1}% from last week. Consider reducing volume or intensity.",
     srpe_alert_yellow:"High load — sRPE up {1}% this week ({0}). Monitor cumulative fatigue.",
     srpe_label:"Weekly sRPE",
+    wellness_title:"How are you today?",
+    wellness_sub:"Daily wellness check-in (30 sec)",
+    wellness_sleep:"How did you sleep?",
+    wellness_body:"How do you feel physically?",
+    wellness_mind:"How are you mentally?",
+    wellness_save:"Save check-in",
+    wellness_done:"Check-in completed",
+    wellness_hrw_green:"Optimal — ready to train at full intensity 💪",
+    wellness_hrw_yellow:"Moderate — technical or low-impact training recommended 🎯",
+    wellness_hrw_red:"Recovery day — avoid high-intensity training today 😴",
+    wellness_tap:"Tap to do your check-in",
+    wellness_edit:"Edit",
     insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
     insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
     insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
@@ -1522,6 +1546,18 @@ const TRANSLATIONS = {
     srpe_alert_red:"Sobrecàrrega crítica — la teva càrrega setmanal (sRPE {0}) va pujar un {1}% vs la setmana passada. Redueix volum o intensitat.",
     srpe_alert_yellow:"Càrrega elevada — sRPE +{1}% aquesta setmana ({0}). Vigila la fatiga acumulada.",
     srpe_label:"sRPE setmanal",
+    wellness_title:"Com estàs avui?",
+    wellness_sub:"Check-in diari de benestar (30 seg)",
+    wellness_sleep:"Com has dormit?",
+    wellness_body:"Com et sents físicament?",
+    wellness_mind:"Com estàs mentalment?",
+    wellness_save:"Desar check-in",
+    wellness_done:"Check-in completat",
+    wellness_hrw_green:"Òptim — llest per entrenar al màxim 💪",
+    wellness_hrw_yellow:"Moderat — entrenament tècnic recomanat 🎯",
+    wellness_hrw_red:"Recuperació — no entreneu fort avui 😴",
+    wellness_tap:"Toca per fer el teu check-in",
+    wellness_edit:"Editar",
     insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
     insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
     insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
@@ -3216,6 +3252,35 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     ? Math.round((sRPEthisWk / sRPEprevWk - 1) * 100)
     : null;
 
+  // ── Check-in de bienestar ──
+  const [wellnessToday, setWellnessToday] = React.useState(null);
+  const [wellnessLoaded, setWellnessLoaded] = React.useState(false);
+  const [showWellnessForm, setShowWellnessForm] = React.useState(false);
+  const [wForm, setWForm] = React.useState({ sueno:0, fisico:0, mental:0 });
+  const [wellnessSaving, setWellnessSaving] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!profile?.id) return;
+    supabase.from("wellness_checkins")
+      .select("*").eq("user_id", profile.id).eq("fecha", today).maybeSingle()
+      .then(({ data }) => { setWellnessToday(data || null); setWellnessLoaded(true); });
+  }, [profile?.id]);
+
+  const saveWellness = async () => {
+    if (!wForm.sueno || !wForm.fisico || !wForm.mental) return;
+    setWellnessSaving(true);
+    const { data } = await supabase.from("wellness_checkins")
+      .upsert({ user_id: profile.id, fecha: today, sueno: wForm.sueno, fisico: wForm.fisico, mental: wForm.mental }, { onConflict:"user_id,fecha" })
+      .select().maybeSingle();
+    if (data) { setWellnessToday(data); if (wForm.sueno === 0) setWForm({ sueno:data.sueno, fisico:data.fisico, mental:data.mental }); }
+    setShowWellnessForm(false);
+    setWellnessSaving(false);
+  };
+
+  const hrw = wellnessToday ? wellnessToday.sueno + wellnessToday.fisico + wellnessToday.mental : null;
+  const hrwColor = hrw === null ? null : hrw >= 13 ? "#10b981" : hrw >= 9 ? "#f59e0b" : "#ef4444";
+  const hrwKey   = hrw === null ? null : hrw >= 13 ? "wellness_hrw_green" : hrw >= 9 ? "wellness_hrw_yellow" : "wellness_hrw_red";
+
   const hora   = new Date().getHours();
   const saludo = hora < 13 ? t("greet_morning",lang) : hora < 20 ? t("greet_afternoon",lang) : t("greet_night",lang);
   const nombre = profile?.nombre?.split(" ")[0] || "Atleta";
@@ -3326,6 +3391,90 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           </div>
         )}
       </div>
+
+      {/* ── WELLNESS CHECK-IN ── */}
+      {wellnessLoaded && (
+        <div style={{ marginBottom:18 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
+            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// BIENESTAR</div>
+            <div style={{ flex:1, height:1, background:"var(--border)" }} />
+          </div>
+
+          {wellnessToday ? (
+            <div style={{ background:"var(--bg-card)", border:`1px solid ${hrwColor}30`, borderLeft:`4px solid ${hrwColor}`, borderRadius:14, padding:"14px 16px" }}>
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
+                <div style={{ fontSize:12, fontWeight:800, color:"var(--text)" }}>{t("wellness_done",lang)}</div>
+                <button onClick={() => { setWForm({ sueno:wellnessToday.sueno, fisico:wellnessToday.fisico, mental:wellnessToday.mental }); setShowWellnessForm(true); }}
+                  style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"none", cursor:"pointer", padding:0 }}>{t("wellness_edit",lang)}</button>
+              </div>
+              <div style={{ display:"flex", gap:12, marginBottom:10 }}>
+                {[{icon:"😴",val:wellnessToday.sueno},{icon:"💪",val:wellnessToday.fisico},{icon:"🧠",val:wellnessToday.mental}].map((x,i) => (
+                  <div key={i} style={{ flex:1, textAlign:"center", background:"var(--bg-input)", borderRadius:10, padding:"8px 4px" }}>
+                    <div style={{ fontSize:18 }}>{x.icon}</div>
+                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{x.val}</div>
+                    <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:2 }}>/5</div>
+                  </div>
+                ))}
+                <div style={{ flex:1, textAlign:"center", background:`${hrwColor}15`, borderRadius:10, padding:"8px 4px", border:`1px solid ${hrwColor}30` }}>
+                  <div style={{ fontSize:18 }}>⚡</div>
+                  <div style={{ fontSize:16, fontWeight:900, color:hrwColor, lineHeight:1 }}>{hrw}</div>
+                  <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:2 }}>HRW</div>
+                </div>
+              </div>
+              <div style={{ fontSize:12, color:hrwColor, fontWeight:600, lineHeight:1.4 }}>{t(hrwKey,lang)}</div>
+            </div>
+          ) : (
+            <div onClick={() => { setWForm({ sueno:0, fisico:0, mental:0 }); setShowWellnessForm(true); }}
+              style={{ background:"rgba(99,102,241,0.06)", border:"1.5px dashed rgba(99,102,241,0.3)", borderRadius:14, padding:"16px 18px", cursor:"pointer", display:"flex", alignItems:"center", gap:14, transition:"all 0.2s" }}
+              onMouseEnter={e => { e.currentTarget.style.background="rgba(99,102,241,0.10)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background="rgba(99,102,241,0.06)"; }}>
+              <div style={{ width:48, height:48, borderRadius:14, background:"rgba(99,102,241,0.12)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, flexShrink:0 }}>🧠</div>
+              <div>
+                <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:3 }}>{t("wellness_title",lang)}</div>
+                <div style={{ fontSize:12, color:"#6366f1", fontWeight:600 }}>{t("wellness_tap",lang)}</div>
+              </div>
+              <div style={{ marginLeft:"auto", fontSize:20, color:"rgba(99,102,241,0.4)" }}>›</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Modal check-in ── */}
+      {showWellnessForm && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+          onClick={() => setShowWellnessForm(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 20px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:4 }}>{t("wellness_title",lang)}</div>
+            <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:20 }}>{t("wellness_sub",lang)}</div>
+            {[
+              { key:"sueno",  icon:"😴", label:t("wellness_sleep",lang) },
+              { key:"fisico", icon:"💪", label:t("wellness_body",lang) },
+              { key:"mental", icon:"🧠", label:t("wellness_mind",lang) },
+            ].map(q => (
+              <div key={q.key} style={{ marginBottom:18 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:"var(--text)", marginBottom:10 }}>{q.icon} {q.label}</div>
+                <div style={{ display:"flex", gap:8 }}>
+                  {[1,2,3,4,5].map(v => (
+                    <button key={v} onClick={() => setWForm(f => ({ ...f, [q.key]:v }))}
+                      style={{ flex:1, padding:"10px 4px", borderRadius:10, border:`2px solid ${wForm[q.key]===v?"#6366f1":"var(--border)"}`, background: wForm[q.key]===v ? "rgba(99,102,241,0.15)" : "var(--bg-input)", color: wForm[q.key]===v ? "#6366f1" : "var(--text-muted)", fontSize:16, fontWeight:900, cursor:"pointer", transition:"all 0.15s" }}>
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {wForm.sueno > 0 && wForm.fisico > 0 && wForm.mental > 0 && (
+              <div style={{ textAlign:"center", marginBottom:16, fontSize:13, color:"var(--text-muted)" }}>
+                HRW: <strong style={{ fontSize:18, color: (wForm.sueno+wForm.fisico+wForm.mental) >= 13 ? "#10b981" : (wForm.sueno+wForm.fisico+wForm.mental) >= 9 ? "#f59e0b" : "#ef4444" }}>{wForm.sueno+wForm.fisico+wForm.mental}</strong> / 15
+              </div>
+            )}
+            <button onClick={saveWellness} disabled={!wForm.sueno||!wForm.fisico||!wForm.mental||wellnessSaving}
+              style={{ width:"100%", padding:"13px", borderRadius:12, border:"none", background: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "var(--bg-input)" : "#6366f1", color: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "var(--text-faint)" : "#fff", fontSize:14, fontWeight:700, cursor: (!wForm.sueno||!wForm.fisico||!wForm.mental) ? "not-allowed" : "pointer", transition:"all 0.2s" }}>
+              {wellnessSaving ? "..." : t("wellness_save",lang)}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── INSIGHTS AUTOMÁTICOS ── */}
       {(() => {

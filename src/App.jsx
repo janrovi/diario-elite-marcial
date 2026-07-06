@@ -3441,9 +3441,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
 
       {/* ── Modal check-in ── */}
       {showWellnessForm && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"flex-end", justifyContent:"center", padding:16 }}
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"center", justifyContent:"center", padding:16 }}
           onClick={() => setShowWellnessForm(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 20px 20px", maxWidth:420, width:"100%", boxShadow:"0 -8px 40px rgba(0,0,0,0.5)", marginBottom:"env(safe-area-inset-bottom,0px)" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"24px 20px 20px", maxWidth:420, width:"100%", boxShadow:"0 0 60px rgba(0,0,0,0.6)", maxHeight:"90vh", overflowY:"auto" }}>
             <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", marginBottom:4 }}>{t("wellness_title",lang)}</div>
             <div style={{ fontSize:12, color:"var(--text-faint)", marginBottom:20 }}>{t("wellness_sub",lang)}</div>
             {[

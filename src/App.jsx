@@ -791,6 +791,26 @@ const TRANSLATIONS = {
     fw_phase_hint_general:"Construye la base. Volumen alto, intensidad moderada.",
     fw_phase_hint_specific:"Aumenta intensidad. Técnica específica y sparring.",
     fw_phase_hint_precomp:"Afila el hacha. Intensidad máxima, volumen bajo.",
+    plan_title:"Plan de 12 Semanas",
+    plan_not_started:"El plan de 12 semanas arranca en",
+    plan_not_started2:"días. Sigue entrenando a tu ritmo.",
+    plan_week:"Semana",
+    plan_of:"de",
+    plan_current:"Semana actual",
+    plan_close_btn:"Cerrar",
+    plan_week_focus:"Enfoque de esta semana",
+    plan_g_w1:"Base cardiovascular. Rodajes largos a ritmo cómodo. Fuerza general (sentadillas, peso muerto, press).",
+    plan_g_w2:"Aumenta volumen 10%. Movilidad articular diaria. Introduce técnica básica de tu disciplina.",
+    plan_g_w3:"Entrena 4-5 días. Mezcla cardio + fuerza + técnica. Recuperación activa los días de descanso.",
+    plan_g_w4:"Semana de descarga: baja volumen 30%. Evalúa tu progreso. Prepara la siguiente fase.",
+    plan_s_w1:"Empieza el sparring suave. Técnica específica diaria. Fuerza potencia (olímpicos, pliometría).",
+    plan_s_w2:"Aumenta intensidad del sparring. Trabaja situaciones de combate. Cardio específico (HIIT).",
+    plan_s_w3:"Sparring técnico intenso. Perfecciona tu juego. Trabaja puntos débiles identificados.",
+    plan_s_w4:"Descarga: 30% menos volumen. Sparring técnico ligero. Confirma la estrategia de combate.",
+    plan_p_w1:"Tapering empieza. Intensidad alta, volumen bajo. Afila tu técnica principal.",
+    plan_p_w2:"Sparring vivo corto (3-4 rounds máx). Mental fuerte. Ajusta peso si es necesario.",
+    plan_p_w3:"Sesiones cortas y explosivas. Visualización diaria. Sin nada nuevo.",
+    plan_p_w4:"Fight Week activada. Protocolo de los últimos 7 días.",
     insight_rpe_down:"Tu cuerpo descansa mejor: RPE bajó a {0} vs {1} la semana pasada.",
     insight_days_no_disc:"Llevas {0} días sin entrenar {1}, tu disciplina principal.",
     insight_top_disc:"{0} es tu disciplina estrella con {1} sesiones registradas.",
@@ -1214,6 +1234,26 @@ const TRANSLATIONS = {
     fw_phase_hint_general:"Build your base. High volume, moderate intensity.",
     fw_phase_hint_specific:"Raise intensity. Specific technique and sparring.",
     fw_phase_hint_precomp:"Sharpen the blade. Max intensity, low volume.",
+    plan_title:"12-Week Plan",
+    plan_not_started:"The 12-week plan starts in",
+    plan_not_started2:"days. Keep training at your pace.",
+    plan_week:"Week",
+    plan_of:"of",
+    plan_current:"Current week",
+    plan_close_btn:"Close",
+    plan_week_focus:"This week's focus",
+    plan_g_w1:"Cardiovascular base. Long runs at comfortable pace. General strength (squats, deadlifts, press).",
+    plan_g_w2:"Increase volume 10%. Daily joint mobility. Introduce basic technique of your discipline.",
+    plan_g_w3:"Train 4-5 days. Mix cardio + strength + technique. Active recovery on rest days.",
+    plan_g_w4:"Deload week: reduce volume 30%. Evaluate your progress. Prepare for the next phase.",
+    plan_s_w1:"Start light sparring. Daily specific technique. Power strength (Olympic lifts, plyometrics).",
+    plan_s_w2:"Increase sparring intensity. Work fight scenarios. Specific cardio (HIIT).",
+    plan_s_w3:"Intense technical sparring. Perfect your game. Work on identified weaknesses.",
+    plan_s_w4:"Deload: 30% less volume. Light technical sparring. Confirm fight strategy.",
+    plan_p_w1:"Tapering begins. High intensity, low volume. Sharpen your main technique.",
+    plan_p_w2:"Short live sparring (3-4 rounds max). Strong mental game. Adjust weight if needed.",
+    plan_p_w3:"Short explosive sessions. Daily visualization. Nothing new.",
+    plan_p_w4:"Fight Week activated. Last 7-day protocol.",
     insight_rpe_down:"Recovery mode: RPE dropped to {0} vs {1} last week.",
     insight_days_no_disc:"It's been {0} days since you trained {1}, your main discipline.",
     insight_top_disc:"{0} is your top discipline with {1} sessions logged.",
@@ -1639,6 +1679,26 @@ const TRANSLATIONS = {
     fw_phase_hint_general:"Construeix la base. Volum alt, intensitat moderada.",
     fw_phase_hint_specific:"Augmenta intensitat. Tècnica específica i sparring.",
     fw_phase_hint_precomp:"Afila el llapis. Intensitat màxima, volum baix.",
+    plan_title:"Pla de 12 Setmanes",
+    plan_not_started:"El pla de 12 setmanes arrenca en",
+    plan_not_started2:"dies. Continua entrenant al teu ritme.",
+    plan_week:"Setmana",
+    plan_of:"de",
+    plan_current:"Setmana actual",
+    plan_close_btn:"Tancar",
+    plan_week_focus:"Enfocament d'aquesta setmana",
+    plan_g_w1:"Base cardiovascular. Rodatges llargs a ritme còmode. Força general (sentadilles, pes mort, press).",
+    plan_g_w2:"Augmenta volum 10%. Mobilitat articular diària. Introdueix tècnica bàsica de la teva disciplina.",
+    plan_g_w3:"Entrena 4-5 dies. Barreja cardio + força + tècnica. Recuperació activa els dies de descans.",
+    plan_g_w4:"Setmana de descàrrega: baixa volum 30%. Avalua el teu progrés. Prepara la fase següent.",
+    plan_s_w1:"Comença el sparring suau. Tècnica específica diària. Força potència (olímpics, pliometria).",
+    plan_s_w2:"Augmenta intensitat del sparring. Treballa situacions de combat. Cardio específic (HIIT).",
+    plan_s_w3:"Sparring tècnic intens. Perfecciona el teu joc. Treballa punts febles identificats.",
+    plan_s_w4:"Descàrrega: 30% menys volum. Sparring tècnic lleuger. Confirma l'estratègia de combat.",
+    plan_p_w1:"Tapering comença. Intensitat alta, volum baix. Afila la teva tècnica principal.",
+    plan_p_w2:"Sparring viu curt (3-4 rounds màx). Mental fort. Ajusta pes si cal.",
+    plan_p_w3:"Sessions curtes i explosives. Visualització diària. Res de nou.",
+    plan_p_w4:"Fight Week activada. Protocol dels últims 7 dies.",
     insight_days_no_disc:"Fa {0} dies que no entrenes {1}, la teva disciplina principal.",
     insight_top_disc:"{0} és la teva disciplina estrella amb {1} sessions registrades.",
     insight_vol_up:"Aquesta setmana portes {0}min — un {1}% més de la teva mitjana habitual.",
@@ -3364,6 +3424,18 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
     try { return localStorage.getItem(profile?.id ? `em_fight_${profile.id}` : "em_fight_guest") || ""; } catch { return ""; }
   });
   const [showFightSetup, setShowFightSetup] = React.useState(false);
+  const [showPlanModal, setShowPlanModal] = React.useState(false);
+
+  // Periodization: which week (1-12) are we in, counting back from fight date?
+  const planWeek = (daysToFight !== null && daysToFight >= 0 && daysToFight <= 84)
+    ? Math.max(1, 12 - Math.ceil(daysToFight / 7) + 1)
+    : null;
+  const planPhase = planWeek === null ? null
+    : planWeek <= 4 ? "g" : planWeek <= 8 ? "s" : "p";
+  const planWeekInPhase = planWeek === null ? null
+    : planWeek <= 4 ? planWeek : planWeek <= 8 ? planWeek - 4 : planWeek - 8;
+  const planFocusKey = planWeek !== null
+    ? `plan_${planPhase}_w${planWeekInPhase}` : null;
   const [fightDateInput, setFightDateInput] = React.useState("");
 
   const daysToFight = React.useMemo(() => {
@@ -3605,8 +3677,14 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
                   </div>
                 )}
               </div>
-              <button onClick={() => { setFightDateInput(fightDate); setShowFightSetup(true); }}
-                style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"1px solid var(--border)", borderRadius:8, padding:"5px 10px", cursor:"pointer", flexShrink:0 }}>{t("fw_edit",lang)}</button>
+              <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                {!isFightWeek && daysToFight !== null && daysToFight > 7 && (
+                  <button onClick={() => setShowPlanModal(true)}
+                    style={{ fontSize:11, fontWeight:700, color:BLUE, background:"rgba(59,130,246,0.1)", border:"1px solid rgba(59,130,246,0.3)", borderRadius:8, padding:"5px 10px", cursor:"pointer" }}>📅 Plan</button>
+                )}
+                <button onClick={() => { setFightDateInput(fightDate); setShowFightSetup(true); }}
+                  style={{ fontSize:11, color:"var(--text-faint)", background:"none", border:"1px solid var(--border)", borderRadius:8, padding:"5px 10px", cursor:"pointer" }}>{t("fw_edit",lang)}</button>
+              </div>
             </div>
 
             {isFightWeek ? (
@@ -3664,6 +3742,81 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
               <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("fw_next_fight",lang)}</div>
               <div style={{ fontSize:12, color:RED, fontWeight:700 }}>{t("fw_date_label",lang)} →</div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Plan de 12 semanas modal ── */}
+      {showPlanModal && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.80)", backdropFilter:"blur(8px)", WebkitBackdropFilter:"blur(8px)", zIndex:3500, display:"flex", alignItems:"flex-start", justifyContent:"center", padding:"60px 12px 24px", overflowY:"auto" }}
+          onClick={() => setShowPlanModal(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ background:"var(--bg-elevated)", border:"1px solid var(--border)", borderRadius:20, padding:"22px 18px 20px", maxWidth:440, width:"100%", boxShadow:"0 8px 60px rgba(0,0,0,0.6)" }}>
+
+            {/* Header */}
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:18 }}>
+              <div>
+                <div style={{ fontSize:15, fontWeight:900, color:"var(--text)" }}>📅 {t("plan_title",lang)}</div>
+                {planWeek ? (
+                  <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:2 }}>{t("plan_current",lang)}: {t("plan_week",lang)} {planWeek} {t("plan_of",lang)} 12</div>
+                ) : daysToFight !== null && daysToFight > 84 ? (
+                  <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:2 }}>{t("plan_not_started",lang)} {daysToFight - 84} {t("plan_not_started2",lang)}</div>
+                ) : null}
+              </div>
+              <button onClick={() => setShowPlanModal(false)}
+                style={{ fontSize:18, color:"var(--text-faint)", background:"none", border:"none", cursor:"pointer", padding:"0 4px" }}>✕</button>
+            </div>
+
+            {/* Phase timeline */}
+            {[
+              { id:"g", label:t("fw_phase_general",lang), weeks:"1–4", color:BLUE, start:1, end:4 },
+              { id:"s", label:t("fw_phase_specific",lang), weeks:"5–8", color:GOLD, start:5, end:8 },
+              { id:"p", label:t("fw_phase_precomp",lang), weeks:"9–12", color:RED, start:9, end:12 },
+            ].map(ph => {
+              const isActive = planPhase === ph.id;
+              const isPast = planWeek !== null && planWeek > ph.end;
+              return (
+                <div key={ph.id} style={{ marginBottom:10, background: isActive ? `${ph.color}12` : isPast ? "var(--bg-input)" : "var(--bg-card)", border:`1.5px solid ${isActive ? ph.color : "var(--border)"}`, borderRadius:12, padding:"10px 14px", opacity: isPast ? 0.5 : 1 }}>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom: isActive ? 6 : 0 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                      <div style={{ width:8, height:8, borderRadius:"50%", background: isActive ? ph.color : "var(--border)", flexShrink:0 }} />
+                      <div style={{ fontSize:12, fontWeight:800, color: isActive ? ph.color : "var(--text-muted)" }}>{ph.label}</div>
+                    </div>
+                    <div style={{ fontSize:10, color:"var(--text-faint)", fontWeight:700 }}>{t("plan_week",lang)} {ph.weeks}</div>
+                  </div>
+                  {isActive && planFocusKey && (
+                    <div style={{ fontSize:11, color:"var(--text)", lineHeight:1.5, paddingLeft:16 }}>
+                      <div style={{ fontSize:10, fontWeight:700, color:ph.color, marginBottom:3, textTransform:"uppercase", letterSpacing:1 }}>{t("plan_week_focus",lang)} ({t("plan_week",lang)} {planWeekInPhase}/4)</div>
+                      {t(planFocusKey, lang)}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Week progress dots */}
+            {planWeek && (
+              <div style={{ marginTop:14 }}>
+                <div style={{ fontSize:10, color:"var(--text-faint)", marginBottom:8, textTransform:"uppercase", letterSpacing:1 }}>{t("plan_week",lang)} 1 → 12</div>
+                <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+                  {Array.from({length:12}, (_,i) => {
+                    const w = i+1;
+                    const ph = w<=4 ? BLUE : w<=8 ? GOLD : RED;
+                    const isNow = w === planWeek;
+                    const isDone = w < planWeek;
+                    return (
+                      <div key={w} style={{ flex:"0 0 calc(8.33% - 4px)", aspectRatio:"1", borderRadius:6, background: isNow ? ph : isDone ? `${ph}40` : "var(--bg-input)", border:`2px solid ${isNow ? ph : isDone ? `${ph}30` : "var(--border)"}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:900, color: isNow ? "#fff" : isDone ? ph : "var(--text-faint)" }}>
+                        {w}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            <button onClick={() => setShowPlanModal(false)}
+              style={{ width:"100%", marginTop:18, padding:"12px", borderRadius:12, border:"none", background:"var(--bg-input)", color:"var(--text-muted)", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+              {t("plan_close_btn",lang)}
+            </button>
           </div>
         </div>
       )}

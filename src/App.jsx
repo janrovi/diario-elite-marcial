@@ -4642,6 +4642,41 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
   // ── Tab principal ──
   const [bioTab, setBioTab] = useState("peso");
 
+  // ── Dolor / Pain check-in ──
+  const [dolorEntries, setDolorEntries] = useState([]);
+  const [showDolorForm, setShowDolorForm] = useState(false);
+  const todayDolor = new Date().toISOString().slice(0,10);
+  const [dolorForm, setDolorForm] = useState({ zona:"", intensidad:5, tipo:"agudo", notas:"", fecha:todayDolor });
+  const [dolorSaving, setDolorSaving] = useState(false);
+  const dolorColor = n => n <= 3 ? "#10b981" : n <= 6 ? "#f59e0b" : n <= 8 ? "#f97316" : "#ef4444";
+
+  React.useEffect(() => {
+    if (!userId || userId === "anon") return;
+    supabase.from("checkins_dolor")
+      .select("*").eq("atleta_id", userId)
+      .order("fecha", { ascending: false }).limit(30)
+      .then(({ data }) => setDolorEntries(data || []));
+  }, [userId]);
+
+  const saveDolor = async () => {
+    if (!dolorForm.zona || !userId) return;
+    setDolorSaving(true);
+    const row = { atleta_id: userId, zona: dolorForm.zona, intensidad: dolorForm.intensidad, tipo: dolorForm.tipo, estado: "activo", notas: dolorForm.notas || null, fecha: dolorForm.fecha };
+    const { data } = await supabase.from("checkins_dolor").insert(row).select().maybeSingle();
+    if (data) setDolorEntries(prev => [data, ...prev]);
+    setDolorForm({ zona:"", intensidad:5, tipo:"agudo", notas:"", fecha:todayDolor });
+    setShowDolorForm(false);
+    setDolorSaving(false);
+  };
+
+  const cycleDolorEstado = async (id, current) => {
+    const next = current === "activo" ? "mejorado" : current === "mejorado" ? "resuelto" : "activo";
+    setDolorEntries(prev => prev.map(e => e.id === id ? { ...e, estado: next } : e));
+    await supabase.from("checkins_dolor").update({ estado: next }).eq("id", id).eq("atleta_id", userId);
+  };
+
+  const dolorActivos = dolorEntries.filter(e => e.estado !== "resuelto").length;
+
   // ── Recuperación ──
   const RECUP_KEY = `em_recuperacion_${userId}`;
   const [recupEntries, setRecupEntries] = useState(() => { try { return JSON.parse(localStorage.getItem("em_recuperacion")) || []; } catch { return []; } });
@@ -4815,13 +4850,14 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <h1 style={{ fontSize:26, fontWeight:900, color:"var(--text)", letterSpacing:-0.5, margin:0 }}>{t("bio_title",lang)}</h1>
       </div>
 
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(5,1fr)", gap:6, marginBottom:20 }}>
+      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:6, marginBottom:20 }}>
         {[
           { key:"peso",     label:t("bio_tab_peso",lang), val: latest ? `${latest.peso} kg` : "—",   icon:"⚖️", color: RED,     onClick: () => setBioTab("peso") },
           { key:"hidra",    label:t("bio_tab_agua",lang), val: aguaHoy ? `${aguaHoy} ml` : "—",      icon:"💧", color: BLUE,    onClick: () => setBioTab("hidra") },
           { key:"nutricion",label:t("bio_tab_cal",lang),  val: caloHoy ? `${caloHoy} kcal` : "—",   icon:"🥗", color: GREEN,   onClick: () => setBioTab("nutricion") },
           { key:"lesiones", label:t("bio_tab_inj",lang),  val: lesionesActivas ? `${lesionesActivas} activa${lesionesActivas>1?"s":""}` : "OK", icon:"🩹", color: lesionesActivas ? "#ef4444" : GREEN, onClick: () => setBioTab("lesiones") },
           { key:"recup",    label:t("bio_tab_rec",lang),  val: recupThisWeek.length ? `${recupThisWeek.length}/sem` : "—", icon:"🧘", color: PURPLE, onClick: () => setBioTab("recup") },
+          { key:"dolor",    label:"Dolor",                val: dolorActivos ? `${dolorActivos} zona${dolorActivos>1?"s":""}` : "OK", icon:"🔴", color: dolorActivos ? "#f97316" : GREEN, onClick: () => setBioTab("dolor") },
         ].map(kpi => {
           const isActive = bioTab === kpi.key;
           return (
@@ -10597,6 +10633,26 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                               <span style={{ fontSize:10, color:"var(--text-faint)", marginLeft:"auto" }}>{l.fecha_inicio}</span>
                             </div>
                           ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ── Dolor activo del atleta ── */}
+                    {athleteDolor.length > 0 && (
+                      <div style={{ background:"rgba(249,115,22,0.07)", border:"1px solid rgba(249,115,22,0.25)", borderRadius:14, padding:"10px 14px", marginBottom:14 }}>
+                        <div style={{ fontSize:10, fontWeight:800, color:"#f97316", textTransform:"uppercase", letterSpacing:0.8, marginBottom:7 }}>🔴 Dolor reportado (14 días)</div>
+                        <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+                          {athleteDolor.map(d => {
+                            const dc = d.intensidad <= 3 ? "#10b981" : d.intensidad <= 6 ? "#f59e0b" : d.intensidad <= 8 ? "#f97316" : "#ef4444";
+                            return (
+                              <div key={d.id} style={{ display:"flex", alignItems:"center", gap:7, flexWrap:"wrap" }}>
+                                <span style={{ fontSize:11, fontWeight:900, color:dc, background:dc+"20", borderRadius:6, padding:"1px 7px", minWidth:32, textAlign:"center" }}>{d.intensidad}/10</span>
+                                <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{d.zona}</span>
+                                <span style={{ fontSize:10, color:"var(--text-faint)", textTransform:"capitalize" }}>· {d.tipo}</span>
+                                <span style={{ fontSize:10, color:"var(--text-faint)", marginLeft:"auto" }}>{d.fecha}</span>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     )}

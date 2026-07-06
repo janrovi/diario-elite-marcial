@@ -3278,8 +3278,8 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
   };
 
   const hrw = wellnessToday ? wellnessToday.sueno + wellnessToday.fisico + wellnessToday.mental : null;
-  const hrwColor = hrw === null ? null : hrw >= 13 ? "#10b981" : hrw >= 9 ? "#f59e0b" : "#ef4444";
-  const hrwKey   = hrw === null ? null : hrw >= 13 ? "wellness_hrw_green" : hrw >= 9 ? "wellness_hrw_yellow" : "wellness_hrw_red";
+  const hrwColor = hrw === null ? null : hrw >= 11 ? "#10b981" : hrw >= 7 ? "#f59e0b" : "#ef4444";
+  const hrwKey   = hrw === null ? null : hrw >= 11 ? "wellness_hrw_green" : hrw >= 7 ? "wellness_hrw_yellow" : "wellness_hrw_red";
 
   const hora   = new Date().getHours();
   const saludo = hora < 13 ? t("greet_morning",lang) : hora < 20 ? t("greet_afternoon",lang) : t("greet_night",lang);
@@ -3465,7 +3465,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             ))}
             {wForm.sueno > 0 && wForm.fisico > 0 && wForm.mental > 0 && (
               <div style={{ textAlign:"center", marginBottom:16, fontSize:13, color:"var(--text-muted)" }}>
-                HRW: <strong style={{ fontSize:18, color: (wForm.sueno+wForm.fisico+wForm.mental) >= 13 ? "#10b981" : (wForm.sueno+wForm.fisico+wForm.mental) >= 9 ? "#f59e0b" : "#ef4444" }}>{wForm.sueno+wForm.fisico+wForm.mental}</strong> / 15
+                HRW: <strong style={{ fontSize:18, color: (wForm.sueno+wForm.fisico+wForm.mental) >= 11 ? "#10b981" : (wForm.sueno+wForm.fisico+wForm.mental) >= 7 ? "#f59e0b" : "#ef4444" }}>{wForm.sueno+wForm.fisico+wForm.mental}</strong> / 15
               </div>
             )}
             <button onClick={saveWellness} disabled={!wForm.sueno||!wForm.fisico||!wForm.mental||wellnessSaving}

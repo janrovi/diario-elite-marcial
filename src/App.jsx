@@ -7149,6 +7149,8 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
       .then(({ data }) => { if (data?.plan) setCoachPlanOverride(data.plan); });
   }, [user?.id]);
   const [coachView, setCoachView] = React.useState("equipo"); // "equipo" | "agenda" | "stats" | "periodo" | "perfil"
+  const [equipoTab, setEquipoTab] = React.useState("dashboard"); // "dashboard" | "atletas"
+  const [athleteWellness, setAthleteWellness] = React.useState({});
   const [showComingSoonCoach, setShowComingSoonCoach] = React.useState(() => !localStorage.getItem("em_v28_launch_jul2026"));
   const [allScheduled, setAllScheduled] = React.useState([]);
   const [scheduledLoading, setScheduledLoading] = React.useState(false);
@@ -7554,6 +7556,18 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
         byAthlete[s.atleta_id].push(s);
       });
       setRecentSessions(byAthlete);
+      // Fetch wellness check-ins for today
+      const today = new Date().toISOString().slice(0,10);
+      const { data: wellnessToday } = await supabase
+        .from("wellness_checkins")
+        .select("user_id, sueno, fisico, mental")
+        .in("user_id", ids)
+        .eq("fecha", today);
+      const wMap = {};
+      (wellnessToday || []).forEach(w => {
+        wMap[w.user_id] = { sueno: w.sueno, fisico: w.fisico, mental: w.mental, total: w.sueno + w.fisico + w.mental };
+      });
+      setAthleteWellness(wMap);
     }
     setLoading(false);
   }, [user.id]);
@@ -9683,7 +9697,189 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
           );
         })() : (
           <>
-            <div className="em-coach-layout" style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
+            {/* ── Tab selector ── */}
+            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:20 }}>
+              {[
+                { key:"dashboard", icon:"🏠", label:"Resumen" },
+                { key:"atletas",   icon:"👥", label:"Atletas" },
+              ].map(({key, icon, label}) => (
+                <button key={key} onClick={() => setEquipoTab(key)}
+                  style={{ padding:"8px 18px", borderRadius:10, border:"none", cursor:"pointer", fontSize:13, fontWeight:700, transition:"all 0.15s",
+                    background: equipoTab === key ? RED : "var(--bg-input)",
+                    color: equipoTab === key ? "#fff" : "var(--text-muted)" }}>
+                  {icon} {label}
+                </button>
+              ))}
+              <div style={{ flex:1 }} />
+              <button onClick={() => { setShowInvite(true); setInviteMsg(""); setInviteStatus(""); }}
+                style={{ padding:"8px 16px", borderRadius:10, border:`1px solid ${RED}40`, background:`linear-gradient(135deg,${RED},#a31515)`, color:"#fff", fontSize:12, fontWeight:700, cursor:"pointer" }}>
+                + Atleta
+              </button>
+            </div>
+
+            {/* ══ DASHBOARD TAB ══ */}
+            {equipoTab === "dashboard" && (() => {
+              // sRPE per athlete
+              const calcSRPE = (id) => (recentSessions[id] || []).reduce((s, x) => s + (parseFloat(x.rpe)||0) * (parseFloat(x.duracion_min)||0), 0);
+              const srpeColor = (v) => v > 2500 ? "#f43f5e" : v > 1500 ? "#f59e0b" : v > 0 ? "#4ade80" : "var(--text-faint)";
+              const hrwColor  = (v) => v === null ? "var(--text-faint)" : v >= 11 ? "#4ade80" : v >= 7 ? "#f59e0b" : "#f43f5e";
+              const hrwLabel  = (v) => v === null ? "—" : v >= 11 ? "Óptimo" : v >= 7 ? "Moderado" : "Recuperar";
+
+              // Alerts
+              const alertAthletes = activeAthletes.filter(a => {
+                const w = athleteWellness[a.atleta_id];
+                const hrw = w ? w.total : null;
+                const srpe = calcSRPE(a.atleta_id);
+                return (hrw !== null && hrw < 7) || srpe > 2500;
+              });
+
+              const totalSRPE = activeAthletes.reduce((s,a) => s + calcSRPE(a.atleta_id), 0);
+
+              return (
+                <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+
+                  {/* KPI strip */}
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:12 }}>
+                    {[
+                      { icon:"👥", label:"Atletas", value:activeAthletes.length, color:RED },
+                      { icon:"🚨", label:"Alertas", value:alertAthletes.length, color: alertAthletes.length > 0 ? "#f43f5e" : "#4ade80" },
+                      { icon:"🏋️", label:"Ses/sem", value:totalSessions, color:"#3b82f6" },
+                      { icon:"🔥", label:"RPE medio", value:avgRpe, color:"#f59e0b" },
+                    ].map(({icon, label, value, color}) => (
+                      <div key={label} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:14, padding:"14px 12px", textAlign:"center" }}>
+                        <div style={{ fontSize:20, marginBottom:4 }}>{icon}</div>
+                        <div style={{ fontSize:22, fontWeight:900, color, lineHeight:1 }}>{value}</div>
+                        <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:4, textTransform:"uppercase", letterSpacing:0.5, fontWeight:700 }}>{label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Alert banner */}
+                  {alertAthletes.length > 0 && (
+                    <div style={{ background:"rgba(244,63,94,0.07)", border:"1px solid rgba(244,63,94,0.3)", borderRadius:14, padding:"12px 16px" }}>
+                      <div style={{ fontSize:12, fontWeight:800, color:"#f43f5e", marginBottom:8 }}>🚨 Atletas que necesitan atención</div>
+                      <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                        {alertAthletes.map(a => {
+                          const w = athleteWellness[a.atleta_id];
+                          const hrw = w ? w.total : null;
+                          const srpe = calcSRPE(a.atleta_id);
+                          const reasons = [];
+                          if (hrw !== null && hrw < 7) reasons.push(`Bienestar bajo (${hrw}/15)`);
+                          if (srpe > 2500) reasons.push(`Carga alta (${Math.round(srpe)} AU)`);
+                          return (
+                            <div key={a.id} onClick={() => { setEquipoTab("atletas"); setSelectedAthlete(a); }}
+                              style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer" }}>
+                              <AthleteAvatar profile={a.profiles} size={28} fontSize={11} variant="dark" />
+                              <div style={{ flex:1, fontSize:12, color:"var(--text-muted)" }}>
+                                <span style={{ fontWeight:700, color:"var(--text)" }}>{a.profiles?.nombre}</span>
+                                {" — "}{reasons.join(" · ")}
+                              </div>
+                              <span style={{ fontSize:11, color:"#f43f5e" }}>Ver →</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Command table */}
+                  <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:20, overflow:"hidden" }}>
+                    {/* Table header */}
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px 60px 80px 32px", gap:8, padding:"10px 16px", borderBottom:"1px solid var(--border)", background:"var(--bg-elevated)" }}>
+                      {["Atleta","Bienestar","Carga sRPE","Ses","Último",""].map((h,i) => (
+                        <div key={i} style={{ fontSize:9, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.8 }}>{h}</div>
+                      ))}
+                    </div>
+
+                    {/* Rows */}
+                    {activeAthletes.length === 0 ? (
+                      <div style={{ padding:"40px 20px", textAlign:"center" }}>
+                        <div style={{ fontSize:40, marginBottom:10 }}>🥋</div>
+                        <div style={{ fontSize:14, fontWeight:700, color:"var(--text)", marginBottom:8 }}>Sin atletas activos</div>
+                        <button onClick={() => { setShowInvite(true); setInviteMsg(""); setInviteStatus(""); }}
+                          style={{ padding:"10px 22px", borderRadius:11, border:"none", background:`linear-gradient(135deg,${RED},#a31515)`, color:"#fff", fontSize:13, fontWeight:700, cursor:"pointer" }}>
+                          + Añadir primer atleta
+                        </button>
+                      </div>
+                    ) : (
+                      activeAthletes.map((a, idx) => {
+                        const w = athleteWellness[a.atleta_id];
+                        const hrw = w ? w.total : null;
+                        const srpe = Math.round(calcSRPE(a.atleta_id));
+                        const sesArr = recentSessions[a.atleta_id] || [];
+                        const lastSes = sesArr.length > 0 ? sesArr.sort((x,y) => y.fecha < x.fecha ? -1 : 1)[0]?.fecha : null;
+                        const daysSince = lastSes ? Math.floor((new Date() - new Date(lastSes+"T12:00:00")) / 86400000) : null;
+                        const lastLabel = daysSince === null ? "—" : daysSince === 0 ? "Hoy" : daysSince === 1 ? "Ayer" : `${daysSince}d`;
+                        const nivel = athleteNiveles[a.atleta_id] || "fitness";
+                        const nv = NIVELES[nivel];
+                        return (
+                          <div key={a.id}
+                            onClick={() => { setEquipoTab("atletas"); setSelectedAthlete(a); }}
+                            style={{ display:"grid", gridTemplateColumns:"1fr 80px 80px 60px 80px 32px", gap:8, padding:"12px 16px",
+                              borderBottom: idx < activeAthletes.length-1 ? "1px solid var(--border)" : "none",
+                              cursor:"pointer", transition:"background 0.15s" }}
+                            onMouseEnter={e => e.currentTarget.style.background="var(--bg-elevated)"}
+                            onMouseLeave={e => e.currentTarget.style.background=""}>
+                            {/* Atleta */}
+                            <div style={{ display:"flex", alignItems:"center", gap:10, minWidth:0 }}>
+                              <AthleteAvatar profile={a.profiles} size={36} fontSize={14} variant="dark" />
+                              <div style={{ minWidth:0 }}>
+                                <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{a.profiles?.nombre || "Atleta"}</div>
+                                <div style={{ display:"flex", alignItems:"center", gap:4, marginTop:2 }}>
+                                  <span style={{ fontSize:8, fontWeight:700, color:nv.color, background:nv.bg, borderRadius:4, padding:"1px 5px" }}>{nv.icon} {nv.label}</span>
+                                  {a.profiles?.disciplina_principal && <span style={{ fontSize:9, color:"var(--text-faint)" }}>{a.profiles.disciplina_principal}</span>}
+                                </div>
+                              </div>
+                            </div>
+                            {/* Bienestar HRW */}
+                            <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
+                              <div style={{ fontSize:14, fontWeight:900, color:hrwColor(hrw), lineHeight:1 }}>{hrw !== null ? `${hrw}/15` : "—"}</div>
+                              <div style={{ fontSize:9, color:hrwColor(hrw), marginTop:2, fontWeight:700 }}>{hrwLabel(hrw)}</div>
+                            </div>
+                            {/* sRPE */}
+                            <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
+                              <div style={{ fontSize:14, fontWeight:900, color:srpeColor(srpe), lineHeight:1 }}>{srpe > 0 ? srpe : "—"}</div>
+                              <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:2 }}>AU/sem</div>
+                            </div>
+                            {/* Sesiones */}
+                            <div style={{ display:"flex", alignItems:"center", justifyContent:"center" }}>
+                              <div style={{ fontSize:18, fontWeight:900, color:"var(--text)" }}>{sesArr.length}</div>
+                            </div>
+                            {/* Último entreno */}
+                            <div style={{ display:"flex", flexDirection:"column", justifyContent:"center" }}>
+                              <div style={{ fontSize:12, fontWeight:700, color: daysSince === null ? "var(--text-faint)" : daysSince <= 1 ? "#4ade80" : daysSince <= 3 ? "#f59e0b" : "#f43f5e" }}>{lastLabel}</div>
+                              {lastSes && <div style={{ fontSize:9, color:"var(--text-faint)", marginTop:1 }}>{lastSes.slice(5)}</div>}
+                            </div>
+                            {/* Arrow */}
+                            <div style={{ display:"flex", alignItems:"center", justifyContent:"center", color:"var(--text-faint)", fontSize:16 }}>›</div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Pendientes */}
+                  {pendingAthletes.length > 0 && (
+                    <div style={{ background:"var(--bg-card)", border:"1px solid #a78bfa28", borderRadius:14, padding:"14px 16px" }}>
+                      <div style={{ fontSize:10, fontWeight:800, color:"#a78bfa", letterSpacing:1, textTransform:"uppercase", marginBottom:10, display:"flex", alignItems:"center", gap:6 }}>
+                        <span style={{ width:6, height:6, borderRadius:3, background:"#a78bfa", display:"inline-block" }} />
+                        Invitaciones pendientes · {pendingAthletes.length}
+                      </div>
+                      {pendingAthletes.map(a => (
+                        <div key={a.id} style={{ display:"flex", alignItems:"center", gap:10, padding:"8px 0", borderBottom:"1px solid var(--border)" }}>
+                          <AthleteAvatar profile={a.profiles} size={32} fontSize={13} variant="dark" />
+                          <div style={{ flex:1, fontSize:13, fontWeight:700, color:"var(--text)" }}>{a.profiles?.nombre || a.profiles?.email || "Atleta"}</div>
+                          <span style={{ fontSize:9, fontWeight:700, color:"#a78bfa", background:"#a78bfa20", borderRadius:5, padding:"3px 8px" }}>Pendiente</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* ══ ATLETAS TAB ══ */}
+            {equipoTab === "atletas" && <div className="em-coach-layout" style={{ display: "flex", gap: 20, alignItems: "flex-start", flexWrap: "wrap" }}>
               {/* ══ Panel izquierdo: equipo ══ */}
               {(() => {
                 const nivelesCount = { profesional: 0, amateur: 0, fitness: 0 };
@@ -10388,7 +10584,7 @@ function CoachApp({ user, profile: profileProp, onMyDiary, onSignOut }) {
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
           </>
         )}
       </div>

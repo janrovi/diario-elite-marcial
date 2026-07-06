@@ -765,6 +765,7 @@ const TRANSLATIONS = {
     wellness_tap:"Toca para hacer tu check-in",
     wellness_edit:"Editar",
     fw_title:"🥊 Fight Week",
+    fw_next_fight:"Próximo combate",
     fw_days_left:"días para el combate",
     fw_fight_day:"¡Día del combate! 🏆",
     fw_max_cut:"Bajada máx. segura",
@@ -1187,6 +1188,7 @@ const TRANSLATIONS = {
     wellness_tap:"Tap to do your check-in",
     wellness_edit:"Edit",
     fw_title:"🥊 Fight Week",
+    fw_next_fight:"Next fight",
     fw_days_left:"days to fight",
     fw_fight_day:"Fight Day! 🏆",
     fw_max_cut:"Max safe cut",
@@ -1611,6 +1613,7 @@ const TRANSLATIONS = {
     wellness_tap:"Toca per fer el teu check-in",
     wellness_edit:"Editar",
     fw_title:"🥊 Fight Week",
+    fw_next_fight:"Pròxim combat",
     fw_days_left:"dies per al combat",
     fw_fight_day:"Dia del combat! 🏆",
     fw_max_cut:"Baixada màx. segura",
@@ -3583,7 +3586,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
       {(daysToFight !== null && daysToFight >= 0) ? (
         <div style={{ marginBottom:18 }}>
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
-            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// FIGHT WEEK</div>
+            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>{isFightWeek ? "// FIGHT WEEK" : "// PRÓXIMO COMBATE"}</div>
             <div style={{ flex:1, height:1, background:"var(--border)" }} />
           </div>
 
@@ -3592,7 +3595,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
 
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom: isFightWeek ? 12 : 4, position:"relative" }}>
               <div>
-                <div style={{ fontSize:11, fontWeight:900, color: isFightWeek ? RED : "var(--text-muted)", textTransform:"uppercase", letterSpacing:2, marginBottom:2 }}>{t("fw_title",lang)}</div>
+                <div style={{ fontSize:11, fontWeight:900, color: isFightWeek ? RED : "var(--text-muted)", textTransform:"uppercase", letterSpacing:2, marginBottom:2 }}>{isFightWeek ? t("fw_title",lang) : t("fw_next_fight",lang)}</div>
                 {daysToFight === 0 ? (
                   <div style={{ fontSize:22, fontWeight:900, color:RED }}>{t("fw_fight_day",lang)}</div>
                 ) : (
@@ -3649,7 +3652,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
       ) : (
         <div style={{ marginBottom:18 }}>
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:10 }}>
-            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// FIGHT WEEK</div>
+            <div style={{ fontSize:9, fontWeight:900, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2.5 }}>// PRÓXIMO COMBATE</div>
             <div style={{ flex:1, height:1, background:"var(--border)" }} />
           </div>
           <div onClick={() => { setFightDateInput(""); setShowFightSetup(true); }}
@@ -3658,7 +3661,7 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
             onMouseLeave={e => { e.currentTarget.style.background=`${RED}06`; e.currentTarget.style.borderColor=`${RED}30`; }}>
             <div style={{ width:52, height:52, borderRadius:14, background:`${RED}15`, border:`1.5px solid ${RED}30`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0 }}>🥊</div>
             <div style={{ flex:1 }}>
-              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("fw_setup",lang)}</div>
+              <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:4 }}>{t("fw_next_fight",lang)}</div>
               <div style={{ fontSize:12, color:RED, fontWeight:700 }}>{t("fw_date_label",lang)} →</div>
             </div>
           </div>

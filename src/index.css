@@ -1741,20 +1741,17 @@ input, textarea, select {
   margin-bottom: 1px;
 }
 
-/* Layout equipo: sidebar + panel */
+/* Layout equipo: master-detail (full width, JS controla visibilidad) */
 .em-coach-layout {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  display: block;
 }
 .em-coach-sidebar {
-  flex: 0 0 360px;
-  min-width: 300px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .em-coach-panel {
-  flex: 1;
-  min-width: 280px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Semana agenda — scroll horizontal en mobile */

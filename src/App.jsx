@@ -17397,9 +17397,7 @@ function MainApp() {
                   <button style={{ fontSize:13, fontWeight:600, color:"var(--text)", background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:8, padding:"10px 20px", display:"inline-block", cursor:"pointer", transition:"background 0.15s, transform 0.15s" }} className="em-btn-secondary" onClick={() => setView("form")}>{tr("stats_empty_cta")}</button>
                 </div>
               )}
-            </>
-
-        {/* ── 🧪 Tests Físicos ── */}
+            {/* ── 🧪 Tests Físicos ── */}
         {(() => {
           const saveTest = async () => {
             if (!testForm.tipo || !testForm.valor || !user?.id) return;
@@ -17503,6 +17501,7 @@ function MainApp() {
             </div>
           );
         })()}
+            </>
           );
         })()}
 

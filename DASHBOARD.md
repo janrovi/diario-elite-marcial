@@ -5,7 +5,9 @@ tags: [dashboard]
 
 > Panel central del proyecto. Los bloques Dataview se actualizan automáticamente.
 
-**Accesos rápidos:** [[SESION_CONTEXTO]] · [[PENDIENTE]] · [[HISTORIAL_MEJORAS]] · [[MAPA_APP]] · [[PLANIFICACION_V28]]
+**Accesos rápidos:** [[SESION_CONTEXTO]] · [[PENDIENTE]] · [[GUIA_PATRONES]] · [[DECISIONES]] · [[HISTORIAL_MEJORAS]] · [[PLANIFICACION_V28]]
+
+**Última sesión:** [[sesiones/2026-07-14]]
 
 ---
 

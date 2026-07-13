@@ -1,7 +1,13 @@
+---
+tags: [contexto, referencia]
+actualizado: 2026-07-13
+---
 # Élite Marcial — Contexto de Sesión para Claude
 
 > Pega este archivo al inicio de cualquier nueva conversación en Cowork.
 > Última actualización: julio 2026
+
+**Ver también:** [[PENDIENTE]] · [[HISTORIAL_MEJORAS]] · [[MAPA_APP]] · [[PLANIFICACION_V28]]
 
 ---
 

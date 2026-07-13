@@ -1,4 +1,12 @@
+---
+tags: [historial]
+fases: 7
+commits_aprox: 51
+actualizado: 2026-07-13
+---
 # 📋 Historial de mejoras — Élite Marcial
+
+**Ver también:** [[PENDIENTE]] · [[SESION_CONTEXTO]] · [[MAPA_APP]]
 
 ---
 

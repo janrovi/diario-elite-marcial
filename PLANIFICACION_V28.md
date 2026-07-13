@@ -1,3 +1,9 @@
+---
+tags: [planificacion]
+version: "2.8"
+estado: completado
+actualizado: 2026-07-06
+---
 # Planificación v2.8 — Periodización Inteligente
 > Última actualización: 6 jul 2026  
 > Empezar aquí en la próxima sesión.

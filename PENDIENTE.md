@@ -1,36 +1,38 @@
 ---
 tags: [roadmap]
-actualizado: 2026-07-13
+actualizado: 2026-07-14
 ---
 # Pendiente — Élite Marcial
 > Orden = prioridad de implementación
+> **Criterio actual:** experiencia atleta en móvil primero. Vista coach → después de testear.
 
-**Ver también:** [[SESION_CONTEXTO]] · [[HISTORIAL_MEJORAS]] · [[MAPA_APP]] · [[preparacion-fisica/estado-implementacion-database]]
-
----
-
-## 🔴 Alta prioridad
-
-- [ ] **`sesiones_grupales`** — Coach crea sesión grupal → múltiples atletas reciben. Cada atleta reporta RPE individual. Requiere 2 tablas SQL + UI coach (crear/asignar) + UI atleta (recibir/reportar) + vista distribución RPE por sesión. #alta
+**Ver también:** [[SESION_CONTEXTO]] · [[HISTORIAL_MEJORAS]] · [[preparacion-fisica/estado-implementacion-database]]
 
 ---
 
-## 🟡 Media prioridad
+## 🔴 Vista atleta — Alta prioridad
 
-- [ ] **Perfil público coach** (`/coach/:username`) — URL limpia, SEO básico (meta tags), enlace compartible. Base ya existe en `CoachPublicProfile`. #media
-- [ ] **Notificaciones push al coach** — trigger SQL cuando dolor > 7 o lesión nueva. Sistema de notificaciones ya existe. #media
-- [ ] **Gráficos evolución tests físicos** — datos en `tests_fisicos`, falta visualización de línea temporal por tipo de test. #media
-- [ ] **Radar evaluaciones coach** — gráfico spider con 4 dimensiones (técnica/físico/mental/táctica) por fecha. Datos en `evaluaciones_coach`. #media
+- [ ] **Gráficos evolución tests físicos** — atleta ve su progresión en el tiempo. Datos ya en `tests_fisicos`, falta gráfico de línea por tipo de test (fuerza, cardio, etc.). Quick win: dato existe, solo falta visualización. #alta
+- [ ] **Radar evaluaciones 4D** — atleta ve su evaluación técnica/físico/mental/táctica en `Progreso`. Datos en `evaluaciones_coach`. Gráfico spider motivador. Quick win. #alta
+- [ ] **`sesiones_grupales` — lado atleta** — atleta recibe sesión grupal asignada por el coach y reporta su RPE individual. Solo la mitad atleta por ahora (coach UI queda en deferred). #alta
 
 ---
 
-## 🟢 Baja prioridad / backlog
+## 🟡 Vista atleta — Media prioridad
 
-- [ ] **`terapias_recuperacion`** — registrar terapias (crioterapia, masaje, HBOT...). Alerta si hay terapia agresiva 48h antes de competir. #baja
-- [ ] **Banner lesión activa** — aviso al coach al programar sesión para atleta con lesión activa. Datos ya en `lesiones`. #baja
-- [ ] **Cruce técnicas ↔ sesiones practicadas** — indicador en ficha del atleta: ¿practica la técnica asignada? Cruza `tecnicas_asignadas` con `sesiones.tecnica_dia`. #baja
-- [ ] **`checkins_dolor` — campo `persiste_noche`** — booleano de alarma clínica según ENFAF Asignatura 5. Disparar alerta al coach si TRUE. #baja
-- [ ] **Internacionalización completa** — strings hardcodeados en CoachApp y algunos modales. #baja
+- [ ] **`terapias_recuperacion`** — atleta registra terapias de recuperación (crioterapia, masaje, HBOT...). Alerta si hay terapia agresiva 48h antes de competir. Nueva tabla. #media
+- [ ] **`checkins_dolor` — campo `persiste_noche`** — booleano en el check-in de dolor del atleta. Alarma clínica (ENFAF). Campo pequeño en feature ya funcional. #media
+- [ ] **Internacionalización atleta** — revisar strings hardcodeados en vistas móviles del atleta (HomeView, CalendarView, CuerpoView, TecnicasView). #media
+
+---
+
+## ⏸️ Deferred — Vista coach (después de testear atleta)
+
+- [ ] **`sesiones_grupales` — lado coach** — crear sesión grupal, asignar atletas, ver distribución de RPE. Depende de que el lado atleta esté funcionando. #coach
+- [ ] **Notificaciones push al coach** — trigger SQL cuando dolor > 7 o lesión nueva. Sistema ya existe. #coach
+- [ ] **Banner lesión activa** — aviso al coach al programar sesión para atleta con lesión activa. #coach
+- [ ] **Cruce técnicas ↔ sesiones practicadas** — indicador en ficha del atleta (vista coach): ¿practica la técnica asignada? #coach
+- [ ] **Perfil público coach** (`/coach/:username`) — SEO, enlace compartible. Base existe en `CoachPublicProfile`. #coach
 
 ---
 

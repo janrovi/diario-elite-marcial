@@ -2981,7 +2981,7 @@ function exportCSV(sessions) {
 }
 
 // ── Técnicas View ─────────────────────────────────────────
-function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecnicasAsig = [], setTecnicasAsig = ()=>{}, supabase }) {
+function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecnicasAsig = [], setTecnicasAsig = ()=>{}, supabase, tecnicasCatalogo = [] }) {
   const [search, setSearch] = useState("");
   const [filterDisc, setFilterDisc] = useState("");
   const [activeTab, setActiveTab] = useState("biblioteca"); // "biblioteca" | "ranking"
@@ -3083,7 +3083,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
 
       {/* ── Tabs ── */}
       <div style={{ display:"flex", gap:6, marginBottom:16, background:"var(--bg-elevated)", borderRadius:12, padding:4 }}>
-        {[["biblioteca","📂 Biblioteca"],["ranking","🏆 Ranking"],["coach","📋 Coach"]].map(([tab, label]) => (
+        {[["biblioteca","📂 Biblioteca"],["ranking","🏆 Ranking"],["catalogo","📖 Catálogo"],["coach","📋 Coach"]].map(([tab, label]) => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             flex:1, border:"none", borderRadius:9, padding:"9px 0", fontSize:12, fontWeight:700, cursor:"pointer",
             background: activeTab===tab ? "var(--bg-card)" : "transparent",
@@ -3223,6 +3223,84 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
               </div>
             );
           })}
+        </div>
+      )}
+
+      {activeTab === "catalogo" && (
+        <div>
+          {tecnicasCatalogo.length === 0 ? (
+            <div style={{ textAlign:"center", padding:"60px 20px", color:"var(--text-faint)" }}>
+              <div style={{ fontSize:40, marginBottom:12 }}>📖</div>
+              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>Cargando catálogo...</div>
+            </div>
+          ) : (() => {
+            const [catSearch, setCatSearch] = React.useState("");
+            const [catFiltro, setCatFiltro] = React.useState("todas");
+            const NIVEL_COLOR = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
+            const categorias = [...new Set(tecnicasCatalogo.map(t => t.categoria))].sort();
+            const q = catSearch.toLowerCase().trim();
+            const filtradas = tecnicasCatalogo.filter(t => {
+              const matchCat = catFiltro === "todas" || t.categoria === catFiltro;
+              const matchSearch = !q || t.nombre.toLowerCase().includes(q) || (t.posicion_inicio||"").toLowerCase().includes(q);
+              return matchCat && matchSearch;
+            });
+            const byCategoria = {};
+            filtradas.forEach(t => {
+              if (!byCategoria[t.categoria]) byCategoria[t.categoria] = [];
+              byCategoria[t.categoria].push(t);
+            });
+            return (
+              <div>
+                <input
+                  style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
+                  placeholder="🔍 Buscar técnica..."
+                  value={catSearch}
+                  onChange={e => setCatSearch(e.target.value)}
+                />
+                <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14 }}>
+                  {["todas", ...categorias].map(cat => (
+                    <button key={cat} onClick={() => setCatFiltro(cat)} style={{
+                      flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
+                      background: catFiltro===cat ? "#C41A1A" : "var(--bg-elevated)",
+                      color: catFiltro===cat ? "#fff" : "var(--text-faint)",
+                      transition:"all 0.15s"
+                    }}>
+                      {cat === "todas" ? "Todas" : cat}
+                    </button>
+                  ))}
+                </div>
+                {Object.entries(byCategoria).map(([cat, tecs]) => (
+                  <div key={cat} style={{ marginBottom:20 }}>
+                    <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.4, marginBottom:8 }}>
+                      {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+                    </div>
+                    <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                      {tecs.map(t => (
+                        <div key={t.id} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"11px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                          <div style={{ flex:1, minWidth:0 }}>
+                            <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:3 }}>{t.nombre}</div>
+                            <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
+                              {t.posicion_inicio && <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20 }}>{t.posicion_inicio}</span>}
+                              {t.nivel && <span style={{ fontSize:10, fontWeight:700, color:NIVEL_COLOR[t.nivel]||"var(--text-faint)", background:(NIVEL_COLOR[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:20 }}>{t.nivel}</span>}
+                            </div>
+                          </div>
+                          {t.video_url && (
+                            <a href={t.video_url} target="_blank" rel="noopener noreferrer"
+                              style={{ marginLeft:10, flexShrink:0, background:"#ff000015", border:"1px solid #ff000028", borderRadius:8, padding:"6px 10px", color:"#cc0000", fontSize:12, fontWeight:700, textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
+                              ▶ Ver
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                {filtradas.length === 0 && catSearch && (
+                  <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -13592,6 +13670,7 @@ function MainApp() {
   const [injuries, setInjuries] = useState([]);
   const [testsF, setTestsF] = useState([]);
   const [tecnicasAsig, setTecnicasAsig] = useState([]);
+  const [tecnicasCatalogo, setTecnicasCatalogo] = useState([]);
   const [evalsC, setEvalsC] = useState([]);
   const [showTestForm, setShowTestForm] = useState(false);
   const [testForm, setTestForm] = useState({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
@@ -13835,6 +13914,15 @@ function MainApp() {
         const { data: tecAsigDb } = await supabase.from("tecnicas_asignadas")
           .select("*").eq("atleta_id", user.id).order("created_at", { ascending: false });
         if (tecAsigDb) setTecnicasAsig(tecAsigDb);
+      } catch { /* silently ignore */ }
+      // Load catálogo de técnicas BJJ
+      try {
+        const { data: catDb } = await supabase.from("tecnicas_catalogo")
+          .select("*").order("categoria", { ascending: true }).order("nombre", { ascending: true });
+        if (catDb) {
+          const seen = new Set();
+          setTecnicasCatalogo(catDb.filter(t => { if (seen.has(t.nombre)) return false; seen.add(t.nombre); return true; }));
+        }
       } catch { /* silently ignore */ }
       // Load tests físicos
       try {
@@ -14739,7 +14827,7 @@ function MainApp() {
 
         {/* TÉCNICAS */}
         {view === "tecnicas" && (
-          <TecnicasView sessions={sessions} onOpenDetail={openDetail} lang={lang} onNewSession={() => setView("form")} tecnicasAsig={tecnicasAsig} setTecnicasAsig={setTecnicasAsig} supabase={supabase} />
+          <TecnicasView sessions={sessions} onOpenDetail={openDetail} lang={lang} onNewSession={() => setView("form")} tecnicasAsig={tecnicasAsig} setTecnicasAsig={setTecnicasAsig} supabase={supabase} tecnicasCatalogo={tecnicasCatalogo} />
         )}
 
         {/* ── PANEL ENTRENADOR ─────────────────────────────────────────── */}
@@ -18032,15 +18120,24 @@ function MainApp() {
                   <div style={s.sectionTitle}>{tr("form_technique")}</div>
                   <Field label={tr("form_tech_name")}>
                     {(() => {
-                      const allTecs = [...new Map(
+                      const q = form.tecnica.nombre.toLowerCase().trim();
+                      const histMap = new Map(
                         sessions.filter(ss => ss.tecnica?.nombre)
                           .sort((a,b) => new Date(b.fecha) - new Date(a.fecha))
-                          .map(ss => [ss.tecnica.nombre, ss.tecnica])
-                      ).values()];
-                      const q = form.tecnica.nombre.toLowerCase().trim();
-                      const suggestions = q.length >= 1
-                        ? allTecs.filter(tc => tc.nombre.toLowerCase().includes(q) && tc.nombre !== form.tecnica.nombre)
+                          .map(ss => [ss.tecnica.nombre, { nombre:ss.tecnica.nombre, descripcion:ss.tecnica.descripcion, _src:"hist" }])
+                      );
+                      const catSugg = q.length >= 1
+                        ? tecnicasCatalogo.filter(tc => tc.nombre.toLowerCase().includes(q) && tc.nombre !== form.tecnica.nombre)
+                            .map(tc => ({ nombre:tc.nombre, descripcion:tc.posicion_inicio ? tc.categoria+" · "+tc.posicion_inicio : tc.categoria, nivel:tc.nivel, video_url:tc.video_url, _src:"cat" }))
                         : [];
+                      const histSugg = q.length >= 1
+                        ? [...histMap.values()].filter(tc => tc.nombre.toLowerCase().includes(q) && tc.nombre !== form.tecnica.nombre)
+                        : [];
+                      const combined = [
+                        ...histSugg.slice(0,2),
+                        ...catSugg.filter(c => !histMap.has(c.nombre)).slice(0, Math.max(4, 6 - histSugg.length))
+                      ];
+                      const NIVEL_C = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
                       return (
                         <div style={{ position:"relative" }}>
                           <input style={s.input} className="em-input"
@@ -18049,17 +18146,23 @@ function MainApp() {
                             placeholder={tr("form_tech_ph")}
                             autoComplete="off"
                           />
-                          {suggestions.length > 0 && (
-                            <div style={{ position:"absolute", top:"calc(100% + 4px)", left:0, right:0, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:8, zIndex:200, boxShadow:"0 4px 16px rgba(0,0,0,0.18)", maxHeight:200, overflowY:"auto" }}>
-                              {suggestions.slice(0,6).map((tc,i) => (
+                          {combined.length > 0 && (
+                            <div style={{ position:"absolute", top:"calc(100% + 4px)", left:0, right:0, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:10, zIndex:200, boxShadow:"0 4px 20px rgba(0,0,0,0.22)", maxHeight:260, overflowY:"auto" }}>
+                              {combined.map((tc,i) => (
                                 <div key={i}
-                                  onMouseDown={e => { e.preventDefault(); setNested("tecnica","nombre",tc.nombre); if (tc.descripcion && !form.tecnica.descripcion) setNested("tecnica","descripcion",tc.descripcion); }}
-                                  style={{ padding:"10px 14px", cursor:"pointer", borderBottom:"1px solid var(--border)", fontSize:13, color:"var(--text)" }}
+                                  onMouseDown={e => { e.preventDefault(); setNested("tecnica","nombre",tc.nombre); }}
+                                  style={{ padding:"10px 14px", cursor:"pointer", borderBottom:"1px solid var(--border)", fontSize:13, color:"var(--text)", display:"flex", justifyContent:"space-between", alignItems:"center", gap:8 }}
                                   onMouseEnter={e => e.currentTarget.style.background="var(--bg-hover)"}
                                   onMouseLeave={e => e.currentTarget.style.background="transparent"}
                                 >
-                                  <div style={{ fontWeight:600 }}>{tc.nombre}</div>
-                                  {tc.descripcion && <div style={{ fontSize:11, color:"var(--text-faint)", marginTop:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{tc.descripcion}</div>}
+                                  <div style={{ flex:1, minWidth:0 }}>
+                                    <div style={{ fontWeight:700, marginBottom:1 }}>{tc.nombre}</div>
+                                    {tc.descripcion && <div style={{ fontSize:11, color:"var(--text-faint)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{tc.descripcion}</div>}
+                                  </div>
+                                  <div style={{ display:"flex", gap:4, flexShrink:0 }}>
+                                    {tc._src==="hist" && <span style={{ fontSize:9, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 6px", borderRadius:20 }}>historial</span>}
+                                    {tc.nivel && <span style={{ fontSize:9, fontWeight:700, color:NIVEL_C[tc.nivel], background:NIVEL_C[tc.nivel]+"20", padding:"2px 6px", borderRadius:20 }}>{tc.nivel}</span>}
+                                  </div>
                                 </div>
                               ))}
                             </div>

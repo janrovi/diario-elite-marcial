@@ -12840,7 +12840,17 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
         localStorage.removeItem("em_login_fail_global");
         onAuth(data.user, false);
       } else if (mode === "register") {
-        const { data, error } = await supabase.auth.signUp({ email: form.email, password: form.password });
+        const { data, error } = await supabase.auth.signUp({
+          email: form.email,
+          password: form.password,
+          options: {
+            data: {
+              nombre: form.nombre,
+              rol: rolMap[authPlan] || "atleta",
+              plan: needsPayment ? "pending_payment" : "free",
+            }
+          }
+        });
         if (error) {
           // No revelar si el email ya existe (email enumeration)
           if (error.message?.toLowerCase().includes("already registered") ||
@@ -12859,11 +12869,17 @@ function AuthScreen({ onAuth, darkMode, onToggleDark, initialMode = "login", onR
           }
           const rolMap = { free:"atleta", coach:"coach", fundador:"atleta" };
           const needsPayment = authPlan === "coach" || authPlan === "fundador";
-          await supabase.from("profiles").upsert({
+          // Profile is created by DB trigger on auth.users insert (see supabase/handle_new_user.sql)
+          // This upsert is a client-side fallback for when the session is already active
+          const { error: profileErr } = await supabase.from("profiles").upsert({
             id: data.user.id, email: form.email, nombre: form.nombre,
             rol: rolMap[authPlan] || "atleta",
             plan: needsPayment ? "pending_payment" : "free",
           });
+          // Ignore RLS error (no session yet — trigger will have created the profile)
+          if (profileErr && !profileErr.message?.includes("row-level security")) {
+            console.warn("profiles upsert:", profileErr.message);
+          }
           if (!needsPayment) {
             // Plan free → mostrar pantalla "confirma tu email"
             setSuccess("¡Registro completado! Revisa tu email y haz clic en el enlace de confirmación para acceder.");

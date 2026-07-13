@@ -1,13 +1,13 @@
 ---
 tags: [contexto, referencia]
-actualizado: 2026-07-13
+actualizado: 2026-07-14
 ---
 # Élite Marcial — Contexto de Sesión para Claude
 
 > Pega este archivo al inicio de cualquier nueva conversación en Cowork.
 > Última actualización: julio 2026
 
-**Ver también:** [[PENDIENTE]] · [[HISTORIAL_MEJORAS]] · [[MAPA_APP]] · [[PLANIFICACION_V28]]
+**Ver también:** [[DASHBOARD]] · [[PENDIENTE]] · [[GUIA_PATRONES]] · [[DECISIONES]] · [[HISTORIAL_MEJORAS]]
 
 ---
 
@@ -25,7 +25,7 @@ actualizado: 2026-07-13
 ## Arquitectura general
 
 ### Frontend
-- **Un único archivo:** `src/App.jsx` (~16.500 líneas)
+- **Un único archivo:** `src/App.jsx` (~18.500 líneas)
 - **REGLA CRÍTICA:** Nunca editar App.jsx con el Edit tool de Claude directamente. SIEMPRE usar scripts Python con `str.replace()`. El archivo es demasiado grande y el Edit tool falla o corrompe el código.
 
 ```python
@@ -59,6 +59,16 @@ with open("src/App.jsx", "w", encoding="utf-8") as f:
 | `coach_notas` | Notas privadas del coach sobre un atleta |
 | `roadmap_votes` | Votos del roadmap de features (Club Fundador) |
 | `avatars` | Storage bucket para avatares de usuario |
+| `lesiones` | Lesiones del atleta (migradas de localStorage) |
+| `checkins_dolor` | Check-in de dolor diario por zona corporal |
+| `tests_fisicos` | Tests de condición física con tendencia ▲▼ |
+| `tecnicas_asignadas` | Coach asigna técnicas, atleta cicla estado |
+| `evaluaciones_coach` | Evaluación 4D coach (técnica/físico/mental/táctica) |
+| `fight_week_tracking` | Seguimiento de pesaje fight week |
+| `wellness_checkins` | Check-in de bienestar diario (HRW) |
+| `periodizaciones` | Planes de periodización 12 semanas |
+
+Ver detalle completo → [[preparacion-fisica/estado-implementacion-database]]
 
 ---
 
@@ -339,16 +349,19 @@ const supabase = createClient(
 
 ## Pendiente / próximas tareas
 
-- [ ] **Verificar y configurar `auth-email-hook`** para que el reset de contraseña funcione
+→ Ver [[PENDIENTE]] para el roadmap completo con prioridades.
+
+Tareas técnicas recurrentes a revisar:
 - [ ] **Re-deploy Edge Functions** si se modifican (send-push, send-suggestion, create-portal-session, stripe-webhook)
 - [ ] **Continuar barrido i18n** — puede haber strings hardcodeados en secciones coach interiores
-- [ ] **Queries sin título en SQL Editor de Supabase** — organizar y documentar qué hace cada una
 
 ---
 
 ## Cómo arrancar una nueva sesión
 
-Cuando empieces una nueva conversación en Cowork, di algo como:
+1. Abre [[DASHBOARD]] en Obsidian → ver estado de tareas pendientes
+2. Revisa [[GUIA_PATRONES]] si tienes dudas sobre cómo editar el código
+3. Pega este archivo al inicio de la conversación en Cowork:
 
 > "Estoy trabajando en la app Élite Marcial. Te adjunto el contexto del proyecto. [pega este archivo]"
 

@@ -43,6 +43,28 @@ LIMIT 8
 
 ---
 
+## 📓 Sesiones recientes
+
+```dataview
+TABLE fecha AS "Fecha", duracion AS "Duración"
+FROM "sesiones"
+WHERE file.name != "TEMPLATE"
+SORT fecha DESC
+LIMIT 5
+```
+
+---
+
+## 📚 Referencias técnicas
+
+```dataview
+TABLE tags AS "Tipo", file.mtime AS "Actualizado"
+FROM #decisiones OR #patrones OR #historial
+SORT file.mtime DESC
+```
+
+---
+
 ## 🗄️ Estado base de datos
 
 | Tabla | Estado |

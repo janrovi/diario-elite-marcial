@@ -1,9 +1,9 @@
 ---
 tags: [sesion]
-fecha: YYYY-MM-DD
+fecha: <% tp.date.now("YYYY-MM-DD") %>
 duracion: ""
 ---
-# Sesión YYYY-MM-DD
+# Sesión <% tp.date.now("YYYY-MM-DD") %>
 
 ## 🎯 Objetivo de la sesión
 

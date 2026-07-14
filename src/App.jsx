@@ -13691,6 +13691,8 @@ function MainApp() {
   const [showTestForm, setShowTestForm] = useState(false);
   const [testForm, setTestForm] = useState({ tipo:"", valor:"", notas:"", fecha: new Date().toISOString().slice(0,10) });
   const [testSaving, setTestSaving] = useState(false);
+  const [selTipo, setSelTipo] = useState(null);
+  const [showHist, setShowHist] = useState(false);
   const [rango, setRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
   const [editRango, setEditRango] = useState(false);
   const [tmpRango, setTmpRango] = useState({ disc:"", cinturon:0, fecha:"", stripes:0 });
@@ -17780,7 +17782,6 @@ function MainApp() {
           // Group by tipo_test, show only last result per type as summary
           const byTipo = {};
           testsF.forEach(t => { if (!byTipo[t.tipo_test]) byTipo[t.tipo_test] = []; byTipo[t.tipo_test].push(t); });
-          const [selTipo, setSelTipo] = React.useState(null);
           // Sparkline SVG inline (sin dependencias externas)
           const Sparkline = ({ data }) => {
             if (!data || data.length < 2) return null;
@@ -17953,7 +17954,6 @@ function MainApp() {
 
         {/* ── 🎯 Evaluaciones del Coach — Radar 4D ── */}
         {evalsC.length > 0 && (() => {
-          const [showHist, setShowHist] = React.useState(false);
           const sortedEvals = [...evalsC].sort((a,b) => b.fecha.localeCompare(a.fecha));
           const latest = sortedEvals[0];
           const prev = sortedEvals[1];

@@ -3279,7 +3279,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                   {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
-                  {tecs.map(t => {
+                  {[...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); }).map(t => {
                     const vid = t.video_url ? (t.video_url.includes("v=") ? t.video_url.split("v=")[1].split("&")[0] : null) : null;
                     const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : null;
                     const CAT_C = { "Sumisiones":"#ef4444","Posiciones":"#6366f1","Barridos":"#f59e0b","Pasajes":"#10b981","Derribos":"#3b82f6","Escapes":"#8b5cf6" };
@@ -3288,14 +3288,14 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       <div key={t.id}
                         onClick={() => t.video_url && window.open(t.video_url, "_blank")}
                         style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default" }}>
-                        <div style={{ position:"relative", paddingTop:"56.25%", background: thumb ? "#000" : cc+"22", overflow:"hidden" }}>
+                        <div style={{ position:"relative", paddingTop:"56.25%", background:cc+"22", overflow:"hidden" }}>
                           {thumb ? (
                             <>
                               <img src={thumb} alt={t.nombre} loading="lazy"
-                                style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", objectFit:"cover" }}
+                                style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", objectFit:"cover", borderRadius:0 }}
                                 onError={e => { e.target.style.display="none"; }}
                               />
-                              <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)" }} />
+                              <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%)" }} />
                               <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
                                 <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(200,0,0,0.88)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 2px 10px rgba(0,0,0,0.5)" }}>
                                   <span style={{ fontSize:13, color:"#fff", marginLeft:3 }}>▶</span>

@@ -41,8 +41,4 @@ actualizado: 2026-07-14
 - [x] `evaluaciones_coach` — tab Eval en panel coach + sección en Progreso atleta
 - [x] `tecnicas_asignadas` — coach asigna, atleta cicla estado
 - [x] `tests_fisicos` — tests físicos con tendencia ▲▼
-- [x] `checkins_dolor` — tab Dolor en CuerpoView + visibilidad coach
-- [x] `fight_week_tracking` — seguimiento de pesaje con alerta 5%
-- [x] `lesiones` — migradas a Supabase, visibles en ficha del atleta
-- [x] Chat atleta ↔ coach — mensajería directa en la app
-- [x] Fix registro — trigger SQL crea perfil sin sesión activa
+- [x] `checkins_dolor` — tab Dolor en CuerpoView + visibil

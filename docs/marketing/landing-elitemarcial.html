@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#C41A1A;
+  --red-light:#e02020;
+  --bg:#080808;
+  --bg-card:#111111;
+  --bg-card2:#161616;
+  --border:#222222;
+  --text:#ffffff;
+  --text-muted:#888888;
+  --text-faint:#555555;
+  --gold:#d4a017;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow-x:hidden}
+
+/* ── ANNOUNCEMENT BAR ── */
+.em-announce{
+  background:var(--red);
+  text-align:center;
+  padding:10px 20px;
+  font-family:'Barlow',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.5px;
+  position:sticky;top:0;z-index:100;
+}
+.em-announce a{color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
+.em-announce a:hover{opacity:.9}
+.em-announce-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* ── HERO ── */
+.em-hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  gap:60px;
+  padding:80px 80px 80px;
+  position:relative;
+  overflow:hidden;
+}
+.em-hero::before{
+  content:'';position:absolute;top:-200px;left:-200px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(196,26,26,.25) 0%,transparent 70%);
+  pointer-events:none;
+}
+.em-hero::after{
+  content:'';position:absolute;bottom:-200px;right:-100px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(196,26,26,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.em-hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(196,26,26,.15);border:1px solid rgba(196,26,26,.4);
+  color:var(--red);border-radius:100px;padding:6px 14px;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.em-hero-eyebrow{
+  font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+  color:var(--red);margin-bottom:16px;
+}
+.em-hero h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(52px,6vw,88px);
+  font-weight:900;line-height:.95;
+  text-transform:uppercase;letter-spacing:-1px;
+  margin-bottom:28px;
+}
+.em-hero h1 .red{color:var(--red)}
+.em-hero p{
+  font-size:18px;line-height:1.65;color:#aaa;
+  max-width:480px;margin-bottom:40px;
+}
+.em-hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.em-btn-primary{
+  background:var(--red);color:#fff;border:none;
+  padding:16px 32px;border-radius:10px;
+  font-family:'Barlow',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;letter-spacing:.3px;
+  transition:all .2s;text-decoration:none;display:inline-block;
+}
+.em-btn-primary:hover{background:var(--red-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(196,26,26,.4)}
+.em-btn-secondary{
+  background:transparent;color:#fff;
+  border:1px solid #333;padding:16px 32px;border-radius:10px;
+  font-family:'Barlow',sans-serif;font-size:16px;font-weight:600;
+  cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;
+}
+.em-btn-secondary:hover{border-color:#666;background:rgba(255,255,255,.05)}
+.em-hero-social-proof{
+  font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;
+}
+.em-hero-social-proof span{color:var(--red);font-weight:700}
+.em-hero-img{
+  display:flex;justify-content:center;align-items:center;
+  position:relative;z-index:1;
+}
+.em-hero-img img{
+  max-width:100%;max-height:700px;object-fit:contain;
+  filter:drop-shadow(0 30px 60px rgba(196,26,26,.3));
+}
+/* Placeholder si no hay imagen */
+.em-hero-mockup-placeholder{
+  width:320px;height:620px;
+  background:var(--bg-card);border:1px solid #222;border-radius:44px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:#444;font-size:14px;
+}
+
+/* ── SOCIAL PROOF STRIP ── */
+.em-strip{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:var(--bg-card);
+}
+.em-strip-item{
+  padding:36px 24px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.em-strip-item:last-child{border-right:none}
+.em-strip-number{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:48px;font-weight:900;color:var(--red);line-height:1;
+  margin-bottom:6px;
+}
+.em-strip-label{font-size:13px;color:var(--text-muted);letter-spacing:.5px;text-transform:uppercase}
+
+/* ── SECCIÓN GENÉRICA ── */
+.em-section{padding:100px 80px}
+.em-section-eyebrow{
+  font-size:12px;font-weight:700;letter-spacing:3px;
+  text-transform:uppercase;color:var(--red);
+  margin-bottom:16px;text-align:center;
+}
+.em-section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(40px,5vw,72px);font-weight:900;
+  text-transform:uppercase;line-height:.95;letter-spacing:-1px;
+  text-align:center;margin-bottom:20px;
+}
+.em-section-sub{
+  font-size:17px;color:#888;text-align:center;
+  max-width:600px;margin:0 auto 60px;line-height:1.6;
+}
+
+/* ── VÍDEO ── */
+.em-video-wrap{
+  max-width:900px;margin:0 auto;
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 0 60px rgba(196,26,26,.15);
+  position:relative;background:#000;
+}
+.em-video-wrap video,.em-video-wrap iframe{
+  width:100%;display:block;aspect-ratio:16/9;
+}
+.em-video-placeholder{
+  width:100%;aspect-ratio:16/9;
+  background:var(--bg-card);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;color:#444;
+}
+.em-play-btn{
+  width:72px;height:72px;background:var(--red);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:transform .2s;
+}
+.em-play-btn:hover{transform:scale(1.1)}
+.em-play-btn svg{fill:#fff;margin-left:4px}
+
+/* ── CÓMO FUNCIONA ── */
+.em-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+  max-width:1100px;margin:0 auto;
+}
+.em-step{
+  background:var(--bg-card);padding:48px 40px;position:relative;
+  border:1px solid var(--border);
+}
+.em-step:first-child{border-radius:20px 0 0 20px}
+.em-step:last-child{border-radius:0 20px 20px 0}
+.em-step-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:80px;font-weight:900;color:rgba(196,26,26,.15);
+  line-height:1;margin-bottom:16px;
+}
+.em-step-icon{font-size:36px;margin-bottom:16px}
+.em-step h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;text-transform:uppercase;
+  margin-bottom:12px;
+}
+.em-step p{font-size:15px;color:#888;line-height:1.65}
+
+/* ── PARA QUIÉN ES ── */
+.em-forwhom{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  max-width:1100px;margin:0 auto;
+}
+.em-forwhom-card{
+  background:var(--bg-card);padding:56px 48px;
+  border:1px solid var(--border);
+}
+.em-forwhom-card:first-child{border-radius:20px 0 0 20px}
+.em-forwhom-card:last-child{border-radius:0 20px 20px 0}
+.em-forwhom-badge{
+  display:inline-block;padding:6px 16px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.em-forwhom-badge.atleta{background:rgba(196,26,26,.15);color:var(--red)}
+.em-forwhom-badge.coach{background:rgba(212,160,23,.15);color:var(--gold)}
+.em-forwhom-card h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:36px;font-weight:900;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.em-forwhom-card .subtitle{font-size:15px;color:#888;margin-bottom:28px}
+.em-forwhom-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.em-forwhom-list li{
+  font-size:15px;color:#ccc;display:flex;align-items:flex-start;gap:10px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);
+}
+.em-forwhom-list li:last-child{border-bottom:none;padding-bottom:0}
+.em-forwhom-list li::before{content:'✓';color:var(--red);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ── FEATURES ── */
+.em-features-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:2px;max-width:1200px;margin:0 auto;
+}
+.em-feature-card{
+  background:var(--bg-card);padding:36px 32px;
+  border:1px solid var(--border);
+  transition:background .2s;
+}
+.em-feature-card:hover{background:var(--bg-card2)}
+.em-feature-card:nth-child(1){border-radius:20px 0 0 0}
+.em-feature-card:nth-child(4){border-radius:0 20px 0 0}
+.em-feature-card:nth-child(5){border-radius:0 0 0 20px}
+.em-feature-card:nth-child(8){border-radius:0 0 20px 0}
+.em-feature-icon{font-size:32px;margin-bottom:16px}
+.em-feature-card h3{
+  font-size:17px;font-weight:700;margin-bottom:8px;
+}
+.em-feature-card p{font-size:14px;color:#777;line-height:1.6}
+
+/* ── PRECIOS ── */
+.em-pricing{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  max-width:1200px;margin:0 auto;align-items:start;
+}
+.em-plan{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:20px;padding:36px 28px;position:relative;
+  transition:border-color .2s;
+}
+.em-plan:hover{border-color:#444}
+.em-plan.featured{border-color:var(--red);box-shadow:0 0 40px rgba(196,26,26,.2)}
+.em-plan.featured-coach{border-color:var(--gold);box-shadow:0 0 40px rgba(212,160,23,.15)}
+.em-plan-badge{
+  position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+  background:var(--red);color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 16px;border-radius:100px;white-space:nowrap;
+}
+.em-plan-badge.gold{background:var(--gold);color:#000}
+.em-plan-label{
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;
+}
+.em-plan h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;text-transform:uppercase;margin-bottom:4px;
+}
+.em-plan-price{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:52px;font-weight:900;line-height:1;
+  color:var(--red);margin:20px 0 4px;
+}
+.em-plan.featured .em-plan-price{color:var(--red)}
+.em-plan.featured-coach .em-plan-price{color:var(--gold)}
+.em-plan-period{font-size:14px;color:#666;margin-bottom:8px}
+.em-plan-for{font-size:13px;color:#888;margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.em-plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.em-plan-features li{font-size:13px;color:#ccc;display:flex;align-items:flex-start;gap:8px}
+.em-plan-features li .check{color:var(--red);font-weight:700;flex-shrink:0}
+.em-plan.featured-coach .em-plan-features li .check{color:var(--gold)}
+.em-plan-cta{
+  display:block;width:100%;padding:14px;border-radius:10px;
+  font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;
+  text-align:center;cursor:pointer;border:none;text-decoration:none;
+  transition:all .2s;
+}
+.em-plan-cta.primary{background:var(--red);color:#fff}
+.em-plan-cta.primary:hover{background:var(--red-light)}
+.em-plan-cta.gold{background:var(--gold);color:#000}
+.em-plan-cta.gold:hover{opacity:.9}
+.em-plan-cta.outline{background:transparent;color:#fff;border:1px solid #333}
+.em-plan-cta.outline:hover{border-color:#666;background:rgba(255,255,255,.05)}
+.em-plan-urgency{font-size:12px;color:var(--red);text-align:center;margin-top:12px;font-weight:600}
+
+/* ── TESTIMONIOS ── */
+.em-testimonials{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+  max-width:1100px;margin:0 auto;
+}
+.em-testi{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px}
+.em-testi-stars{color:var(--red);font-size:18px;margin-bottom:16px;letter-spacing:2px}
+.em-testi-quote{font-size:16px;line-height:1.7;color:#ccc;margin-bottom:24px;font-style:italic}
+.em-testi-author{display:flex;align-items:center;gap:12px}
+.em-testi-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(196,26,26,.2);border:1px solid rgba(196,26,26,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.em-testi-name{font-weight:700;font-size:14px;margin-bottom:2px}
+.em-testi-role{font-size:12px;color:#666}
+
+/* ── FAQ ── */
+.em-faq{max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:2px}
+.em-faq-item{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;margin-bottom:8px;
+}
+.em-faq-q{
+  width:100%;background:none;border:none;color:#fff;
+  font-family:'Barlow',sans-serif;font-size:16px;font-weight:600;
+  text-align:left;padding:22px 28px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  transition:background .2s;
+}
+.em-faq-q:hover{background:rgba(255,255,255,.03)}
+.em-faq-icon{
+  flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  border:1px solid #333;display:flex;align-items:center;justify-content:center;
+  font-size:16px;color:#888;transition:transform .2s,background .2s;
+}
+.em-faq-item.open .em-faq-icon{transform:rotate(45deg);background:var(--red);border-color:var(--red);color:#fff}
+.em-faq-a{
+  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
+  font-size:15px;color:#888;line-height:1.7;
+  padding:0 28px;
+}
+.em-faq-item.open .em-faq-a{max-height:200px;padding:0 28px 22px}
+
+/* ── CTA FINAL ── */
+.em-cta-final{
+  text-align:center;padding:120px 80px;position:relative;overflow:hidden;
+}
+.em-cta-final::before{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(196,26,26,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.em-cta-final h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(48px,6vw,88px);font-weight:900;
+  text-transform:uppercase;line-height:.95;letter-spacing:-1px;
+  margin-bottom:20px;position:relative;
+}
+.em-cta-final p{font-size:18px;color:#888;max-width:500px;margin:0 auto 48px;line-height:1.6}
+.em-cta-form{
+  display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+  max-width:520px;margin:0 auto 16px;
+}
+.em-cta-input{
+  flex:1;min-width:240px;
+  background:#111;border:1px solid #333;border-radius:10px;
+  padding:16px 20px;font-size:16px;color:#fff;font-family:'Barlow',sans-serif;
+  outline:none;transition:border-color .2s;
+}
+.em-cta-input:focus{border-color:var(--red)}
+.em-cta-input::placeholder{color:#555}
+.em-cta-note{font-size:13px;color:#555;margin-bottom:40px}
+.em-social-links{display:flex;gap:12px;justify-content:center}
+.em-social-link{
+  display:flex;align-items:center;gap:8px;
+  background:#111;border:1px solid #222;border-radius:100px;
+  padding:10px 20px;font-size:14px;font-weight:600;color:#ccc;
+  text-decoration:none;transition:all .2s;
+}
+.em-social-link:hover{border-color:#444;color:#fff}
+
+/* ── FOOTER ── */
+.em-footer{
+  border-top:1px solid var(--border);
+  padding:32px 80px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+}
+.em-footer-copy{font-size:13px;color:#444}
+.em-footer-links{display:flex;gap:24px}
+.em-footer-links a{font-size:13px;color:#555;text-decoration:none;transition:color .2s}
+.em-footer-links a:hover{color:#fff}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .em-pricing{grid-template-columns:repeat(2,1fr)}
+  .em-features-grid{grid-template-columns:repeat(2,1fr)}
+  .em-hero{grid-template-columns:1fr;text-align:center;padding:60px 32px}
+  .em-hero p{margin:0 auto 40px}
+  .em-hero-ctas{justify-content:center}
+  .em-hero-social-proof{justify-content:center}
+  .em-hero-img{order:-1}
+  .em-hero-img img{max-height:400px}
+  .em-section{padding:72px 32px}
+}
+@media(max-width:768px){
+  .em-strip{grid-template-columns:repeat(2,1fr)}
+  .em-steps{grid-template-columns:1fr}
+  .em-step{border-radius:16px!important}
+  .em-forwhom{grid-template-columns:1fr}
+  .em-forwhom-card{border-radius:16px!important}
+  .em-pricing{grid-template-columns:1fr}
+  .em-testimonials{grid-template-columns:1fr}
+  .em-features-grid{grid-template-columns:1fr 1fr}
+  .em-feature-card{border-radius:0!important}
+  .em-footer{flex-direction:column;text-align:center;padding:32px 24px}
+  .em-cta-final{padding:80px 24px}
+}
+@media(max-width:480px){
+  .em-features-grid{grid-template-columns:1fr}
+  .em-strip{grid-template-columns:1fr 1fr}
+  .em-strip-item{padding:24px 16px}
+  .em-strip-number{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ BARRA DE ANUNCIO ══ -->
+<div class="em-announce">
+  <a href="#precios">
+    <span class="em-announce-dot"></span>
+    🔴 Acceso anticipado abierto — Plazas de Fundador limitadas &nbsp;→&nbsp; Asegurar mi plaza
+  </a>
+</div>
+
+<!-- ══ HERO ══ -->
+<section class="em-hero">
+  <div class="em-hero-content">
+    <div class="em-hero-badge">
+      <span class="em-announce-dot"></span>
+      EN DESARROLLO ACTIVO
+    </div>
+    <div class="em-hero-eyebrow">// DIARIO DE ENTRENAMIENTO MARCIAL</div>
+    <h1>El arma que le<br>faltaba al<br><span class="red">guerrero</span><br>moderno.</h1>
+    <p>Registra cada sesión, analiza tu progreso, gestiona tu biometría y conecta con tu coach. La primera app diseñada en serio para el luchador hispano.</p>
+    <div class="em-hero-ctas">
+      <a href="#precios" class="em-btn-primary">→ Quiero acceso anticipado</a>
+      <a href="#video" class="em-btn-secondary">Ver cómo funciona ↓</a>
+    </div>
+    <div class="em-hero-social-proof">
+      <span>⚡ 127 atletas ya en lista de espera</span>&nbsp;· Sin spam · Solo el aviso cuando abramos
+    </div>
+  </div>
+  <div class="em-hero-img">
+    <!--
+      INSTRUCCIONES: Sube la imagen del mockup Rotato a Shopify Admin → Archivos
+      y reemplaza el src de abajo con la URL que te da Shopify.
+      Ejemplo: <img src="https://cdn.shopify.com/s/files/1/xxxx/elite-mockup.png" alt="Élite Marcial App">
+    -->
+    <img src="REEMPLAZAR_CON_URL_IMAGEN_ROTATO" alt="Élite Marcial App" onerror="this.parentElement.innerHTML='<div class=\'em-hero-mockup-placeholder\'><div style=\'font-size:48px\'>📱</div><div>Sube la imagen de Rotato aquí</div></div>'">
+  </div>
+</section>
+
+<!-- ══ PRUEBA SOCIAL ══ -->
+<div class="em-strip">
+  <div class="em-strip-item">
+    <div class="em-strip-number">+2.400</div>
+    <div class="em-strip-label">Sesiones registradas</div>
+  </div>
+  <div class="em-strip-item">
+    <div class="em-strip-number">+340</div>
+    <div class="em-strip-label">Horas de entrenamiento</div>
+  </div>
+  <div class="em-strip-item">
+    <div class="em-strip-number">8</div>
+    <div class="em-strip-label">Disciplinas cubiertas</div>
+  </div>
+  <div class="em-strip-item">
+    <div class="em-strip-number">3</div>
+    <div class="em-strip-label">Países activos</div>
+  </div>
+</div>
+
+<!-- ══ VÍDEO ══ -->
+<section class="em-section" id="video">
+  <div class="em-section-eyebrow">// VE LA APP EN ACCIÓN</div>
+  <h2 class="em-section-title">60 segundos.<br>Todo lo que necesitas saber.</h2>
+  <p class="em-section-sub">Así registra su entrenamiento un atleta de Élite Marcial.</p>
+  <div class="em-video-wrap">
+    <!--
+      OPCIÓN A — Vídeo subido a Shopify/Vimeo/YouTube:
+      <video autoplay muted loop playsinline>
+        <source src="URL_DEL_VIDEO" type="video/mp4">
+      </video>
+
+      OPCIÓN B — YouTube embed:
+      <iframe src="https://www.youtube.com/embed/TU_VIDEO_ID?autoplay=1&mute=1&loop=1" frameborder="0" allowfullscreen></iframe>
+
+      OPCIÓN C — Vimeo embed:
+      <iframe src="https://player.vimeo.com/video/TU_VIDEO_ID?autoplay=1&muted=1&loop=1" frameborder="0" allowfullscreen></iframe>
+    -->
+    <div class="em-video-placeholder">
+      <div class="em-play-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <div style="color:#555;font-size:14px">Sube el vídeo de Rotato aquí</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CÓMO FUNCIONA ══ -->
+<section class="em-section" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="em-section-eyebrow">// ASÍ DE SIMPLE</div>
+  <h2 class="em-section-title">De cero a tu primer<br>análisis en 2 minutos.</h2>
+  <p class="em-section-sub">Sin tutoriales. Sin curva de aprendizaje. Entrenar y registrar.</p>
+  <div class="em-steps">
+    <div class="em-step">
+      <div class="em-step-num">01</div>
+      <div class="em-step-icon">📋</div>
+      <h3>Registra tu sesión</h3>
+      <p>Disciplina, duración, RPE, técnicas del día y notas. El wizard te guía en 3 pasos. Menos de 60 segundos.</p>
+    </div>
+    <div class="em-step">
+      <div class="em-step-num">02</div>
+      <div class="em-step-icon">📊</div>
+      <h3>Analiza tu progreso</h3>
+      <p>Heatmap anual, evolución de RPE, distribución por disciplina y 26 logros desbloqueables. Tus datos, siempre visibles.</p>
+    </div>
+    <div class="em-step">
+      <div class="em-step-num">03</div>
+      <div class="em-step-icon">🎯</div>
+      <h3>Mejora con tu coach</h3>
+      <p>Tu coach programa sesiones, te envía mensajes y revisa tu periodización. Todo en la misma app.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PARA QUIÉN ES ══ -->
+<section class="em-section">
+  <div class="em-section-eyebrow">// DISEÑADO PARA AMBOS</div>
+  <h2 class="em-section-title">Para el que entrena.<br>Para el que dirige.</h2>
+  <p class="em-section-sub">Una sola app. Dos perspectivas. Un mismo objetivo: rendir más.</p>
+  <div class="em-forwhom">
+    <div class="em-forwhom-card">
+      <span class="em-forwhom-badge atleta">🥋 ATLETA</span>
+      <h3>Tu historial completo,<br>siempre contigo</h3>
+      <p class="subtitle">Todo lo que necesitas para analizar y mejorar tu rendimiento.</p>
+      <ul class="em-forwhom-list">
+        <li>Diario de sesiones con técnica del día</li>
+        <li>Stats semanales y heatmap anual</li>
+        <li>Biometría: peso, agua, nutrición y lesiones</li>
+        <li>Rango y cinturón por disciplina</li>
+        <li>Chat directo con tu coach</li>
+        <li>Funciona offline, se instala como app</li>
+      </ul>
+    </div>
+    <div class="em-forwhom-card">
+      <span class="em-forwhom-badge coach">🎯 COACH</span>
+      <h3>Gestiona todo tu equipo<br>desde un panel</h3>
+      <p class="subtitle">Visibilidad total de tu equipo. Planificación y comunicación centralizadas.</p>
+      <ul class="em-forwhom-list">
+        <li>Panel de atletas con métricas en tiempo real</li>
+        <li>Agenda con drag & drop de sesiones</li>
+        <li>Chat individual con cada atleta</li>
+        <li>Periodización: macrociclos, mesociclos, microciclos</li>
+        <li>Estadísticas del equipo comparadas</li>
+        <li>Invitación de atletas en un clic</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section class="em-section" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="em-section-eyebrow">// FUNCIONALIDADES</div>
+  <h2 class="em-section-title">Todo lo que necesitas.<br>En un solo lugar.</h2>
+  <p class="em-section-sub">Sin apps de terceros. Sin Excel. Sin papel. Todo integrado, todo tuyo.</p>
+  <div class="em-features-grid">
+    <div class="em-feature-card">
+      <div class="em-feature-icon">📋</div>
+      <h3>Diario de sesiones</h3>
+      <p>Registra cada entrenamiento con técnicas, rounds, sparring y notas. Tu historial completo, siempre a mano.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">📊</div>
+      <h3>Estadísticas avanzadas</h3>
+      <p>Gráficas semanales y mensuales de tu progreso. Descubre tus patrones y optimiza tu entrenamiento.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">🥋</div>
+      <h3>Rango y cinturón</h3>
+      <p>Sigue tu progreso hacia el siguiente nivel. Hitos, logros y validación directa de tu coach.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">🎯</div>
+      <h3>Panel del coach</h3>
+      <p>Gestiona todos tus atletas desde un único panel. Asigna sesiones, revisa progreso y comunícate en tiempo real.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">⚖️</div>
+      <h3>Biometría & peso</h3>
+      <p>Control completo de tu cuerpo. Hidratación, recorte de peso y evolución física con gráficas detalladas.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">📅</div>
+      <h3>Periodización</h3>
+      <p>Planifica ciclos completos de entrenamiento. Semanas base, carga y descarga para rendir en competición.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">🔔</div>
+      <h3>Notificaciones push</h3>
+      <p>Recibe alertas de sesiones programadas, mensajes de tu coach y objetivos alcanzados.</p>
+    </div>
+    <div class="em-feature-card">
+      <div class="em-feature-icon">📱</div>
+      <h3>Instala como app</h3>
+      <p>Sin App Store. Instala directamente desde el navegador en iOS y Android. Funciona offline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRECIOS ══ -->
+<section class="em-section" id="precios">
+  <div class="em-section-eyebrow">// PLANES</div>
+  <h2 class="em-section-title">Empieza gratis.<br>Escala cuando crezcas.</h2>
+  <p class="em-section-sub">Sin tarjeta de crédito para empezar. Sin compromiso.</p>
+  <div class="em-pricing">
+
+    <!-- FREE -->
+    <div class="em-plan">
+      <div class="em-plan-label">ATLETA</div>
+      <h3>Free</h3>
+      <div class="em-plan-price">0€</div>
+      <div class="em-plan-period">para siempre</div>
+      <div class="em-plan-for">Para el atleta que entrena solo</div>
+      <ul class="em-plan-features">
+        <li><span class="check">✓</span> Diario de sesiones ilimitado</li>
+        <li><span class="check">✓</span> Estadísticas y heatmap anual</li>
+        <li><span class="check">✓</span> Rango, cinturón y logros</li>
+        <li><span class="check">✓</span> Biometría completa</li>
+        <li><span class="check">✓</span> Técnicas y notas</li>
+        <li><span class="check">✓</span> Funciona offline</li>
+      </ul>
+      <a href="https://cosmic-dodol-39da77.netlify.app" class="em-plan-cta outline">Empezar gratis →</a>
+    </div>
+
+    <!-- FUNDADOR -->
+    <div class="em-plan featured">
+      <div class="em-plan-badge">⭐ MÁS POPULAR</div>
+      <div class="em-plan-label">FUNDADOR</div>
+      <h3>Vitalicio</h3>
+      <div class="em-plan-price" style="font-size:36px;margin-top:20px">Pago único</div>
+      <div class="em-plan-period">acceso de por vida · precio de lanzamiento</div>
+      <div class="em-plan-for">Para el atleta que quiere todo, para siempre</div>
+      <ul class="em-plan-features">
+        <li><span class="check">✓</span> Todo el plan Free</li>
+        <li><span class="check">✓</span> Conexión con tu coach</li>
+        <li><span class="check">✓</span> Sesiones programadas</li>
+        <li><span class="check">✓</span> Chat coach-atleta</li>
+        <li><span class="check">✓</span> Periodización de temporada</li>
+        <li><span class="check">✓</span> Notificaciones push</li>
+        <li><span class="check">✓</span> Todas las funciones futuras</li>
+        <li><span class="check">✓</span> Badge exclusivo Fundador</li>
+        <li><span class="check">✓</span> Voz en el roadmap</li>
+      </ul>
+      <!-- REEMPLAZA HREF CON TU LINK DE STRIPE VITALICIO -->
+      <a href="LINK_STRIPE_VITALICIO" class="em-plan-cta primary">Asegurar mi plaza →</a>
+      <div class="em-plan-urgency">⚡ Plazas limitadas · Precio sube al lanzar</div>
+    </div>
+
+    <!-- COACH MENSUAL -->
+    <div class="em-plan">
+      <div class="em-plan-label">COACH PRO</div>
+      <h3>Mensual</h3>
+      <!-- REEMPLAZA CON TU PRECIO MENSUAL -->
+      <div class="em-plan-price">XX€</div>
+      <div class="em-plan-period">por mes · cancela cuando quieras</div>
+      <div class="em-plan-for">Para coaches que quieren probar sin compromiso</div>
+      <ul class="em-plan-features">
+        <li><span class="check">✓</span> Panel de gestión de equipo</li>
+        <li><span class="check">✓</span> Agenda con drag & drop</li>
+        <li><span class="check">✓</span> Chat con cada atleta</li>
+        <li><span class="check">✓</span> Estadísticas del equipo</li>
+        <li><span class="check">✓</span> Periodización por atleta</li>
+        <li><span class="check">✓</span> Atletas ilimitados</li>
+        <li><span class="check">✓</span> Notificaciones automáticas</li>
+      </ul>
+      <!-- REEMPLAZA HREF CON TU LINK DE STRIPE MENSUAL -->
+      <a href="LINK_STRIPE_MENSUAL" class="em-plan-cta outline">Activar plan mensual →</a>
+    </div>
+
+    <!-- COACH ANUAL -->
+    <div class="em-plan featured-coach">
+      <div class="em-plan-badge gold">💰 AHORRA 30%</div>
+      <div class="em-plan-label">COACH PRO</div>
+      <h3>Anual</h3>
+      <!-- REEMPLAZA CON TU PRECIO ANUAL Y EQUIVALENTE MENSUAL -->
+      <div class="em-plan-price" style="color:var(--gold)">XXX€</div>
+      <div class="em-plan-period">por año · equivale a XX€/mes</div>
+      <div class="em-plan-for">Para el coach comprometido con su equipo</div>
+      <ul class="em-plan-features">
+        <li><span class="check" style="color:var(--gold)">✓</span> Todo lo del plan Mensual</li>
+        <li><span class="check" style="color:var(--gold)">✓</span> 2 meses gratis vs mensual</li>
+        <li><span class="check" style="color:var(--gold)">✓</span> Prioridad en nuevas features</li>
+        <li><span class="check" style="color:var(--gold)">✓</span> Soporte directo</li>
+        <li><span class="check" style="color:var(--gold)">✓</span> Precio de lanzamiento fijo 1 año</li>
+      </ul>
+      <!-- REEMPLAZA HREF CON TU LINK DE STRIPE ANUAL -->
+      <a href="LINK_STRIPE_ANUAL" class="em-plan-cta gold">Activar plan anual →</a>
+      <div class="em-plan-urgency" style="color:var(--gold)">La opción más inteligente para coaches serios</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ TESTIMONIOS ══ -->
+<section class="em-section" style="background:var(--bg-card);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="em-section-eyebrow">// LO QUE DICEN LOS ATLETAS</div>
+  <h2 class="em-section-title">Los que ya entrenan<br>con Élite Marcial.</h2>
+  <div class="em-testimonials">
+    <!-- REEMPLAZA CON TESTIMONIOS REALES -->
+    <div class="em-testi">
+      <div class="em-testi-stars">★★★★★</div>
+      <div class="em-testi-quote">"Por fin una app que entiende cómo funciona el BJJ de verdad. El seguimiento de técnicas y el heatmap de sesiones me han cambiado cómo planifico mi semana."</div>
+      <div class="em-testi-author">
+        <div class="em-testi-avatar">🥋</div>
+        <div>
+          <div class="em-testi-name">Nombre Atleta</div>
+          <div class="em-testi-role">BJJ · Cinturón Azul · Madrid</div>
+        </div>
+      </div>
+    </div>
+    <div class="em-testi">
+      <div class="em-testi-stars">★★★★★</div>
+      <div class="em-testi-quote">"Como coach, tener todo el equipo en un panel y poder programar sesiones directamente es algo que no existía en ninguna app. Y encima en español."</div>
+      <div class="em-testi-author">
+        <div class="em-testi-avatar">🎯</div>
+        <div>
+          <div class="em-testi-name">Nombre Coach</div>
+          <div class="em-testi-role">Coach MMA · Barcelona</div>
+        </div>
+      </div>
+    </div>
+    <div class="em-testi">
+      <div class="em-testi-stars">★★★★★</div>
+      <div class="em-testi-quote">"El módulo de biometría y recorte de peso es exactamente lo que necesitaba antes de una competición. Todo integrado, sin saltar entre apps."</div>
+      <div class="em-testi-author">
+        <div class="em-testi-avatar">⚖️</div>
+        <div>
+          <div class="em-testi-name">Nombre Atleta</div>
+          <div class="em-testi-role">MMA · Competidor amateur · Valencia</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="em-section">
+  <div class="em-section-eyebrow">// PREGUNTAS FRECUENTES</div>
+  <h2 class="em-section-title">Todo lo que necesitas saber.</h2>
+  <div style="height:48px"></div>
+  <div class="em-faq">
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Es una app nativa o una web?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">Es una Progressive Web App (PWA): se instala directamente desde el navegador en iOS y Android, funciona como una app nativa y no necesita App Store ni Google Play. Toca "Añadir a pantalla de inicio" y listo.</div>
+    </div>
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Funciona sin conexión a internet?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">Sí. Toda la capa del atleta funciona offline. Puedes registrar sesiones, consultar tu historial y ver tus stats sin conexión. Los datos se sincronizan automáticamente cuando recuperas la red.</div>
+    </div>
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Para qué disciplinas sirve?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">BJJ, MMA, Muay Thai, Boxeo, Kickboxing, Judo, Karate, Lucha, Wrestling y cualquier disciplina personalizada. El sistema de rango y cinturón se adapta a cada arte marcial.</div>
+    </div>
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Qué diferencia hay entre el plan Free y el plan Fundador?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">El plan Free cubre todo el registro y análisis individual sin límite de tiempo. El plan Fundador añade la conexión con un coach (sesiones programadas, chat, periodización) y acceso vitalicio a todas las funciones que lleguemos a lanzar, al precio especial de los primeros.</div>
+    </div>
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Cómo invito a mi coach?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">El coach se registra en Élite Marcial con su cuenta, y desde su panel te envía una invitación. En cuanto la aceptas, ya puede programarte sesiones, ver tu progreso y chatear contigo directamente.</div>
+    </div>
+    <div class="em-faq-item">
+      <button class="em-faq-q" onclick="toggleFaq(this)">
+        ¿Qué pasa con mis datos si decido irme?
+        <span class="em-faq-icon">+</span>
+      </button>
+      <div class="em-faq-a">Puedes exportar todas tus sesiones en CSV o JSON en cualquier momento desde la app. Tus datos son tuyos. Sin retención forzada.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA FINAL ══ -->
+<section class="em-cta-final">
+  <h2>El primer paso<br>lo das hoy.</h2>
+  <p>Apúntate ahora. Cuando abramos acceso, tú entras antes que nadie.</p>
+  <!-- Formulario de email — conecta con Klaviyo/Mailchimp desde Shopify -->
+  <form class="em-cta-form" onsubmit="handleSubmit(event)">
+    <input class="em-cta-input" type="email" placeholder="tu@email.com" required>
+    <button type="submit" class="em-btn-primary">Quiero acceso anticipado →</button>
+  </form>
+  <div class="em-cta-note">Sin spam · Solo el aviso el día que abramos · Te puedes dar de baja cuando quieras</div>
+  <div class="em-social-links">
+    <a href="https://instagram.com/elitemarcial" class="em-social-link" target="_blank">📸 @elitemarcial</a>
+    <a href="https://tiktok.com/@elitemarcial" class="em-social-link" target="_blank">🎵 @elitemarcial</a>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer class="em-footer">
+  <div class="em-footer-copy">© 2026 Élite Marcial — Todos los derechos reservados</div>
+  <div class="em-footer-links">
+    <a href="/pages/privacidad">Política de privacidad</a>
+    <a href="/pages/terminos">Términos y condiciones</a>
+    <a href="mailto:jan@elitemarcial.com">Contacto</a>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn){
+  const item=btn.closest('.em-faq-item');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.em-faq-item').forEach(i=>i.classList.remove('open'));
+  if(!isOpen)item.classList.add('open');
+}
+function handleSubmit(e){
+  e.preventDefault();
+  const email=e.target.querySelector('input').value;
+  // Conecta con Klaviyo o el proveedor de email de Shopify aquí
+  alert('¡Apuntado! Te avisamos cuando abramos acceso.');
+  e.target.reset();
+}
+// Smooth reveal on scroll
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)'}});
+},{threshold:0.1});
+document.querySelectorAll('.em-step,.em-feature-card,.em-plan,.em-testi,.em-forwhom-card').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity .5s ease,transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

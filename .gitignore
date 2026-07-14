@@ -24,19 +24,4 @@ dist-ssr
 desktop.ini
 MAPA_APP.md
 
-# Carpetas de documentos y recursos (no son código)
-docs/
-Capturas/
-patches/
-archivo/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Carpetas de do

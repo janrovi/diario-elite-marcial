@@ -351,18 +351,4 @@ const supabase = createClient(
 
 → Ver [[PENDIENTE]] para el roadmap completo con prioridades.
 
-Tareas técnicas recurrentes a revisar:
-- [ ] **Re-deploy Edge Functions** si se modifican (send-push, send-suggestion, create-portal-session, stripe-webhook)
-- [ ] **Continuar barrido i18n** — puede haber strings hardcodeados en secciones coach interiores
-
----
-
-## Cómo arrancar una nueva sesión
-
-1. Abre [[DASHBOARD]] en Obsidian → ver estado de tareas pendientes
-2. Revisa [[GUIA_PATRONES]] si tienes dudas sobre cómo editar el código
-3. Pega este archivo al inicio de la conversación en Cowork:
-
-> "Estoy trabajando en la app Élite Marcial. Te adjunto el contexto del proyecto. [pega este archivo]"
-
-Y Claude tendrá todo el contexto necesario para continuar sin preguntas.
+Tarea

@@ -3096,31 +3096,35 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
         ))}
       </div>
 
-      {/* ── Filtros ── */}
-      <div style={{ display:"flex", gap:8, marginBottom:16 }}>
-        <div style={{ flex:1 }}>
-          <input
-            style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box" }}
-            placeholder={t("tec_search_ph", lang)}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
-        <select
-          style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 11px", fontSize:13, outline:"none", minWidth:120 }}
-          value={filterDisc}
-          onChange={e => setFilterDisc(e.target.value)}
-        >
-          <option value="">{t("lbl_todas",lang)}</option>
-          {discs.map(d => <option key={d} value={d}>{discLabel(d, lang)}</option>)}
-        </select>
-      </div>
-      {hasFilters && (
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12, fontSize:12, color:"var(--text-faint)" }}>
-          <span>{activeTab==="biblioteca" ? filtered.length : rankedFiltered.length} resultado{(activeTab==="biblioteca"?filtered.length:rankedFiltered.length)!==1?"s":""}</span>
-          <button style={{ background:"transparent", border:"none", color:RED, fontSize:12, fontWeight:700, cursor:"pointer" }}
-            onClick={() => { setSearch(""); setFilterDisc(""); }}>✕ Limpiar</button>
-        </div>
+      {/* ── Filtros (solo Biblioteca y Ranking) ── */}
+      {(activeTab === "biblioteca" || activeTab === "ranking") && (
+        <>
+          <div style={{ display:"flex", gap:8, marginBottom:16 }}>
+            <div style={{ flex:1 }}>
+              <input
+                style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box" }}
+                placeholder={t("tec_search_ph", lang)}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
+            <select
+              style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 11px", fontSize:13, outline:"none", minWidth:120 }}
+              value={filterDisc}
+              onChange={e => setFilterDisc(e.target.value)}
+            >
+              <option value="">{t("lbl_todas",lang)}</option>
+              {discs.map(d => <option key={d} value={d}>{discLabel(d, lang)}</option>)}
+            </select>
+          </div>
+          {hasFilters && (
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12, fontSize:12, color:"var(--text-faint)" }}>
+              <span>{activeTab==="biblioteca" ? filtered.length : rankedFiltered.length} resultado{(activeTab==="biblioteca"?filtered.length:rankedFiltered.length)!==1?"s":""}</span>
+              <button style={{ background:"transparent", border:"none", color:RED, fontSize:12, fontWeight:700, cursor:"pointer" }}
+                onClick={() => { setSearch(""); setFilterDisc(""); }}>✕ Limpiar</button>
+            </div>
+          )}
+        </>
       )}
 
       {/* ── TAB: RANKING ── */}
@@ -3269,28 +3273,54 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
               ))}
             </div>
             {Object.entries(byCategoria).map(([cat, tecs]) => (
-              <div key={cat} style={{ marginBottom:20 }}>
-                <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.4, marginBottom:8 }}>
+              <div key={cat} style={{ marginBottom:28 }}>
+                <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.8, marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
+                  <span style={{ width:3, height:13, background:"#C41A1A", borderRadius:2, display:"inline-block", flexShrink:0 }}></span>
                   {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
                 </div>
-                <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                  {tecs.map(t => (
-                    <div key={t.id} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"11px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                      <div style={{ flex:1, minWidth:0 }}>
-                        <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:3 }}>{t.nombre}</div>
-                        <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
-                          {t.posicion_inicio && <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20 }}>{t.posicion_inicio}</span>}
-                          {t.nivel && <span style={{ fontSize:10, fontWeight:700, color:NIVEL_COLOR[t.nivel]||"var(--text-faint)", background:(NIVEL_COLOR[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:20 }}>{t.nivel}</span>}
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
+                  {tecs.map(t => {
+                    const vid = t.video_url ? (t.video_url.includes("v=") ? t.video_url.split("v=")[1].split("&")[0] : null) : null;
+                    const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : null;
+                    const CAT_C = { "Sumisiones":"#ef4444","Posiciones":"#6366f1","Barridos":"#f59e0b","Pasajes":"#10b981","Derribos":"#3b82f6","Escapes":"#8b5cf6" };
+                    const cc = CAT_C[cat] || "#888";
+                    return (
+                      <div key={t.id}
+                        onClick={() => t.video_url && window.open(t.video_url, "_blank")}
+                        style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default" }}>
+                        <div style={{ position:"relative", paddingTop:"56.25%", background: thumb ? "#000" : cc+"22", overflow:"hidden" }}>
+                          {thumb ? (
+                            <>
+                              <img src={thumb} alt={t.nombre} loading="lazy"
+                                style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", objectFit:"cover" }}
+                                onError={e => { e.target.style.display="none"; }}
+                              />
+                              <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)" }} />
+                              <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+                                <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(200,0,0,0.88)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 2px 10px rgba(0,0,0,0.5)" }}>
+                                  <span style={{ fontSize:13, color:"#fff", marginLeft:3 }}>▶</span>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:4 }}>
+                              <span style={{ fontSize:26 }}>🥋</span>
+                              <span style={{ fontSize:8, color:cc, fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>Sin video</span>
+                            </div>
+                          )}
+                          {t.nivel && (
+                            <div style={{ position:"absolute", top:6, right:6, fontSize:9, fontWeight:800, color:"#fff", background:NIVEL_COLOR[t.nivel]||"#555", padding:"2px 7px", borderRadius:20, boxShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{t.nivel}</div>
+                          )}
+                        </div>
+                        <div style={{ padding:"9px 11px" }}>
+                          <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", lineHeight:1.3, marginBottom:4 }}>{t.nombre}</div>
+                          {t.posicion_inicio && (
+                            <div style={{ fontSize:9, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20, display:"inline-block" }}>{t.posicion_inicio}</div>
+                          )}
                         </div>
                       </div>
-                      {t.video_url && (
-                        <a href={t.video_url} target="_blank" rel="noopener noreferrer"
-                          style={{ marginLeft:10, flexShrink:0, background:"#ff000015", border:"1px solid #ff000028", borderRadius:8, padding:"6px 10px", color:"#cc0000", fontSize:12, fontWeight:700, textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
-                          ▶ Ver
-                        </a>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}

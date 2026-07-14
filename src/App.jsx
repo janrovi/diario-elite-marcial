@@ -17764,6 +17764,66 @@ function MainApp() {
           // Group by tipo_test, show only last result per type as summary
           const byTipo = {};
           testsF.forEach(t => { if (!byTipo[t.tipo_test]) byTipo[t.tipo_test] = []; byTipo[t.tipo_test].push(t); });
+          const [selTipo, setSelTipo] = React.useState(null);
+          // Sparkline SVG inline (sin dependencias externas)
+          const Sparkline = ({ data }) => {
+            if (!data || data.length < 2) return null;
+            const vals = data.map(d => d.valor);
+            const minV = Math.min(...vals), maxV = Math.max(...vals);
+            const range = maxV - minV || 1;
+            const W = 100, H = 28, pad = 3;
+            const pts = data.map((d, i) => {
+              const x = pad + (i / (data.length - 1)) * (W - pad * 2);
+              const y = H - pad - ((d.valor - minV) / range) * (H - pad * 2);
+              return x.toFixed(1) + "," + y.toFixed(1);
+            }).join(" ");
+            const lastParts = pts.split(" ").pop().split(",");
+            return (
+              <svg viewBox={"0 0 " + W + " " + H} style={{ width:"100%", height:28, display:"block", marginTop:6 }} preserveAspectRatio="none">
+                <polyline points={pts} fill="none" stroke="#6366f1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx={parseFloat(lastParts[0])} cy={parseFloat(lastParts[1])} r="2.5" fill="#6366f1" />
+              </svg>
+            );
+          };
+          // Grafico de linea SVG completo
+          const LineChart = ({ data, unidad }) => {
+            if (!data || data.length < 2) return null;
+            const sorted = [...data].sort((a,b) => a.fecha.localeCompare(b.fecha));
+            const vals = sorted.map(d => d.valor);
+            const minV = Math.min(...vals), maxV = Math.max(...vals);
+            const range = maxV - minV || 1;
+            const W = 300, H = 140, pL = 44, pR = 10, pT = 18, pB = 30;
+            const cW = W - pL - pR, cH = H - pT - pB;
+            const toX = i => pL + (i / Math.max(sorted.length - 1, 1)) * cW;
+            const toY = v => pT + cH - ((v - minV) / range) * cH;
+            const pts = sorted.map((d,i) => toX(i).toFixed(1) + "," + toY(d.valor).toFixed(1)).join(" ");
+            const area = pL.toFixed(1) + "," + (pT+cH).toFixed(1) + " " + pts + " " + toX(sorted.length-1).toFixed(1) + "," + (pT+cH).toFixed(1);
+            const yMid = minV + range / 2;
+            const fmtV = v => (v % 1 === 0 ? String(Math.round(v)) : v.toFixed(1));
+            return (
+              <svg viewBox={"0 0 " + W + " " + H} style={{ width:"100%", height:140, display:"block", overflow:"visible" }}>
+                {[minV, yMid, maxV].map((v, i) => (
+                  <g key={i}>
+                    <line x1={pL} y1={toY(v).toFixed(1)} x2={W-pR} y2={toY(v).toFixed(1)} stroke="var(--border)" strokeWidth="0.6" strokeDasharray="4,4" />
+                    <text x={pL-4} y={(toY(v)+3.5).toFixed(1)} textAnchor="end" fontSize="8" fill="var(--text-faint)">{fmtV(v)}</text>
+                  </g>
+                ))}
+                <polyline points={area} fill="#6366f118" stroke="none" />
+                <polyline points={pts} fill="none" stroke="#6366f1" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                {sorted.map((d, i) => (
+                  <g key={i}>
+                    <circle cx={toX(i).toFixed(1)} cy={toY(d.valor).toFixed(1)} r="3.5" fill="#6366f1" stroke="var(--bg-card)" strokeWidth="1.5" />
+                    {sorted.length <= 7 && (
+                      <text x={toX(i).toFixed(1)} y={(toY(d.valor)-8).toFixed(1)} textAnchor="middle" fontSize="8" fill="#6366f1" fontWeight="700">{d.valor}{unidad}</text>
+                    )}
+                    {(sorted.length <= 5 || i === 0 || i === sorted.length-1 || i % Math.ceil(sorted.length/4) === 0) && (
+                      <text x={toX(i).toFixed(1)} y={(H-pB+13).toFixed(1)} textAnchor="middle" fontSize="8" fill="var(--text-faint)">{d.fecha.slice(5)}</text>
+                    )}
+                  </g>
+                ))}
+              </svg>
+            );
+          };
           return (
             <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:14 }}>
@@ -17817,31 +17877,59 @@ function MainApp() {
               {testsF.length === 0 && !showTestForm ? (
                 <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"24px 0" }}>Sin resultados aún — añade tu primer test</div>
               ) : (
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(155px,1fr))", gap:8 }}>
-                  {Object.entries(byTipo).map(([tipo, entries]) => {
-                    const sorted = [...entries].sort((a,b)=>b.fecha.localeCompare(a.fecha));
-                    const last = sorted[0];
-                    const prev = sorted[1];
-                    const trend = prev ? (last.valor > prev.valor ? "▲" : last.valor < prev.valor ? "▼" : "—") : null;
-                    const trendColor = prev ? (last.valor > prev.valor ? "#4ade80" : last.valor < prev.valor ? "#f87171" : "var(--text-faint)") : "var(--text-faint)";
-                    return (
-                      <div key={tipo} style={{ background:"var(--bg-input)", borderRadius:12, padding:"12px 14px", position:"relative" }}>
-                        <div style={{ fontSize:10, color:"var(--text-faint)", marginBottom:4, fontWeight:600, textTransform:"uppercase", letterSpacing:0.5 }}>{tipo}</div>
-                        <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
-                          <span style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>{last.valor}</span>
-                          <span style={{ fontSize:11, color:"var(--text-faint)" }}>{last.unidad}</span>
-                          {trend && <span style={{ fontSize:12, fontWeight:800, color:trendColor }}>{trend}</span>}
+                <>
+                  <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(155px,1fr))", gap:8 }}>
+                    {Object.entries(byTipo).map(([tipo, entries]) => {
+                      const sorted = [...entries].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+                      const chronoSorted = [...entries].sort((a,b)=>a.fecha.localeCompare(b.fecha));
+                      const last = sorted[0];
+                      const prev = sorted[1];
+                      const trend = prev ? (last.valor > prev.valor ? "▲" : last.valor < prev.valor ? "▼" : "—") : null;
+                      const trendColor = prev ? (last.valor > prev.valor ? "#4ade80" : last.valor < prev.valor ? "#f87171" : "var(--text-faint)") : "var(--text-faint)";
+                      const isSel = selTipo === tipo;
+                      return (
+                        <div key={tipo} onClick={() => setSelTipo(isSel ? null : tipo)}
+                          style={{ background: isSel ? "#6366f110" : "var(--bg-input)", border: isSel ? "1.5px solid #6366f1" : "1.5px solid transparent", borderRadius:12, padding:"12px 14px", position:"relative", cursor:"pointer", transition:"border 0.15s, background 0.15s" }}>
+                          <div style={{ fontSize:10, color: isSel ? "#6366f1" : "var(--text-faint)", marginBottom:4, fontWeight:700, textTransform:"uppercase", letterSpacing:0.5 }}>{tipo}</div>
+                          <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
+                            <span style={{ fontSize:20, fontWeight:900, color:"var(--text)" }}>{last.valor}</span>
+                            <span style={{ fontSize:11, color:"var(--text-faint)" }}>{last.unidad}</span>
+                            {trend && <span style={{ fontSize:12, fontWeight:800, color:trendColor }}>{trend}</span>}
+                          </div>
+                          <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:3 }}>{last.fecha}</div>
+                          <Sparkline data={chronoSorted} />
+                          <button onClick={(e) => { e.stopPropagation(); deleteTest(last.id); }}
+                            style={{ position:"absolute", top:8, right:8, background:"transparent", border:"none", color:"var(--text-faint)", cursor:"pointer", fontSize:12, opacity:0.5, padding:2 }}>✕</button>
                         </div>
-                        <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:3 }}>{last.fecha}</div>
-                        {sorted.length > 1 && (
-                          <div style={{ fontSize:10, color:"var(--text-faint)", marginTop:2 }}>{sorted.length} registros</div>
+                      );
+                    })}
+                  </div>
+                  {selTipo && byTipo[selTipo] && (() => {
+                    const selData = [...(byTipo[selTipo] || [])].sort((a,b)=>a.fecha.localeCompare(b.fecha));
+                    const selUnidad = selData[0]?.unidad || "";
+                    return (
+                      <div style={{ background:"var(--bg-input)", borderRadius:14, padding:"14px 16px", marginTop:12, border:"1px solid #6366f130" }}>
+                        <div style={{ fontSize:10, fontWeight:800, color:"#6366f1", textTransform:"uppercase", letterSpacing:1.5, marginBottom:10 }}>📈 Evolución — {selTipo}</div>
+                        {selData.length >= 2 ? (
+                          <>
+                            <LineChart data={selData} unidad={selUnidad} />
+                            <div style={{ marginTop:12, borderTop:"1px solid var(--border)", paddingTop:8, display:"flex", flexDirection:"column", gap:0 }}>
+                              {[...selData].reverse().map((d, i) => (
+                                <div key={d.id} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"6px 0", borderBottom: i < selData.length-1 ? "1px solid var(--border)" : "none" }}>
+                                  <span style={{ fontSize:11, color:"var(--text-faint)", minWidth:72 }}>{d.fecha}</span>
+                                  <span style={{ fontSize:14, fontWeight:800, color:"var(--text)" }}>{d.valor} <span style={{ fontSize:10, fontWeight:400, color:"var(--text-faint)" }}>{d.unidad}</span></span>
+                                  {d.notas ? <span style={{ fontSize:10, color:"var(--text-faint)", fontStyle:"italic", maxWidth:100, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{d.notas}</span> : <span />}
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ textAlign:"center", fontSize:12, color:"var(--text-faint)", padding:"10px 0", fontStyle:"italic" }}>Añade más resultados para ver la evolución 📊</div>
                         )}
-                        <button onClick={() => deleteTest(last.id)}
-                          style={{ position:"absolute", top:8, right:8, background:"transparent", border:"none", color:"var(--text-faint)", cursor:"pointer", fontSize:12, opacity:0.5, padding:2 }}>✕</button>
                       </div>
                     );
-                  })}
-                </div>
+                  })()}
+                </>
               )}
             </div>
           );

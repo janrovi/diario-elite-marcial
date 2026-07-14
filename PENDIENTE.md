@@ -12,7 +12,7 @@ actualizado: 2026-07-14
 
 ## 🔴 Vista atleta — Alta prioridad
 
-- [ ] **Gráficos evolución tests físicos** — atleta ve su progresión en el tiempo. Datos ya en `tests_fisicos`, falta gráfico de línea por tipo de test (fuerza, cardio, etc.). Quick win: dato existe, solo falta visualización. #alta
+- [x] **Gráficos evolución tests físicos** — sparkline en cada card + gráfico SVG completo al tocar. Sin deps externas. ✅
 - [ ] **Radar evaluaciones 4D** — atleta ve su evaluación técnica/físico/mental/táctica en `Progreso`. Datos en `evaluaciones_coach`. Gráfico spider motivador. Quick win. #alta
 - [ ] **`sesiones_grupales` — lado atleta** — atleta recibe sesión grupal asignada por el coach y reporta su RPE individual. Solo la mitad atleta por ahora (coach UI queda en deferred). #alta
 

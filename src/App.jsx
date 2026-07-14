@@ -3280,34 +3280,23 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                 </div>
                 <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
                   {[...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); }).map(t => {
-                    const vid = t.video_url ? (t.video_url.includes("v=") ? t.video_url.split("v=")[1].split("&")[0] : null) : null;
-                    const thumb = vid ? `https://img.youtube.com/vi/${vid}/mqdefault.jpg` : null;
                     const CAT_C = { "Sumisiones":"#ef4444","Posiciones":"#6366f1","Barridos":"#f59e0b","Pasajes":"#10b981","Derribos":"#3b82f6","Escapes":"#8b5cf6" };
+                    const CAT_ICON = { "Sumisiones":"🔒","Posiciones":"🛡️","Barridos":"🔄","Pasajes":"⚡","Derribos":"💥","Escapes":"🚀" };
                     const cc = CAT_C[cat] || "#888";
+                    const icon = CAT_ICON[cat] || "🥋";
                     return (
                       <div key={t.id}
                         onClick={() => t.video_url && window.open(t.video_url, "_blank")}
                         style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default" }}>
-                        <div style={{ position:"relative", paddingTop:"56.25%", background:cc+"22", overflow:"hidden" }}>
-                          {thumb ? (
-                            <>
-                              <img src={thumb} alt={t.nombre} loading="lazy"
-                                style={{ position:"absolute", top:0, left:0, width:"100%", height:"100%", objectFit:"cover", borderRadius:0 }}
-                                onError={e => { e.target.style.display="none"; }}
-                              />
-                              <div style={{ position:"absolute", inset:0, background:"linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%)" }} />
-                              <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
-                                <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(200,0,0,0.88)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 2px 10px rgba(0,0,0,0.5)" }}>
-                                  <span style={{ fontSize:13, color:"#fff", marginLeft:3 }}>▶</span>
-                                </div>
+                        <div style={{ position:"relative", paddingTop:"56.25%", background:`linear-gradient(135deg, ${cc}33 0%, ${cc}11 100%)`, overflow:"hidden" }}>
+                          <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
+                            <span style={{ fontSize:22 }}>{icon}</span>
+                            {t.video_url && (
+                              <div style={{ display:"flex", alignItems:"center", gap:4, background:"rgba(200,0,0,0.85)", borderRadius:20, padding:"3px 10px", boxShadow:"0 2px 8px rgba(0,0,0,0.4)" }}>
+                                <span style={{ fontSize:10, color:"#fff", fontWeight:700 }}>▶ YouTube</span>
                               </div>
-                            </>
-                          ) : (
-                            <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:4 }}>
-                              <span style={{ fontSize:26 }}>🥋</span>
-                              <span style={{ fontSize:8, color:cc, fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>Sin video</span>
-                            </div>
-                          )}
+                            )}
+                          </div>
                           {t.nivel && (
                             <div style={{ position:"absolute", top:6, right:6, fontSize:9, fontWeight:800, color:"#fff", background:NIVEL_COLOR[t.nivel]||"#555", padding:"2px 7px", borderRadius:20, boxShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{t.nivel}</div>
                           )}

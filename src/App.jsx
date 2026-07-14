@@ -2985,6 +2985,8 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
   const [search, setSearch] = useState("");
   const [filterDisc, setFilterDisc] = useState("");
   const [activeTab, setActiveTab] = useState("biblioteca"); // "biblioteca" | "ranking"
+  const [catSearch, setCatSearch] = useState("");
+  const [catFiltro, setCatFiltro] = useState("todas");
 
   const RED = "#C41A1A";
   const allWithTecnica = sessions.filter(ss => ss.tecnica?.nombre);
@@ -3226,83 +3228,78 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
         </div>
       )}
 
-      {activeTab === "catalogo" && (
-        <div>
-          {tecnicasCatalogo.length === 0 ? (
-            <div style={{ textAlign:"center", padding:"60px 20px", color:"var(--text-faint)" }}>
-              <div style={{ fontSize:40, marginBottom:12 }}>📖</div>
-              <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>Cargando catálogo...</div>
+      {activeTab === "catalogo" && (() => {
+        if (tecnicasCatalogo.length === 0) return (
+          <div style={{ textAlign:"center", padding:"60px 20px", color:"var(--text-faint)" }}>
+            <div style={{ fontSize:40, marginBottom:12 }}>📖</div>
+            <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>Cargando catálogo...</div>
+          </div>
+        );
+        const NIVEL_COLOR = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
+        const categorias = [...new Set(tecnicasCatalogo.map(t => t.categoria))].sort();
+        const q = catSearch.toLowerCase().trim();
+        const filtradas = tecnicasCatalogo.filter(t => {
+          const matchCat = catFiltro === "todas" || t.categoria === catFiltro;
+          const matchSearch = !q || t.nombre.toLowerCase().includes(q) || (t.posicion_inicio||"").toLowerCase().includes(q);
+          return matchCat && matchSearch;
+        });
+        const byCategoria = {};
+        filtradas.forEach(t => {
+          if (!byCategoria[t.categoria]) byCategoria[t.categoria] = [];
+          byCategoria[t.categoria].push(t);
+        });
+        return (
+          <div>
+            <input
+              style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
+              placeholder="🔍 Buscar técnica..."
+              value={catSearch}
+              onChange={e => setCatSearch(e.target.value)}
+            />
+            <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14 }}>
+              {["todas", ...categorias].map(cat => (
+                <button key={cat} onClick={() => setCatFiltro(cat)} style={{
+                  flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
+                  background: catFiltro===cat ? "#C41A1A" : "var(--bg-elevated)",
+                  color: catFiltro===cat ? "#fff" : "var(--text-faint)",
+                  transition:"all 0.15s"
+                }}>
+                  {cat === "todas" ? "Todas" : cat}
+                </button>
+              ))}
             </div>
-          ) : (() => {
-            const [catSearch, setCatSearch] = React.useState("");
-            const [catFiltro, setCatFiltro] = React.useState("todas");
-            const NIVEL_COLOR = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
-            const categorias = [...new Set(tecnicasCatalogo.map(t => t.categoria))].sort();
-            const q = catSearch.toLowerCase().trim();
-            const filtradas = tecnicasCatalogo.filter(t => {
-              const matchCat = catFiltro === "todas" || t.categoria === catFiltro;
-              const matchSearch = !q || t.nombre.toLowerCase().includes(q) || (t.posicion_inicio||"").toLowerCase().includes(q);
-              return matchCat && matchSearch;
-            });
-            const byCategoria = {};
-            filtradas.forEach(t => {
-              if (!byCategoria[t.categoria]) byCategoria[t.categoria] = [];
-              byCategoria[t.categoria].push(t);
-            });
-            return (
-              <div>
-                <input
-                  style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
-                  placeholder="🔍 Buscar técnica..."
-                  value={catSearch}
-                  onChange={e => setCatSearch(e.target.value)}
-                />
-                <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14 }}>
-                  {["todas", ...categorias].map(cat => (
-                    <button key={cat} onClick={() => setCatFiltro(cat)} style={{
-                      flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
-                      background: catFiltro===cat ? "#C41A1A" : "var(--bg-elevated)",
-                      color: catFiltro===cat ? "#fff" : "var(--text-faint)",
-                      transition:"all 0.15s"
-                    }}>
-                      {cat === "todas" ? "Todas" : cat}
-                    </button>
+            {Object.entries(byCategoria).map(([cat, tecs]) => (
+              <div key={cat} style={{ marginBottom:20 }}>
+                <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.4, marginBottom:8 }}>
+                  {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+                </div>
+                <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+                  {tecs.map(t => (
+                    <div key={t.id} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"11px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:3 }}>{t.nombre}</div>
+                        <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
+                          {t.posicion_inicio && <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20 }}>{t.posicion_inicio}</span>}
+                          {t.nivel && <span style={{ fontSize:10, fontWeight:700, color:NIVEL_COLOR[t.nivel]||"var(--text-faint)", background:(NIVEL_COLOR[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:20 }}>{t.nivel}</span>}
+                        </div>
+                      </div>
+                      {t.video_url && (
+                        <a href={t.video_url} target="_blank" rel="noopener noreferrer"
+                          style={{ marginLeft:10, flexShrink:0, background:"#ff000015", border:"1px solid #ff000028", borderRadius:8, padding:"6px 10px", color:"#cc0000", fontSize:12, fontWeight:700, textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
+                          ▶ Ver
+                        </a>
+                      )}
+                    </div>
                   ))}
                 </div>
-                {Object.entries(byCategoria).map(([cat, tecs]) => (
-                  <div key={cat} style={{ marginBottom:20 }}>
-                    <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.4, marginBottom:8 }}>
-                      {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
-                    </div>
-                    <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                      {tecs.map(t => (
-                        <div key={t.id} style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, padding:"11px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                          <div style={{ flex:1, minWidth:0 }}>
-                            <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", marginBottom:3 }}>{t.nombre}</div>
-                            <div style={{ display:"flex", gap:5, flexWrap:"wrap" }}>
-                              {t.posicion_inicio && <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20 }}>{t.posicion_inicio}</span>}
-                              {t.nivel && <span style={{ fontSize:10, fontWeight:700, color:NIVEL_COLOR[t.nivel]||"var(--text-faint)", background:(NIVEL_COLOR[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:20 }}>{t.nivel}</span>}
-                            </div>
-                          </div>
-                          {t.video_url && (
-                            <a href={t.video_url} target="_blank" rel="noopener noreferrer"
-                              style={{ marginLeft:10, flexShrink:0, background:"#ff000015", border:"1px solid #ff000028", borderRadius:8, padding:"6px 10px", color:"#cc0000", fontSize:12, fontWeight:700, textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
-                              ▶ Ver
-                            </a>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-                {filtradas.length === 0 && catSearch && (
-                  <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
-                )}
               </div>
-            );
-          })()}
-        </div>
-      )}
+            ))}
+            {filtradas.length === 0 && catSearch && (
+              <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
+            )}
+          </div>
+        );
+      })()}
 
       {activeTab === "coach" && (
         <div>
@@ -17935,30 +17932,106 @@ function MainApp() {
           );
         })()}
 
-        {/* ── 📋 Evaluaciones del Coach ── */}
-        {evalsC.length > 0 && (
-          <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
-            <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2, marginBottom:14 }}>📋 Evaluaciones del Coach</div>
-            {evalsC.map(ev => {
-              const avg = ((ev.tecnica+ev.fisico+ev.mental+ev.tactica)/4).toFixed(1);
-              const avgColor = avg >= 8 ? "#4ade80" : avg >= 6 ? "#f59e0b" : "#f87171";
-              return (
-                <div key={ev.id} style={{ background:"var(--bg-input)", borderRadius:12, padding:"12px 14px", marginBottom:10 }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-                    <span style={{ fontSize:12, fontWeight:700, color:"var(--text)" }}>{ev.fecha}</span>
-                    <span style={{ fontSize:15, fontWeight:900, color:avgColor }}>⭐ {avg}/10</span>
-                  </div>
-                  <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom: ev.comentario ? 8 : 0 }}>
-                    {[["🥋",ev.tecnica,"#6366f1"],["💪",ev.fisico,"#10b981"],["🧠",ev.mental,"#f59e0b"],["♟️",ev.tactica,"#3b82f6"]].map(([icon,val,color]) => (
-                      <span key={icon} style={{ fontSize:11, fontWeight:700, color, background:color+"18", borderRadius:20, padding:"2px 8px" }}>{icon} {val}</span>
-                    ))}
-                  </div>
-                  {ev.comentario && <div style={{ fontSize:11, color:"var(--text-muted)", fontStyle:"italic", lineHeight:1.5 }}>"{ev.comentario}"</div>}
+        {/* ── 🎯 Evaluaciones del Coach — Radar 4D ── */}
+        {evalsC.length > 0 && (() => {
+          const [showHist, setShowHist] = React.useState(false);
+          const sortedEvals = [...evalsC].sort((a,b) => b.fecha.localeCompare(a.fecha));
+          const latest = sortedEvals[0];
+          const prev = sortedEvals[1];
+          const latestAvg = ((latest.tecnica+latest.fisico+latest.mental+latest.tactica)/4).toFixed(1);
+          const avgColor = latestAvg >= 8 ? "#4ade80" : latestAvg >= 6 ? "#f59e0b" : "#f87171";
+          // Radar geometry
+          const CX = 100, CY = 100, R = 68;
+          const AXES = [
+            { key:"tecnica", label:"Técnica", icon:"🥋", angle:-Math.PI/2, color:"#6366f1" },
+            { key:"fisico",  label:"Físico",  icon:"💪", angle:0,           color:"#10b981" },
+            { key:"mental",  label:"Mental",  icon:"🧠", angle:Math.PI/2,  color:"#f59e0b" },
+            { key:"tactica", label:"Táctica", icon:"♟️", angle:Math.PI,    color:"#3b82f6" },
+          ];
+          const toXY = (angle, val, max=10) => ({
+            x: CX + R * Math.cos(angle) * (val/max),
+            y: CY + R * Math.sin(angle) * (val/max),
+          });
+          const polyPts = ev => AXES.map(a => { const p = toXY(a.angle, ev[a.key]); return p.x.toFixed(1)+","+p.y.toFixed(1); }).join(" ");
+          const gridPts = v => AXES.map(a => { const p = toXY(a.angle, v); return p.x.toFixed(1)+","+p.y.toFixed(1); }).join(" ");
+          const LR = R + 20;
+          return (
+            <div style={{ background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:16, padding:"18px", marginBottom:14 }}>
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:12 }}>
+                <div style={{ fontSize:10, fontWeight:800, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:2 }}>🎯 Evaluación del Coach</div>
+                <span style={{ fontSize:16, fontWeight:900, color:avgColor }}>⭐ {latestAvg}<span style={{ fontSize:10, fontWeight:400, color:"var(--text-faint)" }}>/10</span></span>
+              </div>
+              {/* Radar SVG */}
+              <svg viewBox="0 0 200 200" style={{ width:"100%", maxWidth:240, height:200, display:"block", margin:"0 auto 12px", overflow:"visible" }}>
+                {/* Grid rings */}
+                {[3,6,10].map(v => (
+                  <polygon key={v} points={gridPts(v)} fill="none" stroke="var(--border)" strokeWidth={v===10 ? 0.8 : 0.5} strokeDasharray={v<10 ? "3,3" : undefined} />
+                ))}
+                {/* Grid ring labels (right side) */}
+                {[3,6,10].map(v => (
+                  <text key={v} x={(CX+R*(v/10)+3).toFixed(1)} y={CY+3} fontSize="7" fill="var(--text-faint)">{v}</text>
+                ))}
+                {/* Axis lines */}
+                {AXES.map(a => { const tip = toXY(a.angle, 10); return <line key={a.key} x1={CX} y1={CY} x2={tip.x.toFixed(1)} y2={tip.y.toFixed(1)} stroke="var(--border)" strokeWidth="0.7" />; })}
+                {/* Previous eval ghost */}
+                {prev && <polygon points={polyPts(prev)} fill="none" stroke="var(--border)" strokeWidth="1.2" strokeDasharray="4,3" opacity="0.7" />}
+                {/* Latest eval polygon */}
+                <polygon points={polyPts(latest)} fill="#6366f120" stroke="#6366f1" strokeWidth="2" />
+                {/* Data points */}
+                {AXES.map(a => { const p = toXY(a.angle, latest[a.key]); return <circle key={a.key} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r="3.5" fill={a.color} stroke="var(--bg-card)" strokeWidth="1.5" />; })}
+                {/* Axis labels */}
+                {AXES.map(a => {
+                  const lp = { x: CX + LR * Math.cos(a.angle), y: CY + LR * Math.sin(a.angle) };
+                  const anc = a.angle === 0 ? "start" : Math.abs(Math.abs(a.angle)-Math.PI) < 0.01 ? "end" : "middle";
+                  const dy = a.angle < -0.1 ? -2 : a.angle > 0.1 && a.angle < Math.PI-0.01 ? 10 : 4;
+                  return (
+                    <g key={a.key}>
+                      <text x={lp.x.toFixed(1)} y={(lp.y+dy-9).toFixed(1)} textAnchor={anc} fontSize="10" fontWeight="800" fill={a.color}>{latest[a.key]}</text>
+                      <text x={lp.x.toFixed(1)} y={(lp.y+dy+1).toFixed(1)} textAnchor={anc} fontSize="7.5" fill="var(--text-faint)">{a.icon} {a.label}</text>
+                    </g>
+                  );
+                })}
+                {/* Center avg */}
+                <circle cx={CX} cy={CY} r="14" fill="var(--bg-input)" />
+                <text x={CX} y={(CY+4).toFixed(1)} textAnchor="middle" fontSize="11" fontWeight="900" fill={avgColor}>{latestAvg}</text>
+              </svg>
+              {/* Meta row */}
+              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                <span style={{ fontSize:11, color:"var(--text-faint)" }}>{latest.fecha}</span>
+                <div style={{ display:"flex", gap:4 }}>
+                  {AXES.map(a => <span key={a.key} style={{ fontSize:11, fontWeight:700, color:a.color, background:a.color+"18", borderRadius:20, padding:"2px 7px" }}>{a.icon} {latest[a.key]}</span>)}
                 </div>
-              );
-            })}
-          </div>
-        )}
+              </div>
+              {latest.comentario && <div style={{ fontSize:11, color:"var(--text-muted)", fontStyle:"italic", lineHeight:1.5, marginTop:6 }}>"{latest.comentario}"</div>}
+              {/* History */}
+              {evalsC.length > 1 && (
+                <>
+                  <button onClick={() => setShowHist(v=>!v)}
+                    style={{ marginTop:10, fontSize:11, color:"var(--text-faint)", background:"transparent", border:"none", cursor:"pointer", padding:0, display:"flex", alignItems:"center", gap:5 }}>
+                    <span style={{ fontSize:9 }}>{showHist ? "▲" : "▼"}</span> {evalsC.length-1} evaluación{evalsC.length > 2 ? "es" : ""} anterior{evalsC.length > 2 ? "es" : ""}
+                    {prev && !showHist && <span style={{ fontSize:10, color:"var(--text-faint)", fontStyle:"italic" }}>— dotted = {prev.fecha}</span>}
+                  </button>
+                  {showHist && sortedEvals.slice(1).map(ev => {
+                    const avg = ((ev.tecnica+ev.fisico+ev.mental+ev.tactica)/4).toFixed(1);
+                    const ac = avg >= 8 ? "#4ade80" : avg >= 6 ? "#f59e0b" : "#f87171";
+                    return (
+                      <div key={ev.id} style={{ background:"var(--bg-input)", borderRadius:10, padding:"10px 12px", marginTop:8 }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
+                          <span style={{ fontSize:11, color:"var(--text-faint)" }}>{ev.fecha}</span>
+                          <span style={{ fontSize:12, fontWeight:800, color:ac }}>⭐ {avg}/10</span>
+                        </div>
+                        <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+                          {AXES.map(a => <span key={a.key} style={{ fontSize:10, fontWeight:700, color:a.color, background:a.color+"18", borderRadius:20, padding:"2px 7px" }}>{a.icon} {ev[a.key]}</span>)}
+                        </div>
+                        {ev.comentario && <div style={{ fontSize:10, color:"var(--text-muted)", fontStyle:"italic", marginTop:4 }}>"{ev.comentario}"</div>}
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </div>
+          );
+        })()}
             </>
           );
         })()}

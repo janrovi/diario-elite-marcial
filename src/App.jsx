@@ -13680,6 +13680,7 @@ function MainApp() {
   const [filterPeriod, setFilterPeriod] = useState("");
   const [filterRpe, setFilterRpe] = useState(""); // "": all, "easy": ≤4, "mod": 5-7, "hard": ≥8
   const [compactView, setCompactView] = useState(false);
+  const [weekView, setWeekView] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null });
   const [goals, setGoals] = useState([]);
   const [bodyEntries, setBodyEntries] = useState([]);
@@ -16455,10 +16456,20 @@ function MainApp() {
                 {lbl}
               </button>
             ))}
-            <button onClick={() => setCompactView(v => !v)} title={compactView ? "Vista normal" : "Vista compacta"}
-              style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${compactView?"#C41A1A40":"var(--border)"}`, background:compactView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:compactView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer", marginLeft:"auto" }}>
-              {compactView ? "▤" : "≡"}
-            </button>
+            <div style={{ display:"flex", gap:4, marginLeft:"auto" }}>
+              <button onClick={() => { setWeekView(false); setCompactView(false); }} title="Vista lista"
+                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${!weekView&&!compactView?"#C41A1A40":"var(--border)"}`, background:!weekView&&!compactView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:!weekView&&!compactView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
+                ≡
+              </button>
+              <button onClick={() => { setCompactView(v => !v); setWeekView(false); }} title="Vista compacta"
+                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${compactView&&!weekView?"#C41A1A40":"var(--border)"}`, background:compactView&&!weekView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:compactView&&!weekView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
+                ▤
+              </button>
+              <button onClick={() => { setWeekView(v => !v); setCompactView(false); }} title="Vista semanal"
+                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${weekView?"#C41A1A40":"var(--border)"}`, background:weekView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:weekView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
+                📅
+              </button>
+            </div>
             <button className="em-sort-chip" onClick={() => {
               const headers = tr("csv_headers").split(",");
               const rows = sessions.map(ss => [
@@ -16644,6 +16655,133 @@ function MainApp() {
               if (fecha === yesterday) return tr("lbl_yesterday");
               return new Date(fecha+"T12:00:00").toLocaleDateString(lang,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
             };
+
+            // ── VISTA SEMANAL ──
+            if (weekView) {
+              const getWeekKey = (fecha) => {
+                const d = new Date(fecha + "T12:00:00");
+                const day = d.getDay() === 0 ? 7 : d.getDay(); // lunes=1..domingo=7
+                const monday = new Date(d); monday.setDate(d.getDate() - day + 1);
+                return monday.toISOString().slice(0, 10);
+              };
+              const weekMap = {};
+              sorted.forEach(ss => {
+                const wk = getWeekKey(ss.fecha);
+                if (!weekMap[wk]) weekMap[wk] = [];
+                weekMap[wk].push(ss);
+              });
+              const weeks = Object.keys(weekMap).sort((a, b) => b.localeCompare(a));
+              const todayWk = getWeekKey(today);
+              return weeks.map(wk => {
+                const wkSessions = weekMap[wk];
+                const mondayDate = new Date(wk + "T12:00:00");
+                const sundayDate = new Date(mondayDate); sundayDate.setDate(mondayDate.getDate() + 6);
+                const fmtDate = d => d.toLocaleDateString(lang, { day:"numeric", month:"short" });
+                const totalMin = wkSessions.reduce((s, ss) => s + (parseFloat(ss.duracionMin)||0), 0);
+                const rpeVals = wkSessions.filter(ss => ss.rpe).map(ss => parseFloat(ss.rpe));
+                const avgRpeW = rpeVals.length ? (rpeVals.reduce((a,b)=>a+b,0)/rpeVals.length).toFixed(1) : null;
+                const isCurrentWeek = wk === todayWk;
+                const goalPct = Math.min(100, Math.round(wkSessions.length / weekGoal * 100));
+                const goalDone = wkSessions.length >= weekGoal;
+                // days of week with sessions
+                const DAY_KEYS = ["L","M","X","J","V","S","D"];
+                const sessionDays = new Set(wkSessions.map(ss => {
+                  const d = new Date(ss.fecha + "T12:00:00");
+                  return d.getDay() === 0 ? 6 : d.getDay() - 1; // 0=lun..6=dom
+                }));
+                return (
+                  <div key={wk} style={{ marginBottom: 16 }}>
+                    {/* Week header */}
+                    <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:10, padding:"10px 14px", background:"var(--bg-card)", borderRadius:14, border:`1px solid ${isCurrentWeek ? "#C41A1A40" : "var(--border)"}`, borderLeft:`4px solid ${isCurrentWeek ? "#C41A1A" : "var(--border)"}` }}>
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:4 }}>
+                          <span style={{ fontSize:12, fontWeight:800, color:isCurrentWeek?"#C41A1A":"var(--text)", letterSpacing:-0.3 }}>
+                            {fmtDate(mondayDate)} — {fmtDate(sundayDate)}
+                          </span>
+                          {isCurrentWeek && <span style={{ fontSize:9, background:"#C41A1A", color:"#fff", borderRadius:4, padding:"1px 6px", fontWeight:800, letterSpacing:0.5 }}>ESTA SEMANA</span>}
+                        </div>
+                        {/* Day pills */}
+                        <div style={{ display:"flex", gap:4, marginBottom:6 }}>
+                          {DAY_KEYS.map((d, i) => (
+                            <div key={d} style={{ width:22, height:22, borderRadius:6, display:"flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:800,
+                              background: sessionDays.has(i) ? "#C41A1A" : "var(--bg-input)",
+                              color: sessionDays.has(i) ? "#fff" : "var(--text-faint)",
+                              border: sessionDays.has(i) ? "none" : "1px solid var(--border)" }}>
+                              {d}
+                            </div>
+                          ))}
+                        </div>
+                        {/* Progress bar */}
+                        <div style={{ height:3, borderRadius:3, background:"var(--bg-input)", overflow:"hidden" }}>
+                          <div style={{ height:"100%", width:`${goalPct}%`, background: goalDone ? "#10b981" : "#C41A1A", borderRadius:3, transition:"width 0.4s" }} />
+                        </div>
+                      </div>
+                      {/* Stats */}
+                      <div style={{ display:"flex", gap:12, flexShrink:0 }}>
+                        <div style={{ textAlign:"center" }}>
+                          <div style={{ fontSize:16, fontWeight:900, color:"#C41A1A", lineHeight:1 }}>{wkSessions.length}</div>
+                          <div style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5, marginTop:2 }}>ses.</div>
+                        </div>
+                        {totalMin > 0 && (
+                          <div style={{ textAlign:"center" }}>
+                            <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", lineHeight:1 }}>{totalMin >= 60 ? `${Math.round(totalMin/60*10)/10}h` : `${totalMin}m`}</div>
+                            <div style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5, marginTop:2 }}>vol.</div>
+                          </div>
+                        )}
+                        {avgRpeW && (
+                          <div style={{ textAlign:"center" }}>
+                            <div style={{ fontSize:16, fontWeight:900, color: avgRpeW >= 8 ? "#ef4444" : avgRpeW >= 6 ? "#f59e0b" : "#10b981", lineHeight:1 }}>{avgRpeW}</div>
+                            <div style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5, marginTop:2 }}>rpe</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    {/* Session cards */}
+                    <div style={{ display:"flex", flexDirection:"column", gap:6, paddingLeft:4 }}>
+                      {wkSessions.map(ss => {
+                        const discColor = ss.fromCoach ? "#3b82f6" : getDiscColor(ss.disciplina);
+                        const dayName = new Date(ss.fecha + "T12:00:00").toLocaleDateString(lang, { weekday:"short" });
+                        const dayNum = new Date(ss.fecha + "T12:00:00").getDate();
+                        return (
+                          <div key={ss.id} onClick={() => openDetail(ss)}
+                            style={{ display:"flex", alignItems:"center", gap:0, background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:12, overflow:"hidden", cursor:"pointer", transition:"border-color 0.15s, box-shadow 0.15s" }}
+                            onMouseEnter={e => { e.currentTarget.style.borderColor=discColor; e.currentTarget.style.boxShadow=`0 4px 16px ${discColor}20`; }}
+                            onMouseLeave={e => { e.currentTarget.style.borderColor="var(--border)"; e.currentTarget.style.boxShadow=""; }}>
+                            {/* Date column */}
+                            <div style={{ width:44, flexShrink:0, background:`${discColor}15`, borderRight:`2px solid ${discColor}`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"10px 4px", alignSelf:"stretch" }}>
+                              <span style={{ fontSize:9, fontWeight:700, color:discColor, textTransform:"uppercase", letterSpacing:0.3 }}>{dayName}</span>
+                              <span style={{ fontSize:18, fontWeight:900, color:discColor, lineHeight:1 }}>{dayNum}</span>
+                            </div>
+                            {/* Content */}
+                            <div style={{ flex:1, padding:"10px 12px", minWidth:0 }}>
+                              <div style={{ fontSize:13, fontWeight:800, color:"var(--text)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", marginBottom:4 }}>
+                                {ss.nombre || "Sesión"}
+                                {ss.fromCoach && <span style={{ marginLeft:6, fontSize:9, color:"#3b82f6", fontWeight:700 }}>🎓 Coach</span>}
+                              </div>
+                              <div style={{ display:"flex", gap:6, flexWrap:"wrap", alignItems:"center" }}>
+                                {ss.disciplina && <span style={{ fontSize:10, fontWeight:700, color:discColor, background:discColor+"18", borderRadius:4, padding:"1px 7px" }}>{discLabel(ss.disciplina, lang)}</span>}
+                                {ss.tipo_sesion && <span style={{ fontSize:10, color:getTipoColor(ss.tipo_sesion), background:getTipoColor(ss.tipo_sesion)+"18", borderRadius:4, padding:"1px 7px", fontWeight:600 }}>{getTipoIcon(ss.tipo_sesion)} {ss.tipo_sesion}</span>}
+                                {ss.duracionMin && <span style={{ fontSize:11, color:"var(--text-muted)" }}>⏱ {fmtDur(ss.duracionMin)}</span>}
+                                {ss.tecnica?.nombre && <span style={{ fontSize:10, color:"var(--text-faint)", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", maxWidth:120 }}>🥋 {ss.tecnica.nombre}</span>}
+                              </div>
+                            </div>
+                            {/* RPE */}
+                            {ss.rpe && (
+                              <div style={{ flexShrink:0, width:42, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", borderLeft:"1px solid var(--border)", padding:"10px 6px", gap:1 }}>
+                                <span style={{ fontSize:18, fontWeight:900, color:getRpeColor(ss.rpe), lineHeight:1 }}>{ss.rpe}</span>
+                                <span style={{ fontSize:8, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:0.5 }}>rpe</span>
+                                <span style={{ fontSize:12 }}>{getRpeEmoji(ss.rpe)}</span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              });
+            }
+
             let lastDate = null;
             return sorted.map(ss => {
               const showHeader = groupByDate && ss.fecha !== lastDate;

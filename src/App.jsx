@@ -16456,19 +16456,18 @@ function MainApp() {
                 {lbl}
               </button>
             ))}
-            <div style={{ display:"flex", gap:4, marginLeft:"auto" }}>
-              <button onClick={() => { setWeekView(false); setCompactView(false); }} title="Vista lista"
-                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${!weekView&&!compactView?"#C41A1A40":"var(--border)"}`, background:!weekView&&!compactView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:!weekView&&!compactView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
-                ≡
-              </button>
-              <button onClick={() => { setCompactView(v => !v); setWeekView(false); }} title="Vista compacta"
-                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${compactView&&!weekView?"#C41A1A40":"var(--border)"}`, background:compactView&&!weekView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:compactView&&!weekView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
-                ▤
-              </button>
-              <button onClick={() => { setWeekView(v => !v); setCompactView(false); }} title="Vista semanal"
-                style={{ padding:"5px 10px", borderRadius:20, border:`1px solid ${weekView?"#C41A1A40":"var(--border)"}`, background:weekView?"rgba(196,26,26,0.12)":"var(--bg-card)", color:weekView?"#C41A1A":"var(--text-faint)", fontSize:11, cursor:"pointer" }}>
-                📅
-              </button>
+            <div style={{ display:"flex", gap:0, marginLeft:"auto", background:"var(--bg-input)", borderRadius:10, padding:3, border:"1px solid var(--border)" }}>
+              {[
+                { label:"Lista", icon:"≡", active:!weekView&&!compactView, onClick:() => { setWeekView(false); setCompactView(false); } },
+                { label:"Compact", icon:"▤", active:compactView&&!weekView, onClick:() => { setCompactView(v=>!v); setWeekView(false); } },
+                { label:"Semanas", icon:"📅", active:weekView, onClick:() => { setWeekView(v=>!v); setCompactView(false); } },
+              ].map(({label, icon, active, onClick}) => (
+                <button key={label} onClick={onClick}
+                  style={{ padding:"6px 12px", borderRadius:8, border:"none", background:active?"var(--bg-card)":"transparent", color:active?"#C41A1A":"var(--text-faint)", fontSize:11, fontWeight:active?800:500, cursor:"pointer", transition:"all 0.15s", display:"flex", alignItems:"center", gap:4, boxShadow:active?"0 1px 4px rgba(0,0,0,0.15)":"none" }}>
+                  <span style={{ fontSize:13 }}>{icon}</span>
+                  <span style={{ letterSpacing:0.2 }}>{label}</span>
+                </button>
+              ))}
             </div>
             <button className="em-sort-chip" onClick={() => {
               const headers = tr("csv_headers").split(",");

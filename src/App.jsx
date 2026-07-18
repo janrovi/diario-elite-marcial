@@ -3476,6 +3476,11 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountW.Avanzado}</span>
                     </div>
                   </div>
+                  <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                    {Object.entries({ "Derribos":"🤼","Proyecciones":"💥","Control suelo":"🛡️","Inmovilizaciones":"🔒","Escapes":"🚀","Clinch":"🤛" }).map(([cat, icon]) => (
+                      <span key={cat} title={cat} style={{ fontSize:16 }}>{icon}</span>
+                    ))}
+                  </div>
                   <span style={{ fontSize:18, color:"var(--text-faint)", flexShrink:0, transition:"transform 0.25s", transform: catWrestlingOpen ? "rotate(90deg)" : "none" }}>›</span>
                 </div>
                 {catWrestlingOpen && (
@@ -3557,6 +3562,11 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountB.Avanzado}</span>
                     </div>
                   </div>
+                  <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                    {Object.entries({ "Golpes":"🥊","Combinaciones":"⚡","Defensa":"🛡️","Footwork":"👣","Guardia":"🤜","Clinch":"🤼" }).map(([cat, icon]) => (
+                      <span key={cat} title={cat} style={{ fontSize:16 }}>{icon}</span>
+                    ))}
+                  </div>
                   <span style={{ fontSize:18, color:"var(--text-faint)", flexShrink:0, transition:"transform 0.25s", transform: catBoxeoOpen ? "rotate(90deg)" : "none" }}>›</span>
                 </div>
                 {catBoxeoOpen && (
@@ -3636,6 +3646,11 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCountMT.Intermedio}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountMT.Avanzado}</span>
                     </div>
+                  </div>
+                  <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                    {Object.entries({ "Puñetazos":"👊","Patadas":"🦵","Codos":"💥","Rodillas":"🦴","Clinch":"🤼","Defensa":"🛡️" }).map(([cat, icon]) => (
+                      <span key={cat} title={cat} style={{ fontSize:16 }}>{icon}</span>
+                    ))}
                   </div>
                   <span style={{ fontSize:18, color:"var(--text-faint)", flexShrink:0, transition:"transform 0.25s", transform: catMuayThaiOpen ? "rotate(90deg)" : "none" }}>›</span>
                 </div>

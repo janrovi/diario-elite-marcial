@@ -2988,6 +2988,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
   const [catSearch, setCatSearch] = useState("");
   const [catFiltro, setCatFiltro] = useState("todas");
   const [catBJJOpen, setCatBJJOpen] = useState(false);
+  const [catSoloPracticadas, setCatSoloPracticadas] = useState(false);
 
   const RED = "#C41A1A";
   const allWithTecnica = sessions.filter(ss => ss.tecnica?.nombre);
@@ -3243,10 +3244,30 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
         const NIVEL_COLOR = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
         const categorias = [...new Set(tecnicasCatalogo.map(t => t.categoria))].sort();
         const q = catSearch.toLowerCase().trim();
+
+        // ── Sincronización con sesiones entrenadas ──
+        const norm = s => (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+        const practicadasMap = {}; // nombre_catalogo_id → { count, lastDate }
+        tecnicasCatalogo.forEach(t => {
+          const tn = norm(t.nombre);
+          const matches = sessions.filter(ss => {
+            const sn = norm(ss.tecnica?.nombre || "");
+            if (!sn) return false;
+            return tn.includes(sn) || sn.includes(tn) ||
+              tn.split(" ").filter(w=>w.length>4).some(w => sn.includes(w));
+          });
+          if (matches.length > 0) {
+            const last = matches.sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+            practicadasMap[t.id] = { count: matches.length, lastDate: last.fecha };
+          }
+        });
+        const getPrac = t => practicadasMap[t.id] || null;
+
         const filtradas = tecnicasCatalogo.filter(t => {
           const matchCat = catFiltro === "todas" || t.categoria === catFiltro;
           const matchSearch = !q || t.nombre.toLowerCase().includes(q) || (t.posicion_inicio||"").toLowerCase().includes(q);
-          return matchCat && matchSearch;
+          const matchPrac = !catSoloPracticadas || !!getPrac(t);
+          return matchCat && matchSearch && matchPrac;
         });
         const byCategoria = {};
         filtradas.forEach(t => {
@@ -3299,8 +3320,8 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
               {/* Contenido expandible */}
               {catBJJOpen && (
                 <div style={{ border:"1px solid var(--border)", borderTop:"none", borderRadius:"0 0 14px 14px", padding:"16px 14px", background:"var(--bg)" }}>
-                  {/* Filtros de categoría */}
-                  <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14, scrollbarWidth:"none" }}>
+                  {/* Filtros de categoría + practicadas */}
+                  <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:8, scrollbarWidth:"none" }}>
                     {["todas", ...categorias].map(cat => (
                       <button key={cat} onClick={() => setCatFiltro(cat)} style={{
                         flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
@@ -3312,6 +3333,28 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       </button>
                     ))}
                   </div>
+                  {/* Stats de progreso + filtro practicadas */}
+                  {(() => {
+                    const totalPrac = Object.keys(practicadasMap).length;
+                    const pct = Math.round(totalPrac / tecnicasCatalogo.length * 100);
+                    return (
+                      <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
+                        <div style={{ flex:1 }}>
+                          <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
+                            <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                            <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPrac} / {tecnicasCatalogo.length}</span>
+                          </div>
+                          <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>
+                            <div style={{ height:"100%", width:`${pct}%`, background:"linear-gradient(90deg,#10b981,#34d399)", borderRadius:4, transition:"width 0.5s" }} />
+                          </div>
+                        </div>
+                        <button onClick={() => setCatSoloPracticadas(v=>!v)}
+                          style={{ flexShrink:0, fontSize:11, fontWeight:700, padding:"6px 12px", borderRadius:20, border:`1px solid ${catSoloPracticadas?"#10b981":"var(--border)"}`, background:catSoloPracticadas?"#10b98122":"var(--bg-card)", color:catSoloPracticadas?"#10b981":"var(--text-faint)", cursor:"pointer", whiteSpace:"nowrap" }}>
+                          ✓ Solo practicadas
+                        </button>
+                      </div>
+                    );
+                  })()}
 
                   {filtradas.length === 0 && catSearch && (
                     <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
@@ -3351,6 +3394,10 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                               {t.nivel && (
                                 <span style={{ fontSize:9, fontWeight:800, color:NIVEL_DOT[t.nivel]||"#888", background:(NIVEL_DOT[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:6, flexShrink:0, letterSpacing:0.3 }}>{t.nivel}</span>
                               )}
+                              {/* Practicada */}
+                              {(() => { const p = getPrac(t); return p ? (
+                                <span title={`Última: ${p.lastDate}`} style={{ fontSize:10, fontWeight:800, color:"#10b981", background:"#10b98118", padding:"2px 7px", borderRadius:6, flexShrink:0, letterSpacing:0.2 }}>✓ {p.count}x</span>
+                              ) : null; })()}
                               {/* YouTube */}
                               {t.video_url && (
                                 <span style={{ fontSize:11, color:"#C41A1A", flexShrink:0, fontWeight:700 }}>▶</span>

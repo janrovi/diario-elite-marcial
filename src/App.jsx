@@ -632,6 +632,26 @@ const TRANSLATIONS = {
     update_ready_title:"Nueva versión disponible", update_ready_body:"Actualiza para obtener las últimas mejoras", update_now:"Actualizar", update_later:"Ahora no",
     splash_title:"Diario de Entrenamiento",
     rpe_no_data:"Registra al menos 2 sesiones con RPE para ver la evolución",
+    rpe_dist_empty:"{t("rpe_dist_empty",lang)}",
+    cat_last_time:"última vez",
+    ins_streak_record:"¡Racha histórica! Llevas {n} días seguidos entrenando. Tu récord anterior era {m}.",
+    ins_streak_goal:"Llevas {n} días seguidos. Tu mejor racha fue de {m} días — ¡a por ella!",
+    notif_mark_all:"{t("notif_mark_all",lang)}", notif_clear:"{t("notif_clear",lang)}", notif_empty:"Sin notificaciones",
+    pass_min_chars:"❌ Mínimo 8 caracteres", pass_no_match:"❌ Las contraseñas no coinciden",
+    pass_updated:"✅ Contraseña actualizada", delete_error:"Error al eliminar la cuenta. Inténtalo de nuevo.",
+    dolor_add:"+ Registrar dolor / molestia", dolor_empty:"Sin dolores registrados 🟢",
+    dolor_ph_zona:"ej. rodilla derecha", dolor_ph_notes:"Describe cuándo aparece, qué lo mejora...",
+    dolor_agudo:"Agudo", dolor_cronico:"Crónico", dolor_difuso:"Difuso",
+    dolor_zona_lbl:"Zona", dolor_tipo_lbl:"Tipo", dolor_notas_lbl:"Notas (opcional)", dolor_fecha_lbl:"Fecha",
+    dolor_intensity_lbl:"Intensidad", dolor_saving:"Guardando…", dolor_save:"Guardar",
+    recup_dur_lbl:"Duración (min)", recup_tech_lbl:"Técnica / Terapia",
+    recup_ph_tech:"Electroterapia, US...", recup_ph_notes:"Cómo fue, qué mejoró...",
+    recup_save:"Guardar sesión", recup_add:"+ Registrar sesión",
+    nutri_add:"+ Añadir comida", nutri_add_btn:"Añadir comida", nutri_today_lbl:"Hoy",
+    body_add_weight:"+ Registrar peso", body_save_weight:"Guardar registro",
+    body_add_detail:"+ Registro detallado", body_save_short:"Guardar",
+    body_save_goal:"Guardar objetivo",
+    inj_add_btn:"+ Registrar lesion",
     /* ── LABELS GENERALES ── */
     lbl_nombre:"Nombre", lbl_email:"Email", lbl_estado:"Estado", lbl_tipo:"Tipo",
     lbl_notas_lbl:"Notas", lbl_zona:"Zona", lbl_objetivo:"Objetivo", lbl_inicio:"Inicio",
@@ -1120,6 +1140,26 @@ const TRANSLATIONS = {
     update_ready_title:"New version available", update_ready_body:"Update to get the latest improvements", update_now:"Update now", update_later:"Not now",
     splash_title:"Training Journal",
     rpe_no_data:"Log at least 2 sessions with RPE to see the evolution",
+    rpe_dist_empty:"Log RPE in your sessions to see the intensity distribution",
+    cat_last_time:"last time",
+    ins_streak_record:"Historic streak! You've trained {n} days in a row. Your previous record was {m}.",
+    ins_streak_goal:"You've trained {n} days in a row. Your best streak was {m} days — go for it!",
+    notif_mark_all:"Mark all as read", notif_clear:"🗑 Clear read notifications", notif_empty:"No notifications",
+    pass_min_chars:"❌ Minimum 8 characters", pass_no_match:"❌ Passwords don't match",
+    pass_updated:"✅ Password updated", delete_error:"Error deleting account. Please try again.",
+    dolor_add:"+ Log pain / discomfort", dolor_empty:"No pain logged 🟢",
+    dolor_ph_zona:"e.g. right knee", dolor_ph_notes:"Describe when it appears, what helps...",
+    dolor_agudo:"Acute", dolor_cronico:"Chronic", dolor_difuso:"Diffuse",
+    dolor_zona_lbl:"Zone", dolor_tipo_lbl:"Type", dolor_notas_lbl:"Notes (optional)", dolor_fecha_lbl:"Date",
+    dolor_intensity_lbl:"Intensity", dolor_saving:"Saving…", dolor_save:"Save",
+    recup_dur_lbl:"Duration (min)", recup_tech_lbl:"Technique / Therapy",
+    recup_ph_tech:"Electrotherapy, US...", recup_ph_notes:"How it went, what improved...",
+    recup_save:"Save session", recup_add:"+ Log session",
+    nutri_add:"+ Add food", nutri_add_btn:"Add food", nutri_today_lbl:"Today",
+    body_add_weight:"+ Log weight", body_save_weight:"Save entry",
+    body_add_detail:"+ Detailed log", body_save_short:"Save",
+    body_save_goal:"Save goal",
+    inj_add_btn:"+ Log injury",
     lbl_nombre:"Name", lbl_email:"Email", lbl_estado:"Status", lbl_tipo:"Type",
     lbl_notas_lbl:"Notes", lbl_zona:"Area", lbl_objetivo:"Goal", lbl_inicio:"Start",
     lbl_select:"Select", lbl_add:"Add", lbl_no_data:"No data",
@@ -1594,6 +1634,26 @@ const TRANSLATIONS = {
     update_ready_title:"Nova versió disponible", update_ready_body:"Actualitza per obtenir les últimes millores", update_now:"Actualitzar", update_later:"Ara no",
     splash_title:"Diari d'Entrenament",
     rpe_no_data:"Registra almenys 2 sessions amb RPE per veure l'evolució",
+    rpe_dist_empty:"Registra el RPE a les teves sessions per veure la distribució d'intensitat",
+    cat_last_time:"última vegada",
+    ins_streak_record:"Ratxa històrica! Portes {n} dies seguits entrenant. El teu rècord anterior era {m}.",
+    ins_streak_goal:"Portes {n} dies seguits. La teva millor ratxa va ser de {m} dies — a per ella!",
+    notif_mark_all:"Marcar tot llegit", notif_clear:"🗑 Netejar notificacions llegides", notif_empty:"Sense notificacions",
+    pass_min_chars:"❌ Mínim 8 caràcters", pass_no_match:"❌ Les contrasenyes no coincideixen",
+    pass_updated:"✅ Contrasenya actualitzada", delete_error:"Error en eliminar el compte. Torna-ho a provar.",
+    dolor_add:"+ Registrar dolor / molèstia", dolor_empty:"Sense dolors registrats 🟢",
+    dolor_ph_zona:"p.ex. genoll dret", dolor_ph_notes:"Descriu quan apareix, què ho millora...",
+    dolor_agudo:"Agut", dolor_cronico:"Crònic", dolor_difuso:"Difús",
+    dolor_zona_lbl:"Zona", dolor_tipo_lbl:"Tipus", dolor_notas_lbl:"Notes (opcional)", dolor_fecha_lbl:"Data",
+    dolor_intensity_lbl:"Intensitat", dolor_saving:"Desant…", dolor_save:"Desar",
+    recup_dur_lbl:"Durada (min)", recup_tech_lbl:"Tècnica / Teràpia",
+    recup_ph_tech:"Electroteràpia, US...", recup_ph_notes:"Com va anar, què va millorar...",
+    recup_save:"Desar sessió", recup_add:"+ Registrar sessió",
+    nutri_add:"+ Afegir menjar", nutri_add_btn:"Afegir menjar", nutri_today_lbl:"Avui",
+    body_add_weight:"+ Registrar pes", body_save_weight:"Desar registre",
+    body_add_detail:"+ Registre detallat", body_save_short:"Desar",
+    body_save_goal:"Desar objectiu",
+    inj_add_btn:"+ Registrar lesió",
     lbl_nombre:"Nom", lbl_email:"Email", lbl_estado:"Estat", lbl_tipo:"Tipus",
     lbl_notas_lbl:"Notes", lbl_zona:"Zona", lbl_objetivo:"Objectiu", lbl_inicio:"Inici",
     lbl_select:"Selecciona", lbl_add:"Afegir", lbl_no_data:"Sense dades",
@@ -2658,7 +2718,7 @@ function RPEHistogram({ sessions, lang = "es" }) {
   const withRpe = sessions.filter(s => s.rpe);
   if (withRpe.length === 0) return (
     <div style={{ textAlign:"center", padding:"24px 0", color:"var(--text-dim)", fontSize:13 }}>
-      Registra el RPE en tus sesiones para ver la distribución de intensidad
+      {t("rpe_dist_empty",lang)}
     </div>
   );
   const RPE_COLORS = { 1:"#38a169",2:"#48bb78",3:"#68d391",4:"#f6e05e",5:"#ecc94b",6:"#f6ad55",7:"#ed8936",8:"#fc8181",9:"#f56565",10:"#e53e3e" };
@@ -3171,7 +3231,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                     <div style={{ fontSize:14, fontWeight:800, color:"var(--text)", marginBottom:2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{name}</div>
                     <div style={{ fontSize:11, color:"var(--text-faint)" }}>
                       {info.disc ? discLabel(info.disc, lang) : t("tec_no_disc",lang)}
-                      {info.lastDate && <> · última vez {info.lastDate}</>}
+                      {info.lastDate && <> · {t("cat_last_time",lang)} {info.lastDate}</>}
                     </div>
                   </div>
                   <div style={{ textAlign:"right", flexShrink:0 }}>
@@ -4761,9 +4821,9 @@ function HomeView({ sessions, bodyEntries, injuries, profile, lang, onNavigate }
           bestStreak = best;
         }
         if (curStreak > 0 && curStreak >= bestStreak && curStreak >= 5) {
-          insights.push({ icon:"🏆", text:`¡Racha histórica! Llevas ${curStreak} días seguidos entrenando. Tu récord anterior era ${bestStreak}.` });
+          insights.push({ icon:"🏆", text:t("ins_streak_record",lang).replace("{n}",curStreak).replace("{m}",bestStreak) });
         } else if (curStreak >= 5) {
-          insights.push({ icon:"🔥", text:`Llevas ${curStreak} días seguidos. Tu mejor racha fue de ${bestStreak} días — ¡a por ella!` });
+          insights.push({ icon:"🔥", text:t("ins_streak_goal",lang).replace("{n}",curStreak).replace("{m}",bestStreak) });
         }
 
         if (insights.length === 0) return null;
@@ -5451,7 +5511,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <div>
           <button onClick={() => setShowForm(v => !v)}
             style={{ width:"100%", padding:"12px", borderRadius:12, border:`1px dashed ${RED}50`, background:`${RED}08`, color:RED, fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16, letterSpacing:0.5 }}>
-            {showForm ? "✕ Cancelar" : "+ Registrar peso"}
+            {showForm ? "✕ "+t("btn_cancel",lang) : t("body_add_weight",lang)}
           </button>
 
           {showForm && (
@@ -5471,7 +5531,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 <input value={form.notas||""} onChange={e => setF("notas", e.target.value)} placeholder="Opcional" style={inputSt} />
               </div>
               <button onClick={save} style={{ width:"100%", padding:11, borderRadius:10, border:"none", background:`linear-gradient(135deg,${RED},#8B0000)`, color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer" }}>
-                Guardar registro
+                {t("body_save_weight",lang)}
               </button>
             </div>
           )}
@@ -5653,7 +5713,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               </div>
               <button onClick={() => setShowHidraForm(v=>!v)}
                 style={{ width:"100%", padding:"11px", borderRadius:12, border:`1px dashed ${BLUE}50`, background:`${BLUE}08`, color:BLUE, fontSize:12, fontWeight:700, cursor:"pointer", marginBottom:12 }}>
-                {showHidraForm ? "✕ Cancelar" : "+ Registro detallado"}
+                {showHidraForm ? "✕ "+t("btn_cancel",lang) : t("body_add_detail",lang)}
               </button>
               {showHidraForm && (
                 <div style={{ background:"var(--bg-card)", border:`1px solid ${BLUE}30`, borderRadius:14, padding:16, marginBottom:12 }}>
@@ -5679,7 +5739,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                     </div>
                   </div>
                   <button onClick={saveHidra} style={{ width:"100%", padding:11, borderRadius:10, border:"none", background:`linear-gradient(135deg,${BLUE},#1d4ed8)`, color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer" }}>
-                    Guardar
+                    {t("body_save_short",lang)}
                   </button>
                 </div>
               )}
@@ -5791,7 +5851,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                 </div>
                 <button onClick={()=>{setNutriGoal(goalTemp);setEditNutriGoal(false);}}
                   style={{ width:"100%", padding:10, borderRadius:10, border:"none", background:GREEN, color:"#fff", fontWeight:800, fontSize:12, cursor:"pointer" }}>
-                  Guardar objetivo
+                  {t("body_save_goal",lang)}
                 </button>
               </div>
             ) : (
@@ -5823,7 +5883,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
 
           <button onClick={() => setShowNutriForm(v=>!v)}
             style={{ width:"100%", padding:"12px", borderRadius:12, border:`1px dashed ${GREEN}50`, background:`${GREEN}08`, color:GREEN, fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:12 }}>
-            {showNutriForm ? "✕ Cancelar" : "+ Añadir comida"}
+            {showNutriForm ? "✕ "+t("btn_cancel",lang) : t("nutri_add",lang)}
           </button>
 
           {showNutriForm && (
@@ -5856,14 +5916,14 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               </div>
               <button onClick={saveNutri} disabled={!nutriForm.nombre||!nutriForm.calorias}
                 style={{ width:"100%", padding:11, borderRadius:10, border:"none", background:`linear-gradient(135deg,${GREEN},#059669)`, color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer", opacity:(!nutriForm.nombre||!nutriForm.calorias)?0.4:1 }}>
-                Añadir comida
+                {t("nutri_add_btn",lang)}
               </button>
             </div>
           )}
 
           {nutriToday.length > 0 && (
             <div style={{ marginBottom:16 }}>
-              <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>Hoy</div>
+              <div style={{ fontSize:10, color:"var(--text-faint)", textTransform:"uppercase", letterSpacing:1, marginBottom:8 }}>{t("nutri_hoy",lang)}</div>
               {nutriToday.map(e=>(
                 <div key={e.id} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:10, padding:"10px 14px", marginBottom:6 }}>
                   <div>
@@ -5913,7 +5973,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <div>
           <button onClick={() => setShowInjForm(v=>!v)}
             style={{ width:"100%", padding:"12px", borderRadius:12, border:"1px dashed rgba(229,62,62,0.4)", background:"rgba(229,62,62,0.05)", color:"#e53e3e", fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16 }}>
-            {showInjForm ? "✕ Cancelar" : "+ Registrar lesion"}
+            {showInjForm ? "✕ "+t("btn_cancel",lang) : t("inj_add_btn",lang)}
           </button>
 
           {showInjForm && (
@@ -6014,7 +6074,7 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <div>
           <button onClick={() => setShowRecupForm(v=>!v)}
             style={{ width:"100%", padding:"12px", borderRadius:12, border:`1px dashed ${PURPLE}50`, background:`${PURPLE}08`, color:PURPLE, fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16 }}>
-            {showRecupForm ? "✕ Cancelar" : "+ Registrar sesión"}
+            {showRecupForm ? "✕ "+t("btn_cancel",lang) : t("recup_add",lang)}
           </button>
 
           {showRecupForm && (
@@ -6047,15 +6107,15 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Duración (min)</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_dur_lbl",lang)}</label>
                   <input type="number" value={recupForm.duracion} onChange={e=>setRecupForm(f=>({...f,duracion:e.target.value}))} placeholder="45"
                     style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" }}/>
                 </div>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Técnica / Terapia</label>
-                  <input value={recupForm.terapia} onChange={e=>setRecupForm(f=>({...f,terapia:e.target.value}))} placeholder="Electroterapia, US..."
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("recup_tech_lbl",lang)}</label>
+                  <input value={recupForm.terapia} onChange={e=>setRecupForm(f=>({...f,terapia:e.target.value}))} placeholder={t("recup_ph_tech",lang)}
                     style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:14, outline:"none", boxSizing:"border-box" }}/>
                 </div>
                 <div>
@@ -6071,12 +6131,12 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
               </div>
               <div style={{ marginBottom:12 }}>
                 <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("lbl_notas_lbl",lang)}</label>
-                <textarea value={recupForm.notas} onChange={e=>setRecupForm(f=>({...f,notas:e.target.value}))} rows={2} placeholder="Cómo fue, qué mejoró..."
+                <textarea value={recupForm.notas} onChange={e=>setRecupForm(f=>({...f,notas:e.target.value}))} rows={2} placeholder={t("recup_ph_notes",lang)}
                   style={{ width:"100%", padding:"10px 12px", borderRadius:10, border:"1px solid var(--border)", background:"var(--bg-input)", color:"var(--text)", fontSize:13, outline:"none", resize:"vertical", boxSizing:"border-box" }}/>
               </div>
               <button onClick={saveRecup}
                 style={{ width:"100%", padding:11, borderRadius:10, border:"none", background:`linear-gradient(135deg,${PURPLE},#6d28d9)`, color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer" }}>
-                Guardar sesión
+                {t("recup_save",lang)}
               </button>
             </div>
           )}
@@ -6144,53 +6204,53 @@ function CuerpoView({ entries, onAdd, onDelete, injuries, setInjuries, lang = "e
         <div>
           <button onClick={() => setShowDolorForm(v=>!v)}
             style={{ width:"100%", padding:"12px", borderRadius:12, border:"1px dashed rgba(249,115,22,0.4)", background:"rgba(249,115,22,0.05)", color:"#f97316", fontSize:13, fontWeight:800, cursor:"pointer", marginBottom:16 }}>
-            {showDolorForm ? "✕ Cancelar" : "+ Registrar dolor / molestia"}
+            {showDolorForm ? "✕ "+t("btn_cancel",lang) : t("dolor_add",lang)}
           </button>
 
           {showDolorForm && (
             <div style={{ background:"var(--bg-card)", border:"1px solid rgba(249,115,22,0.2)", borderRadius:14, padding:16, marginBottom:16 }}>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:8 }}>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Zona</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("dolor_zona_lbl",lang)}</label>
                   <input value={dolorForm.zona} onChange={e=>setDolorForm(f=>({...f,zona:e.target.value}))}
-                    placeholder="ej. rodilla derecha" style={inputSt} />
+                    placeholder={t("dolor_ph_zona",lang)} style={inputSt} />
                 </div>
                 <div>
-                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Tipo</label>
+                  <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("dolor_tipo_lbl",lang)}</label>
                   <select value={dolorForm.tipo} onChange={e=>setDolorForm(f=>({...f,tipo:e.target.value}))} style={inputSt}>
-                    <option value="agudo">Agudo</option>
-                    <option value="cronico">Crónico</option>
-                    <option value="difuso">Difuso</option>
+                    <option value="agudo">{t("dolor_agudo",lang)}</option>
+                    <option value="cronico">{t("dolor_cronico",lang)}</option>
+                    <option value="difuso">{t("dolor_difuso",lang)}</option>
                   </select>
                 </div>
               </div>
               <div style={{ marginBottom:8 }}>
                 <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>
-                  Intensidad: <span style={{ color: dolorColor(dolorForm.intensidad), fontWeight:800 }}>{dolorForm.intensidad}/10</span>
+                  {t("dolor_intensity_lbl",lang)}: <span style={{ color: dolorColor(dolorForm.intensidad), fontWeight:800 }}>{dolorForm.intensidad}/10</span>
                 </label>
                 <input type="range" min={1} max={10} value={dolorForm.intensidad}
                   onChange={e=>setDolorForm(f=>({...f,intensidad:+e.target.value}))}
                   style={{ width:"100%", accentColor:"#f97316" }} />
               </div>
               <div style={{ marginBottom:8 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Fecha</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("dolor_fecha_lbl",lang)}</label>
                 <input type="date" value={dolorForm.fecha} onChange={e=>setDolorForm(f=>({...f,fecha:e.target.value}))} style={inputSt} />
               </div>
               <div style={{ marginBottom:12 }}>
-                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>Notas (opcional)</label>
+                <label style={{ fontSize:10, color:"var(--text-faint)", display:"block", marginBottom:4, textTransform:"uppercase", letterSpacing:1 }}>{t("dolor_notas_lbl",lang)}</label>
                 <textarea value={dolorForm.notas} onChange={e=>setDolorForm(f=>({...f,notas:e.target.value}))}
-                  placeholder="Describe cuándo aparece, qué lo mejora..." rows={2}
+                  placeholder={t("dolor_ph_notes",lang)} rows={2}
                   style={{ ...inputSt, resize:"none", lineHeight:"1.4" }} />
               </div>
               <button onClick={saveDolor} disabled={dolorSaving || !dolorForm.zona}
                 style={{ width:"100%", padding:"11px", borderRadius:10, border:"none", background:"#f97316", color:"#fff", fontSize:13, fontWeight:800, cursor:"pointer", opacity: dolorSaving || !dolorForm.zona ? 0.6 : 1 }}>
-                {dolorSaving ? "Guardando…" : "Guardar"}
+                {dolorSaving ? t("dolor_saving",lang) : t("dolor_save",lang)}
               </button>
             </div>
           )}
 
           {dolorEntries.length === 0 ? (
-            <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"32px 0" }}>Sin dolores registrados 🟢</div>
+            <div style={{ textAlign:"center", color:"var(--text-faint)", fontSize:13, padding:"32px 0" }}>{t("dolor_empty",lang)}</div>
           ) : (
             <div>
               {dolorEntries.map(e => (
@@ -6463,23 +6523,23 @@ function UserMenu({ user, profile, darkMode, onToggleDark, onSignOut, onProfileU
         await supabase.auth.signOut();
         onSignOut();
       } else {
-        setDeleteError("Error al eliminar la cuenta. Inténtalo de nuevo.");
+        setDeleteError(t("delete_error",lang));
       }
     } catch (err) {
       console.error("Error eliminando cuenta:", err);
-      setDeleteError("Error al eliminar la cuenta. Inténtalo de nuevo.");
+      setDeleteError(t("delete_error",lang));
     }
     setDeleting(false);
   };
 
   const handleChangePassword = async () => {
-    if (newPass.length < 8) { setPassMsg("❌ Mínimo 8 caracteres"); return; }
-    if (newPass !== confirmPass) { setPassMsg("❌ Las contraseñas no coinciden"); return; }
+    if (newPass.length < 8) { setPassMsg(t("pass_min_chars",lang)); return; }
+    if (newPass !== confirmPass) { setPassMsg(t("pass_no_match",lang)); return; }
     setPassSaving(true);
     const { error } = await supabase.auth.updateUser({ password: newPass });
     if (error) { setPassMsg("❌ " + error.message); }
     else {
-      setPassMsg("✅ Contraseña actualizada");
+      setPassMsg(t("pass_updated",lang));
       setTimeout(() => { setShowPassChange(false); setNewPass(""); setConfirmPass(""); setPassMsg(""); }, 1800);
     }
     setPassSaving(false);
@@ -6844,7 +6904,7 @@ function NotificationBell({ userId, onNewNotif }) {
             <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{t("settings_notif",lang)}</span>
             {unread > 0 && (
               <button onClick={markAllRead} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: RED, fontWeight: 600, padding: 0 }}>
-                Marcar todo leído
+                {t("notif_mark_all",lang)}
               </button>
             )}
           </div>
@@ -6852,7 +6912,7 @@ function NotificationBell({ userId, onNewNotif }) {
             {notifs.length === 0 ? (
               <div style={{ padding: "36px 16px", textAlign: "center", color: "var(--text-faint)", fontSize: 13 }}>
                 <div style={{ fontSize: 28, marginBottom: 8 }}>🔔</div>
-                Sin notificaciones
+                {t("notif_empty",lang)}
               </div>
             ) : notifs.map(n => (
               <div key={n.id} onClick={() => markRead(n.id)}
@@ -6877,7 +6937,7 @@ function NotificationBell({ userId, onNewNotif }) {
           {notifs.some(n => n.leida) && (
             <div style={{ padding: "10px 16px", borderTop: "1px solid var(--border)", textAlign: "center" }}>
               <button onClick={deleteAllRead} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 11, color: "var(--text-faint)", fontWeight: 600, padding: 0 }}>
-                🗑 Limpiar notificaciones leídas
+                {t("notif_clear",lang)}
               </button>
             </div>
           )}

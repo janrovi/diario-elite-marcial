@@ -2987,6 +2987,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
   const [activeTab, setActiveTab] = useState("biblioteca"); // "biblioteca" | "ranking"
   const [catSearch, setCatSearch] = useState("");
   const [catFiltro, setCatFiltro] = useState("todas");
+  const [catBJJOpen, setCatBJJOpen] = useState(false);
 
   const RED = "#C41A1A";
   const allWithTecnica = sessions.filter(ss => ss.tecnica?.nombre);
@@ -3252,70 +3253,130 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
           if (!byCategoria[t.categoria]) byCategoria[t.categoria] = [];
           byCategoria[t.categoria].push(t);
         });
+        const CAT_C = { "Sumisiones":"#ef4444","Posiciones":"#6366f1","Barridos":"#f59e0b","Pasajes":"#10b981","Derribos":"#3b82f6","Escapes":"#8b5cf6" };
+        const CAT_ICON = { "Sumisiones":"🔒","Posiciones":"🛡️","Barridos":"🔄","Pasajes":"⚡","Derribos":"💥","Escapes":"🚀" };
+        const nivelCount = { Principiante: filtradas.filter(t=>t.nivel==="Principiante").length, Intermedio: filtradas.filter(t=>t.nivel==="Intermedio").length, Avanzado: filtradas.filter(t=>t.nivel==="Avanzado").length };
         return (
           <div>
-            <input
-              style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
-              placeholder="🔍 Buscar técnica..."
-              value={catSearch}
-              onChange={e => setCatSearch(e.target.value)}
-            />
-            <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14 }}>
-              {["todas", ...categorias].map(cat => (
-                <button key={cat} onClick={() => setCatFiltro(cat)} style={{
-                  flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
-                  background: catFiltro===cat ? "#C41A1A" : "var(--bg-elevated)",
-                  color: catFiltro===cat ? "#fff" : "var(--text-faint)",
-                  transition:"all 0.15s"
-                }}>
-                  {cat === "todas" ? "Todas" : cat}
-                </button>
-              ))}
-            </div>
-            {Object.entries(byCategoria).map(([cat, tecs]) => (
-              <div key={cat} style={{ marginBottom:28 }}>
-                <div style={{ fontSize:10, fontWeight:800, color:"#C41A1A", textTransform:"uppercase", letterSpacing:1.8, marginBottom:12, display:"flex", alignItems:"center", gap:6 }}>
-                  <span style={{ width:3, height:13, background:"#C41A1A", borderRadius:2, display:"inline-block", flexShrink:0 }}></span>
-                  {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+            {/* Search — solo visible si BJJ abierto o si hay texto */}
+            {(catBJJOpen || catSearch) && (
+              <input
+                style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
+                placeholder="🔍 Buscar técnica..."
+                value={catSearch}
+                onChange={e => setCatSearch(e.target.value)}
+              />
+            )}
+
+            {/* ── Acordeón de deportes ── */}
+            {/* BJJ */}
+            <div style={{ marginBottom:12 }}>
+              {/* Header del deporte */}
+              <div
+                onClick={() => { setCatBJJOpen(v=>!v); setCatSearch(""); setCatFiltro("todas"); }}
+                style={{ display:"flex", alignItems:"center", gap:14, padding:"16px 18px", borderRadius: catBJJOpen ? "14px 14px 0 0" : 14, background:"var(--bg-card)", border:"1px solid var(--border)", borderBottom: catBJJOpen ? "1px solid var(--border)" : "1px solid var(--border)", cursor:"pointer", transition:"border-radius 0.2s", userSelect:"none" }}
+                onMouseEnter={e=>e.currentTarget.style.borderColor="#C41A1A40"}
+                onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+              >
+                <div style={{ width:48, height:48, borderRadius:12, background:"linear-gradient(135deg,#C41A1A,#8b0000)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0, boxShadow:"0 4px 12px rgba(196,26,26,0.3)" }}>🥋</div>
+                <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Brazilian Jiu-Jitsu</div>
+                  <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                    <span style={{ fontSize:11, color:"var(--text-faint)" }}>{tecnicasCatalogo.length} técnicas</span>
+                    <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCount.Principiante}</span>
+                    <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCount.Intermedio}</span>
+                    <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCount.Avanzado}</span>
+                  </div>
                 </div>
-                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
-                  {[...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); }).map(t => {
-                    const CAT_C = { "Sumisiones":"#ef4444","Posiciones":"#6366f1","Barridos":"#f59e0b","Pasajes":"#10b981","Derribos":"#3b82f6","Escapes":"#8b5cf6" };
-                    const CAT_ICON = { "Sumisiones":"🔒","Posiciones":"🛡️","Barridos":"🔄","Pasajes":"⚡","Derribos":"💥","Escapes":"🚀" };
+                <div style={{ display:"flex", gap:6, flexShrink:0 }}>
+                  {Object.entries(CAT_ICON).map(([cat, icon]) => (
+                    <span key={cat} title={cat} style={{ fontSize:16 }}>{icon}</span>
+                  ))}
+                </div>
+                <span style={{ fontSize:18, color:"var(--text-faint)", flexShrink:0, transition:"transform 0.25s", transform: catBJJOpen ? "rotate(90deg)" : "none" }}>›</span>
+              </div>
+
+              {/* Contenido expandible */}
+              {catBJJOpen && (
+                <div style={{ border:"1px solid var(--border)", borderTop:"none", borderRadius:"0 0 14px 14px", padding:"16px 14px", background:"var(--bg)" }}>
+                  {/* Filtros de categoría */}
+                  <div style={{ display:"flex", gap:6, overflowX:"auto", paddingBottom:8, marginBottom:14, scrollbarWidth:"none" }}>
+                    {["todas", ...categorias].map(cat => (
+                      <button key={cat} onClick={() => setCatFiltro(cat)} style={{
+                        flexShrink:0, fontSize:11, fontWeight:700, padding:"5px 12px", borderRadius:20, border:"none", cursor:"pointer",
+                        background: catFiltro===cat ? "#C41A1A" : "var(--bg-elevated)",
+                        color: catFiltro===cat ? "#fff" : "var(--text-faint)",
+                        transition:"all 0.15s"
+                      }}>
+                        {cat === "todas" ? "Todas" : `${CAT_ICON[cat]||""} ${cat}`}
+                      </button>
+                    ))}
+                  </div>
+
+                  {filtradas.length === 0 && catSearch && (
+                    <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
+                  )}
+
+                  {Object.entries(byCategoria).map(([cat, tecs]) => {
                     const cc = CAT_C[cat] || "#888";
                     const icon = CAT_ICON[cat] || "🥋";
                     return (
-                      <div key={t.id}
-                        onClick={() => t.video_url && window.open(t.video_url, "_blank")}
-                        style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default" }}>
-                        <div style={{ position:"relative", paddingTop:"56.25%", background:`linear-gradient(135deg, ${cc}33 0%, ${cc}11 100%)`, overflow:"hidden" }}>
-                          <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
-                            <span style={{ fontSize:22 }}>{icon}</span>
-                            {t.video_url && (
-                              <div style={{ display:"flex", alignItems:"center", gap:4, background:"rgba(200,0,0,0.85)", borderRadius:20, padding:"3px 10px", boxShadow:"0 2px 8px rgba(0,0,0,0.4)" }}>
-                                <span style={{ fontSize:10, color:"#fff", fontWeight:700 }}>▶ YouTube</span>
-                              </div>
-                            )}
-                          </div>
-                          {t.nivel && (
-                            <div style={{ position:"absolute", top:6, right:6, fontSize:9, fontWeight:800, color:"#fff", background:NIVEL_COLOR[t.nivel]||"#555", padding:"2px 7px", borderRadius:20, boxShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{t.nivel}</div>
-                          )}
+                      <div key={cat} style={{ marginBottom:24 }}>
+                        <div style={{ fontSize:10, fontWeight:800, color:cc, textTransform:"uppercase", letterSpacing:1.8, marginBottom:10, display:"flex", alignItems:"center", gap:6 }}>
+                          <span style={{ width:3, height:13, background:cc, borderRadius:2, display:"inline-block", flexShrink:0 }}></span>
+                          {icon} {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
                         </div>
-                        <div style={{ padding:"9px 11px" }}>
-                          <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", lineHeight:1.3, marginBottom:4 }}>{t.nombre}</div>
-                          {t.posicion_inicio && (
-                            <div style={{ fontSize:9, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20, display:"inline-block" }}>{t.posicion_inicio}</div>
-                          )}
+                        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
+                          {[...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); }).map(t => (
+                            <div key={t.id}
+                              onClick={() => t.video_url && window.open(t.video_url, "_blank")}
+                              style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default", transition:"transform 0.15s, box-shadow 0.15s" }}
+                              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow=`0 6px 18px ${cc}25`; e.currentTarget.style.borderColor=cc+"60"; }}
+                              onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow=""; e.currentTarget.style.borderColor="var(--border)"; }}>
+                              <div style={{ position:"relative", paddingTop:"56.25%", background:`linear-gradient(135deg, ${cc}33 0%, ${cc}11 100%)`, overflow:"hidden" }}>
+                                <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
+                                  <span style={{ fontSize:22 }}>{icon}</span>
+                                  {t.video_url && (
+                                    <div style={{ display:"flex", alignItems:"center", gap:4, background:"rgba(200,0,0,0.85)", borderRadius:20, padding:"3px 10px", boxShadow:"0 2px 8px rgba(0,0,0,0.4)" }}>
+                                      <span style={{ fontSize:10, color:"#fff", fontWeight:700 }}>▶ YouTube</span>
+                                    </div>
+                                  )}
+                                </div>
+                                {t.nivel && (
+                                  <div style={{ position:"absolute", top:6, right:6, fontSize:9, fontWeight:800, color:"#fff", background:NIVEL_COLOR[t.nivel]||"#555", padding:"2px 7px", borderRadius:20, boxShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{t.nivel}</div>
+                                )}
+                              </div>
+                              <div style={{ padding:"9px 11px" }}>
+                                <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", lineHeight:1.3, marginBottom:4 }}>{t.nombre}</div>
+                                {t.posicion_inicio && (
+                                  <div style={{ fontSize:9, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20, display:"inline-block" }}>{t.posicion_inicio}</div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     );
                   })}
                 </div>
+              )}
+            </div>
+
+            {/* Próximamente — otros deportes */}
+            {[
+              { nombre:"Muay Thai", icon:"🥊", color:"#f59e0b" },
+              { nombre:"Lucha / Wrestling", icon:"🤼", color:"#3b82f6" },
+              { nombre:"Boxeo", icon:"🥊", color:"#8b5cf6" },
+            ].map(deporte => (
+              <div key={deporte.nombre} style={{ display:"flex", alignItems:"center", gap:14, padding:"14px 18px", borderRadius:14, background:"var(--bg-card)", border:"1px solid var(--border)", marginBottom:8, opacity:0.45, cursor:"not-allowed" }}>
+                <div style={{ width:48, height:48, borderRadius:12, background:`linear-gradient(135deg,${deporte.color},${deporte.color}88)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, flexShrink:0 }}>{deporte.icon}</div>
+                <div style={{ flex:1 }}>
+                  <div style={{ fontSize:15, fontWeight:800, color:"var(--text)", marginBottom:2 }}>{deporte.nombre}</div>
+                  <div style={{ fontSize:11, color:"var(--text-faint)" }}>Próximamente</div>
+                </div>
+                <span style={{ fontSize:10, fontWeight:700, color:"var(--text-faint)", background:"var(--bg-elevated)", borderRadius:6, padding:"3px 8px" }}>SOON</span>
               </div>
             ))}
-            {filtradas.length === 0 && catSearch && (
-              <div style={{ textAlign:"center", padding:"40px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
-            )}
           </div>
         );
       })()}

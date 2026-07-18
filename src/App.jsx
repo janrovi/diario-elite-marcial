@@ -3320,38 +3320,41 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                   {Object.entries(byCategoria).map(([cat, tecs]) => {
                     const cc = CAT_C[cat] || "#888";
                     const icon = CAT_ICON[cat] || "🥋";
+                    const NIVEL_DOT = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
+                    const sorted = [...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); });
                     return (
-                      <div key={cat} style={{ marginBottom:24 }}>
-                        <div style={{ fontSize:10, fontWeight:800, color:cc, textTransform:"uppercase", letterSpacing:1.8, marginBottom:10, display:"flex", alignItems:"center", gap:6 }}>
-                          <span style={{ width:3, height:13, background:cc, borderRadius:2, display:"inline-block", flexShrink:0 }}></span>
-                          {icon} {cat} <span style={{ color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+                      <div key={cat} style={{ marginBottom:20 }}>
+                        {/* Cabecera categoría */}
+                        <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
+                          <div style={{ width:28, height:28, borderRadius:8, background:`${cc}22`, border:`1px solid ${cc}44`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0 }}>{icon}</div>
+                          <span style={{ fontSize:11, fontWeight:900, color:cc, textTransform:"uppercase", letterSpacing:1.5 }}>{cat}</span>
+                          <span style={{ fontSize:10, color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+                          <div style={{ flex:1, height:1, background:`${cc}22` }} />
                         </div>
-                        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(150px,1fr))", gap:10 }}>
-                          {[...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); }).map(t => (
+                        {/* Lista de técnicas */}
+                        <div style={{ display:"flex", flexDirection:"column", gap:3 }}>
+                          {sorted.map((t, i) => (
                             <div key={t.id}
                               onClick={() => t.video_url && window.open(t.video_url, "_blank")}
-                              style={{ borderRadius:12, overflow:"hidden", background:"var(--bg-card)", border:"1px solid var(--border)", cursor: t.video_url ? "pointer" : "default", transition:"transform 0.15s, box-shadow 0.15s" }}
-                              onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow=`0 6px 18px ${cc}25`; e.currentTarget.style.borderColor=cc+"60"; }}
-                              onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow=""; e.currentTarget.style.borderColor="var(--border)"; }}>
-                              <div style={{ position:"relative", paddingTop:"56.25%", background:`linear-gradient(135deg, ${cc}33 0%, ${cc}11 100%)`, overflow:"hidden" }}>
-                                <div style={{ position:"absolute", inset:0, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:6 }}>
-                                  <span style={{ fontSize:22 }}>{icon}</span>
-                                  {t.video_url && (
-                                    <div style={{ display:"flex", alignItems:"center", gap:4, background:"rgba(200,0,0,0.85)", borderRadius:20, padding:"3px 10px", boxShadow:"0 2px 8px rgba(0,0,0,0.4)" }}>
-                                      <span style={{ fontSize:10, color:"#fff", fontWeight:700 }}>▶ YouTube</span>
-                                    </div>
-                                  )}
-                                </div>
-                                {t.nivel && (
-                                  <div style={{ position:"absolute", top:6, right:6, fontSize:9, fontWeight:800, color:"#fff", background:NIVEL_COLOR[t.nivel]||"#555", padding:"2px 7px", borderRadius:20, boxShadow:"0 1px 4px rgba(0,0,0,0.4)" }}>{t.nivel}</div>
-                                )}
-                              </div>
-                              <div style={{ padding:"9px 11px" }}>
-                                <div style={{ fontSize:11, fontWeight:800, color:"var(--text)", lineHeight:1.3, marginBottom:4 }}>{t.nombre}</div>
-                                {t.posicion_inicio && (
-                                  <div style={{ fontSize:9, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:20, display:"inline-block" }}>{t.posicion_inicio}</div>
-                                )}
-                              </div>
+                              style={{ display:"flex", alignItems:"center", gap:10, padding:"8px 10px", borderRadius:10, background:"var(--bg-card)", border:"1px solid transparent", borderLeft:`3px solid ${cc}`, cursor: t.video_url ? "pointer" : "default", transition:"background 0.12s, border-color 0.12s" }}
+                              onMouseEnter={e=>{ e.currentTarget.style.background=`${cc}0a`; e.currentTarget.style.borderColor=`${cc}60`; }}
+                              onMouseLeave={e=>{ e.currentTarget.style.background="var(--bg-card)"; e.currentTarget.style.borderColor="transparent"; }}>
+                              {/* Número */}
+                              <span style={{ fontSize:10, color:"var(--text-faint)", fontWeight:600, minWidth:16, textAlign:"right", flexShrink:0 }}>{i+1}</span>
+                              {/* Nombre */}
+                              <span style={{ flex:1, fontSize:13, fontWeight:700, color:"var(--text)", lineHeight:1.2, minWidth:0 }}>{t.nombre}</span>
+                              {/* Posición */}
+                              {t.posicion_inicio && (
+                                <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:6, flexShrink:0, maxWidth:100, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{t.posicion_inicio}</span>
+                              )}
+                              {/* Nivel */}
+                              {t.nivel && (
+                                <span style={{ fontSize:9, fontWeight:800, color:NIVEL_DOT[t.nivel]||"#888", background:(NIVEL_DOT[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:6, flexShrink:0, letterSpacing:0.3 }}>{t.nivel}</span>
+                              )}
+                              {/* YouTube */}
+                              {t.video_url && (
+                                <span style={{ fontSize:11, color:"#C41A1A", flexShrink:0, fontWeight:700 }}>▶</span>
+                              )}
                             </div>
                           ))}
                         </div>

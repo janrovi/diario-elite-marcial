@@ -609,6 +609,10 @@ const TRANSLATIONS = {
     tec_empty_title:"Aquí vivirán tus técnicas",
     tec_empty_desc:"Cada sesión que registres con una técnica del día aparecerá aquí como tu biblioteca personal.",
     tec_empty_cta:"➕ Crea una sesión con técnica",
+    cat_tab_lib:"📂 Biblioteca", cat_tab_rank:"🏆 Ranking", cat_tab_cat:"📖 Catálogo", cat_tab_coach:"📋 Coach",
+    cat_loading:"Cargando catálogo...", cat_techniques:"técnicas",
+    cat_practiced:"Técnicas practicadas", cat_only_practiced:"Solo practicadas",
+    cat_no_results:"Sin resultados para", cat_search_ph:"🔍 Buscar técnica...", cat_all:"Todas",
     gsearch_ph:"Buscar sesiones, técnicas, notas...", detail_vs_avg:"vs tu media", detail_above_avg:"encima de la media", detail_below_avg:"por debajo de la media",
     gsearch_no_results:"Sin resultados para",
     gsearch_min_chars:"Escribe al menos 2 caracteres",
@@ -1093,6 +1097,10 @@ const TRANSLATIONS = {
     tec_empty_title:"Your techniques will live here",
     tec_empty_desc:"Every session you log with a technique of the day will appear here as your personal library.",
     tec_empty_cta:"➕ Create a session with a technique",
+    cat_tab_lib:"📂 Library", cat_tab_rank:"🏆 Ranking", cat_tab_cat:"📖 Catalog", cat_tab_coach:"📋 Coach",
+    cat_loading:"Loading catalog...", cat_techniques:"techniques",
+    cat_practiced:"Practiced techniques", cat_only_practiced:"Only practiced",
+    cat_no_results:"No results for", cat_search_ph:"🔍 Search technique...", cat_all:"All",
     gsearch_ph:"Search sessions, techniques, notes...", detail_vs_avg:"vs your avg", detail_above_avg:"above average", detail_below_avg:"below average",
     gsearch_no_results:"No results for",
     gsearch_min_chars:"Type at least 2 characters",
@@ -1563,6 +1571,10 @@ const TRANSLATIONS = {
     tec_empty_title:"Aquí viuran les teves tècniques",
     tec_empty_desc:"Cada sessió que registres amb una tècnica del dia apareixerà aquí com la teva biblioteca personal.",
     tec_empty_cta:"➕ Crea una sessió amb tècnica",
+    cat_tab_lib:"📂 Biblioteca", cat_tab_rank:"🏆 Rànquing", cat_tab_cat:"📖 Catàleg", cat_tab_coach:"📋 Coach",
+    cat_loading:"Carregant catàleg...", cat_techniques:"tècniques",
+    cat_practiced:"Tècniques practicades", cat_only_practiced:"Només practicades",
+    cat_no_results:"Sense resultats per a", cat_search_ph:"🔍 Cerca tècnica...", cat_all:"Totes",
     gsearch_ph:"Cercar sessions, tècniques, notes...", detail_vs_avg:"vs la teva mitjana", detail_above_avg:"per sobre la mitjana", detail_below_avg:"per sota la mitjana",
     gsearch_no_results:"Sense resultats per a",
     gsearch_min_chars:"Escriu almenys 2 caràcters",
@@ -3090,7 +3102,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
 
       {/* ── Tabs ── */}
       <div style={{ display:"flex", gap:6, marginBottom:16, background:"var(--bg-elevated)", borderRadius:12, padding:4 }}>
-        {[["biblioteca","📂 Biblioteca"],["ranking","🏆 Ranking"],["catalogo","📖 Catálogo"],["coach","📋 Coach"]].map(([tab, label]) => (
+        {[["biblioteca",t("cat_tab_lib",lang)],["ranking",t("cat_tab_rank",lang)],["catalogo",t("cat_tab_cat",lang)],["coach",t("cat_tab_coach",lang)]].map(([tab, label]) => (
           <button key={tab} onClick={() => setActiveTab(tab)} style={{
             flex:1, border:"none", borderRadius:9, padding:"9px 0", fontSize:12, fontWeight:700, cursor:"pointer",
             background: activeTab===tab ? "var(--bg-card)" : "transparent",
@@ -3126,7 +3138,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:12, fontSize:12, color:"var(--text-faint)" }}>
               <span>{activeTab==="biblioteca" ? filtered.length : rankedFiltered.length} resultado{(activeTab==="biblioteca"?filtered.length:rankedFiltered.length)!==1?"s":""}</span>
               <button style={{ background:"transparent", border:"none", color:RED, fontSize:12, fontWeight:700, cursor:"pointer" }}
-                onClick={() => { setSearch(""); setFilterDisc(""); }}>✕ Limpiar</button>
+                onClick={() => { setSearch(""); setFilterDisc(""); }}>{t("tec_clear",lang)}</button>
             </div>
           )}
         </>
@@ -3241,7 +3253,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
         if (tecnicasCatalogo.length === 0) return (
           <div style={{ textAlign:"center", padding:"60px 20px", color:"var(--text-faint)" }}>
             <div style={{ fontSize:40, marginBottom:12 }}>📖</div>
-            <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>Cargando catálogo...</div>
+            <div style={{ fontSize:14, fontWeight:700, color:"var(--text)" }}>{t("cat_loading",lang)}</div>
           </div>
         );
         const NIVEL_COLOR = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
@@ -3328,7 +3340,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
             {(catBJJOpen || catSearch) && (
               <input
                 style={{ background:"var(--bg-input)", border:"1px solid var(--border-sub)", borderRadius:10, color:"var(--text)", padding:"9px 14px", fontSize:14, width:"100%", outline:"none", boxSizing:"border-box", marginBottom:10 }}
-                placeholder="🔍 Buscar técnica..."
+                placeholder={t("cat_search_ph",lang)}
                 value={catSearch}
                 onChange={e => setCatSearch(e.target.value)}
               />
@@ -3348,7 +3360,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                 <div style={{ flex:1, minWidth:0 }}>
                   <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Brazilian Jiu-Jitsu</div>
                   <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                    <span style={{ fontSize:11, color:"var(--text-faint)" }}>{bjjAll.length} técnicas</span>
+                    <span style={{ fontSize:11, color:"var(--text-faint)" }}>{bjjAll.length} {t("cat_techniques",lang)}</span>
                     <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCount.Principiante}</span>
                     <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCount.Intermedio}</span>
                     <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCount.Avanzado}</span>
@@ -3374,7 +3386,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                         color: catFiltro===cat ? "#fff" : "var(--text-faint)",
                         transition:"all 0.15s"
                       }}>
-                        {cat === "todas" ? "Todas" : `${CAT_ICON[cat]||""} ${cat}`}
+                        {cat === "todas" ? t("cat_all",lang) : `${CAT_ICON[cat]||""} ${cat}`}
                       </button>
                     ))}
                   </div>
@@ -3386,7 +3398,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                       <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
                         <div style={{ flex:1 }}>
                           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
-                            <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                            <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>{t("cat_practiced",lang)}</span>
                             <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPrac} / {bjjAll.length}</span>
                           </div>
                           <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>
@@ -3395,14 +3407,14 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                         </div>
                         <button onClick={() => setCatSoloPracticadas(v=>!v)}
                           style={{ flexShrink:0, fontSize:11, fontWeight:700, padding:"6px 12px", borderRadius:20, border:`1px solid ${catSoloPracticadas?"#10b981":"var(--border)"}`, background:catSoloPracticadas?"#10b98122":"var(--bg-card)", color:catSoloPracticadas?"#10b981":"var(--text-faint)", cursor:"pointer", whiteSpace:"nowrap" }}>
-                          ✓ Solo practicadas
+                          ✓ {t("cat_only_practiced",lang)}
                         </button>
                       </div>
                     );
                   })()}
 
                   {filtradas.length === 0 && catSearch && (
-                    <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", fontSize:13 }}>Sin resultados para "{catSearch}"</div>
+                    <div style={{ textAlign:"center", padding:"30px 20px", color:"var(--text-faint)", fontSize:13 }}>{t("cat_no_results",lang)} "{catSearch}"</div>
                   )}
 
                   {Object.entries(byCategoriaBJJ).map(([cat, tecs]) => {
@@ -3470,7 +3482,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Lucha / Wrestling</div>
                     <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{wrestlingAll.length} técnicas</span>
+                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{wrestlingAll.length} {t("cat_techniques",lang)}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCountW.Principiante}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCountW.Intermedio}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountW.Avanzado}</span>
@@ -3496,7 +3508,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                           <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
                             <div style={{ flex:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
-                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>{t("cat_practiced",lang)}</span>
                                 <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPracW} / {wrestlingAll.length}</span>
                               </div>
                               <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>
@@ -3556,7 +3568,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Boxeo</div>
                     <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{boxeoAll.length} técnicas</span>
+                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{boxeoAll.length} {t("cat_techniques",lang)}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCountB.Principiante}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCountB.Intermedio}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountB.Avanzado}</span>
@@ -3581,7 +3593,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                           <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
                             <div style={{ flex:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
-                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>{t("cat_practiced",lang)}</span>
                                 <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPracB} / {boxeoAll.length}</span>
                               </div>
                               <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>
@@ -3641,7 +3653,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                   <div style={{ flex:1, minWidth:0 }}>
                     <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Muay Thai</div>
                     <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{muayThaiAll.length} técnicas</span>
+                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{muayThaiAll.length} {t("cat_techniques",lang)}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCountMT.Principiante}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCountMT.Intermedio}</span>
                       <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountMT.Avanzado}</span>
@@ -3666,7 +3678,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
                           <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
                             <div style={{ flex:1 }}>
                               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
-                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>{t("cat_practiced",lang)}</span>
                                 <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPracMT} / {muayThaiAll.length}</span>
                               </div>
                               <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>

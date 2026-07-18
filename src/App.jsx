@@ -2989,6 +2989,7 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
   const [catFiltro, setCatFiltro] = useState("todas");
   const [catBJJOpen, setCatBJJOpen] = useState(false);
   const [catWrestlingOpen, setCatWrestlingOpen] = useState(false);
+  const [catBoxeoOpen, setCatBoxeoOpen] = useState(false);
   const [catSoloPracticadas, setCatSoloPracticadas] = useState(false);
 
   const RED = "#C41A1A";
@@ -3286,6 +3287,17 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
         const byCategoriaWrestling = {};
         filtradasWrestling.forEach(t => { if (!byCategoriaWrestling[t.categoria]) byCategoriaWrestling[t.categoria] = []; byCategoriaWrestling[t.categoria].push(t); });
 
+        // Deporte: Boxeo
+        const boxeoAll = tecnicasCatalogo.filter(t => t.disciplina === "Boxeo");
+        const filtradasBoxeo = boxeoAll.filter(t => {
+          const matchSearch = !q || t.nombre.toLowerCase().includes(q) || (t.posicion_inicio||"").toLowerCase().includes(q);
+          const matchPrac = !catSoloPracticadas || !!getPrac(t);
+          return matchSearch && matchPrac;
+        });
+        const byCategoriaBoxeo = {};
+        filtradasBoxeo.forEach(t => { if (!byCategoriaBoxeo[t.categoria]) byCategoriaBoxeo[t.categoria] = []; byCategoriaBoxeo[t.categoria].push(t); });
+        const nivelCountB = { Principiante: boxeoAll.filter(t=>t.nivel==="Principiante").length, Intermedio: boxeoAll.filter(t=>t.nivel==="Intermedio").length, Avanzado: boxeoAll.filter(t=>t.nivel==="Avanzado").length };
+
         // Para el acordeón activo usamos las vars correctas
         const filtradas = filtradasBJJ; // keep for nivelCount compat
         const categorias = categoriasBJJ;
@@ -3514,11 +3526,88 @@ function TecnicasView({ sessions, onOpenDetail, lang = "es", onNewSession, tecni
               </div>
             )}
 
-            {/* Próximamente — otros deportes */}
-            {[
-              { nombre:"Muay Thai", icon:"🥊", color:"#f59e0b" },
-              { nombre:"Boxeo", icon:"🥊", color:"#8b5cf6" },
-            ].map(deporte => (
+            {/* ── Boxeo ── */}
+            {boxeoAll.length > 0 && (
+              <div style={{ marginBottom:12 }}>
+                <div
+                  onClick={() => { setCatBoxeoOpen(v=>!v); setCatSearch(""); }}
+                  style={{ display:"flex", alignItems:"center", gap:14, padding:"16px 18px", borderRadius: catBoxeoOpen ? "14px 14px 0 0" : 14, background:"var(--bg-card)", border:"1px solid var(--border)", cursor:"pointer", userSelect:"none" }}
+                  onMouseEnter={e=>e.currentTarget.style.borderColor="#8b5cf640"}
+                  onMouseLeave={e=>e.currentTarget.style.borderColor="var(--border)"}
+                >
+                  <div style={{ width:48, height:48, borderRadius:12, background:"linear-gradient(135deg,#6d28d9,#8b5cf6)", display:"flex", alignItems:"center", justifyContent:"center", fontSize:26, flexShrink:0, boxShadow:"0 4px 12px rgba(139,92,246,0.3)" }}>🥊</div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontSize:16, fontWeight:900, color:"var(--text)", letterSpacing:-0.3, marginBottom:3 }}>Boxeo</div>
+                    <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                      <span style={{ fontSize:11, color:"var(--text-faint)" }}>{boxeoAll.length} técnicas</span>
+                      <span style={{ fontSize:10, fontWeight:700, color:"#10b981", background:"#10b98115", borderRadius:4, padding:"1px 6px" }}>P: {nivelCountB.Principiante}</span>
+                      <span style={{ fontSize:10, fontWeight:700, color:"#f59e0b", background:"#f59e0b15", borderRadius:4, padding:"1px 6px" }}>I: {nivelCountB.Intermedio}</span>
+                      <span style={{ fontSize:10, fontWeight:700, color:"#ef4444", background:"#ef444415", borderRadius:4, padding:"1px 6px" }}>A: {nivelCountB.Avanzado}</span>
+                    </div>
+                  </div>
+                  <span style={{ fontSize:18, color:"var(--text-faint)", flexShrink:0, transition:"transform 0.25s", transform: catBoxeoOpen ? "rotate(90deg)" : "none" }}>›</span>
+                </div>
+                {catBoxeoOpen && (
+                  <div style={{ border:"1px solid var(--border)", borderTop:"none", borderRadius:"0 0 14px 14px", padding:"16px 14px", background:"var(--bg)" }}>
+                    {(() => {
+                      const CAT_C_B = { "Golpes":"#8b5cf6","Combinaciones":"#ec4899","Defensa":"#10b981","Footwork":"#f59e0b","Guardia":"#3b82f6","Clinch":"#ef4444" };
+                      const CAT_ICON_B = { "Golpes":"🥊","Combinaciones":"⚡","Defensa":"🛡️","Footwork":"👣","Guardia":"🤜","Clinch":"🤼" };
+                      const NIVEL_DOT = { "Principiante":"#10b981", "Intermedio":"#f59e0b", "Avanzado":"#ef4444" };
+                      const totalPracB = Object.keys(practicadasMap).filter(id => boxeoAll.find(t=>String(t.id)===String(id))).length;
+                      return (
+                        <>
+                          <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:14, padding:"10px 12px", background:"var(--bg-input)", borderRadius:10 }}>
+                            <div style={{ flex:1 }}>
+                              <div style={{ display:"flex", justifyContent:"space-between", marginBottom:5 }}>
+                                <span style={{ fontSize:11, fontWeight:700, color:"var(--text)" }}>Técnicas practicadas</span>
+                                <span style={{ fontSize:11, fontWeight:900, color:"#10b981" }}>{totalPracB} / {boxeoAll.length}</span>
+                              </div>
+                              <div style={{ height:5, background:"var(--border)", borderRadius:4, overflow:"hidden" }}>
+                                <div style={{ height:"100%", width:`${Math.round(totalPracB/boxeoAll.length*100)}%`, background:"linear-gradient(90deg,#8b5cf6,#a78bfa)", borderRadius:4 }} />
+                              </div>
+                            </div>
+                          </div>
+                          {Object.entries(byCategoriaBoxeo).map(([cat, tecs]) => {
+                            const cc = CAT_C_B[cat] || "#8b5cf6";
+                            const icon = CAT_ICON_B[cat] || "🥊";
+                            const sorted = [...tecs].sort((a,b) => { const O={"Principiante":0,"Intermedio":1,"Avanzado":2}; return (O[a.nivel]??9)-(O[b.nivel]??9); });
+                            return (
+                              <div key={cat} style={{ marginBottom:20 }}>
+                                <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
+                                  <div style={{ width:28, height:28, borderRadius:8, background:`${cc}22`, border:`1px solid ${cc}44`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:14, flexShrink:0 }}>{icon}</div>
+                                  <span style={{ fontSize:11, fontWeight:900, color:cc, textTransform:"uppercase", letterSpacing:1.5 }}>{cat}</span>
+                                  <span style={{ fontSize:10, color:"var(--text-faint)", fontWeight:400 }}>({tecs.length})</span>
+                                  <div style={{ flex:1, height:1, background:`${cc}22` }} />
+                                </div>
+                                <div style={{ display:"flex", flexDirection:"column", gap:3 }}>
+                                  {sorted.map((t, i) => (
+                                    <div key={t.id}
+                                      onClick={() => t.video_url && window.open(t.video_url, "_blank")}
+                                      style={{ display:"flex", alignItems:"center", gap:10, padding:"8px 10px", borderRadius:10, background:"var(--bg-card)", border:"1px solid transparent", borderLeft:`3px solid ${cc}`, cursor: t.video_url ? "pointer" : "default", transition:"background 0.12s, border-color 0.12s" }}
+                                      onMouseEnter={e=>{ e.currentTarget.style.background=`${cc}0a`; e.currentTarget.style.borderColor=`${cc}60`; }}
+                                      onMouseLeave={e=>{ e.currentTarget.style.background="var(--bg-card)"; e.currentTarget.style.borderColor="transparent"; }}>
+                                      <span style={{ fontSize:10, color:"var(--text-faint)", fontWeight:600, minWidth:16, textAlign:"right", flexShrink:0 }}>{i+1}</span>
+                                      <span style={{ flex:1, fontSize:13, fontWeight:700, color:"var(--text)", lineHeight:1.2, minWidth:0 }}>{t.nombre}</span>
+                                      {t.posicion_inicio && <span style={{ fontSize:10, color:"var(--text-faint)", background:"var(--bg-elevated)", padding:"2px 7px", borderRadius:6, flexShrink:0, maxWidth:100, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{t.posicion_inicio}</span>}
+                                      {t.nivel && <span style={{ fontSize:9, fontWeight:800, color:NIVEL_DOT[t.nivel]||"#888", background:(NIVEL_DOT[t.nivel]||"#888")+"18", padding:"2px 7px", borderRadius:6, flexShrink:0 }}>{t.nivel}</span>}
+                                      {(() => { const p = getPrac(t); return p ? <span title={`Última: ${p.lastDate}`} style={{ fontSize:10, fontWeight:800, color:"#10b981", background:"#10b98118", padding:"2px 7px", borderRadius:6, flexShrink:0 }}>✓ {p.count}x</span> : null; })()}
+                                      {t.video_url && <span style={{ fontSize:11, color:"#8b5cf6", flexShrink:0, fontWeight:700 }}>▶</span>}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Próximamente — Muay Thai */}
+            {[{ nombre:"Muay Thai", icon:"🦵", color:"#f59e0b" }].map(deporte => (
               <div key={deporte.nombre} style={{ display:"flex", alignItems:"center", gap:14, padding:"14px 18px", borderRadius:14, background:"var(--bg-card)", border:"1px solid var(--border)", marginBottom:8, opacity:0.45, cursor:"not-allowed" }}>
                 <div style={{ width:48, height:48, borderRadius:12, background:`linear-gradient(135deg,${deporte.color},${deporte.color}88)`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:24, flexShrink:0 }}>{deporte.icon}</div>
                 <div style={{ flex:1 }}>
